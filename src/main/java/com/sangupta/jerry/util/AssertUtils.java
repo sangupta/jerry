@@ -57,5 +57,30 @@ public class AssertUtils {
 		
 		return true;
 	}
+	
+	/**
+	 * 
+	 * @param array
+	 * @return
+	 */
+	public static boolean isEmpty(Object[] array) {
+		if(array == null || array.length == 0) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * @param array
+	 * @return
+	 */
+	public static boolean isNotEmpty(Object[] array) {
+		if(array == null || array.length == 0) {
+			return false;
+		}
+		
+		return true;
+	}
 
 }
