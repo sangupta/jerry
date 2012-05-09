@@ -21,25 +21,13 @@
 
 package com.sangupta.jerry.util;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class AssertUtils {
 	
 	public static boolean isEmpty(String string) {
 		if(string == null || string.length() == 0) {
-			return true;
-		}
-		
-		return false;
-	}
-
-	/**
-	 * @param headers
-	 * @return
-	 */
-	@SuppressWarnings("rawtypes")
-	public static boolean isNotEmpty(Map headers) {
-		if(headers == null || headers.isEmpty()) {
 			return true;
 		}
 		
@@ -83,4 +71,43 @@ public class AssertUtils {
 		return true;
 	}
 
+	/**
+	 * @param params
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public static boolean isEmpty(Map params) {
+		if(params == null || params.isEmpty()) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean isNotEmpty(Map params) {
+		if(params == null || params.isEmpty()) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean isEmpty(Collection collection) {
+		if(collection == null || collection.isEmpty()) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean isNotEmpty(Collection collection) {
+		if(collection == null || collection.isEmpty()) {
+			return false;
+		}
+		
+		return true;
+	}
 }
