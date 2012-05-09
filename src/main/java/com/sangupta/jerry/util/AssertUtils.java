@@ -110,4 +110,24 @@ public class AssertUtils {
 		
 		return true;
 	}
+
+	/**
+	 * @param object
+	 * @return
+	 */
+	public static boolean isEmpty(Object object) {
+		if(object == null) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean isNotEmpty(Object object) {
+		if(object == null) {
+			return false;
+		}
+		
+		return true;
+	}
 }
