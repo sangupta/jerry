@@ -57,6 +57,10 @@ public class ZipUtils {
 			return null;
 		}
 		
+		if(logger.isDebugEnabled()) {
+			logger.debug("Reading " + fileName + " from " + tempZip.getAbsolutePath());
+		}
+		
 		ZipInputStream stream = null;
 		BufferedOutputStream outStream = null;
 		File tempFile = null;
@@ -64,8 +68,8 @@ public class ZipUtils {
 		try {
 			byte[] buf = new byte[1024];
 			stream = new ZipInputStream(new FileInputStream(tempZip));
-			ZipEntry entry = stream.getNextEntry();
-			while(entry != null) {
+			ZipEntry entry;
+			while((entry = stream.getNextEntry()) != null) {
 				String entryName = entry.getName();
 				if(entryName.equals(fileName)) {
 					tempFile = File.createTempFile(FilenameUtils.getName(entryName), FilenameUtils.getExtension(entryName));
@@ -78,6 +82,8 @@ public class ZipUtils {
 					}
 					
 					outStream.close();
+					
+					return tempFile;
 				}
 			}
 		} finally {

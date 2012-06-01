@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sangupta.jerry.http.WebInvoker;
 import com.sangupta.jerry.http.WebResponse;
@@ -34,6 +36,8 @@ import com.sangupta.jerry.http.WebResponse;
  *
  */
 public class WebUtils {
+	
+	private static final Logger logger = LoggerFactory.getLogger(WebUtils.class);
 	
 	/**
 	 * Download the URL at the given location URL and store it as a temporary file on disk.
@@ -47,6 +51,10 @@ public class WebUtils {
 		String extension = UriUtils.extractExtension(url);
 		File tempFile = File.createTempFile("download", extension);
 		tempFile.deleteOnExit();
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("Downloading " + url + " to " + tempFile.getAbsolutePath());
+		}
 		
 		WebResponse response = WebInvoker.getResponse(url);
 		if(response != null) {

@@ -40,10 +40,10 @@ public class AssertUtils {
 	@SuppressWarnings("rawtypes")
 	public static boolean isNotEmpty(Map headers) {
 		if(headers == null || headers.isEmpty()) {
-			return true;
+			return false;
 		}
 		
-		return false;
+		return true;
 	}
 
 	/**
