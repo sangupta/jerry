@@ -22,11 +22,16 @@
 package com.sangupta.jerry.util;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Utility functions around the URI.
+ * 
  * @author sangupta
  *
  */
@@ -149,5 +154,43 @@ public class UriUtils {
 		}
 		
 		return url.substring(index + 1);
+	}
+	
+	public static String urlEncode(Map<String, String> params) {
+		return urlEncode(params, false);
+	}
+
+	/**
+	 * The method is NOT thread-safe.
+	 * 
+	 * @param testParams
+	 * @return
+	 */
+	public static String urlEncode(Map<String, String> params, boolean encodeValues) {
+		if(AssertUtils.isEmpty(params)) {
+			return StringUtils.EMPTY_STRING;
+		}
+		
+		Set<Entry<String, String>> entrySet = params.entrySet();
+		StringBuilder builder = new StringBuilder();
+		boolean first = true;
+		for(Entry<String, String> entry : entrySet) {
+			if(!first) {
+				builder.append("&");
+			}
+			
+			first = false;
+			
+			builder.append(entry.getKey());
+			builder.append("=");
+			
+			if(encodeValues) {
+				builder.append(encodeURIComponent(entry.getValue()));
+			} else {
+				builder.append(entry.getValue());
+			}
+		}
+		
+		return builder.toString();
 	}
 }

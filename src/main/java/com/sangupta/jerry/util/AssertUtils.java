@@ -21,6 +21,7 @@
 
 package com.sangupta.jerry.util;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class AssertUtils {
@@ -34,7 +35,7 @@ public class AssertUtils {
 	}
 
 	/**
-	 * @param headers
+	 * @param headerValue
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
@@ -45,17 +46,89 @@ public class AssertUtils {
 		
 		return true;
 	}
-
+	
 	/**
-	 * @param headerValue
+	 * 
+	 * @param array
 	 * @return
 	 */
-	public static boolean isNotEmpty(String string) {
-		if(string == null || string.length() == 0) {
+	public static boolean isEmpty(Object[] array) {
+		if(array == null || array.length == 0) {
+			return true;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * @param array
+	 * @return
+	 */
+	public static boolean isNotEmpty(Object[] array) {
+		if(array == null || array.length == 0) {
 			return false;
 		}
 		
 		return true;
 	}
 
+	/**
+	 * @param params
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public static boolean isEmpty(Map params) {
+		if(params == null || params.isEmpty()) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean isNotEmpty(Map params) {
+		if(params == null || params.isEmpty()) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean isEmpty(Collection collection) {
+		if(collection == null || collection.isEmpty()) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean isNotEmpty(Collection collection) {
+		if(collection == null || collection.isEmpty()) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * @param object
+	 * @return
+	 */
+	public static boolean isEmpty(Object object) {
+		if(object == null) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean isNotEmpty(Object object) {
+		if(object == null) {
+			return false;
+		}
+		
+		return true;
+	}
 }

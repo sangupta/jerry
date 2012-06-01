@@ -21,6 +21,13 @@
 
 package com.sangupta.jerry.http;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.HttpHeaders;
+
 
 /**
  * Class that encapsulates the response information obtained from invoking a HTTP URL. 
@@ -37,7 +44,7 @@ public class WebResponse {
     /**
      * The response message returned by the webservice invocation.
      */
-    private String responseMessage;
+    private String message;
     
     /**
      * The response body returned by the webservice invocation.
@@ -45,24 +52,77 @@ public class WebResponse {
     private byte[] bytes;
     
     /**
-     * The content that was received as part of the response body
+     * The charset of the content received
      */
-    private String content;
+    private String charSet;
     
-    /**
-     * The reponse content type as returned by the webservice invocation.
-     */
     private String contentType;
     
     /**
-     * The last modified header in case it was specified
+     * The response headers received
      */
-    private long lastModified;
+    private Map<String, String> headers;
     
     /**
      * The size of the response
      */
     private long size;
+    
+    /**
+     * Utility method to add a header to this response
+     * 
+     * @param header
+     * @param value
+     */
+    public void addResponseHeader(String header, String value) {
+    	if(headers == null) {
+    		headers = new HashMap<String, String>();
+    	}
+    	
+    	headers.put(header, value);
+    }
+    
+    public String getContent() {
+    	if(this.bytes != null) {
+        	if(this.charSet != null) {
+        		try {
+					return new String(this.bytes, charSet);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+        	}
+
+        	return new String(this.bytes);
+    	}
+    	
+    	return null;
+    }
+    
+    /**
+     * Return the last modified date as a long value
+     * 
+     * @return
+     */
+    public long getLastModified() {
+    	String headerValue = getHeader(HttpHeaders.LAST_MODIFIED);
+    	if(headerValue != null) {
+    		try {
+    			return Date.parse(headerValue);
+    		} catch(Exception e) {
+    			// eat this up
+    		}
+    	}
+    	
+    	return -1;
+    }
+    
+    private String getHeader(String headerName) {
+    	if(headers == null) {
+    		return null;
+    	}
+    	
+    	return headers.get(headerName);
+    }
     
     // Usual accessor's follow
 
@@ -83,52 +143,6 @@ public class WebResponse {
     public void setResponseCode(int responseCode) {
         this.responseCode = responseCode;
     }
-
-    /** 
-     * Returns the responseMessage.
-     *
-     * @return the responseMessage.
-     */
-    public String getResponseMessage() {
-        return this.responseMessage;
-    }
-
-    /** 
-     * Sets the responseMessage to the specified value.
-     *
-     * @param responseMessage responseMessage to set.
-     */
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-	/**
-	 * @return the contentType
-	 */
-	public String getContentType() {
-		return contentType;
-	}
-
-	/**
-	 * @param contentType the contentType to set
-	 */
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
-
-	/**
-	 * @return the lastModified
-	 */
-	public long getLastModified() {
-		return lastModified;
-	}
-
-	/**
-	 * @param lastModified the lastModified to set
-	 */
-	public void setLastModified(long lastModified) {
-		this.lastModified = lastModified;
-	}
 
 	/**
 	 * @return the size
@@ -161,17 +175,59 @@ public class WebResponse {
 	}
 
 	/**
-	 * @return the content
+	 * @return the message
 	 */
-	public String getContent() {
-		return content;
+	public String getMessage() {
+		return message;
 	}
 
 	/**
-	 * @param content the content to set
+	 * @param message the message to set
 	 */
-	public void setContent(String content) {
-		this.content = content;
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the headers
+	 */
+	public Map<String, String> getHeaders() {
+		return headers;
+	}
+
+	/**
+	 * @param headers the headers to set
+	 */
+	public void setHeaders(Map<String, String> headers) {
+		this.headers = headers;
+	}
+
+	/**
+	 * @return the contentType
+	 */
+	public String getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * @param contentType the contentType to set
+	 */
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+
+	/**
+	 * @return the charSet
+	 */
+	public String getCharSet() {
+		return charSet;
+	}
+
+	/**
+	 * @param charSet the charSet to set
+	 */
+	public void setCharSet(String charSet) {
+		this.charSet = charSet;
 	}
 
 }

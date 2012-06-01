@@ -23,7 +23,6 @@ package com.sangupta.jerry.http;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -164,6 +163,7 @@ public class WebInvoker {
             	contentType = "";
             }
             
+            // get response size
         	long size;
             if(entity != null) {
 				size = entity.getContentLength();
@@ -183,38 +183,22 @@ public class WebInvoker {
             	size = value;
             }
             
-            long lastModified = 0;
-            try {
-            	headerValue = getResponseHeaderValue(httpResponse, HttpHeaders.LAST_MODIFIED);
-            	if(headerValue != null) {
-            		lastModified = Date.parse(headerValue);
-            	}
-            } catch(Exception e) {
-            	logger.error("Unable to parse last modified date: " + headerValue, e);
-            }
-            
-            String response = null;
+            // get the response bytes
+        	String charSet = null;
             byte[] responseBytes = null;
             if(entity != null) {
             	responseBytes = EntityUtils.toByteArray(entity);
+				charSet = EntityUtils.getContentCharSet(entity);
             	
-            	if(responseBytes != null) {
-	            	String charSet = EntityUtils.getContentCharSet(entity);
-	            	if(charSet != null) {
-	            		response = new String(responseBytes, charSet);
-	            	} else {
-	            		response = new String(responseBytes);
-	            	}
-            	}
             }
-
+            
             // process response cookies only if cookies were sent via the client side
             if (logger.isDebugEnabled()) {
                 logger.debug("Response code: " + responseCode);
                 logger.debug("Response message: " + responseMessage);
                 logger.debug("Content Type: " + contentType);
-                logger.debug("Last Modified: " + lastModified);
                 logger.debug("Content Length: " + size);
+                logger.debug("CharSet: " + charSet);
             }
             
             logger.info("Webservice invocation returned with response code of " + responseCode);
@@ -223,12 +207,19 @@ public class WebInvoker {
 			webResponse = new WebResponse();
             
             webResponse.setResponseCode(responseCode);
-            webResponse.setResponseMessage(responseMessage);
-            webResponse.setContent(response);
+            webResponse.setMessage(responseMessage);
+            webResponse.setCharSet(charSet);
             webResponse.setContentType(contentType);
-            webResponse.setLastModified(lastModified);
             webResponse.setSize(size);
             webResponse.setBytes(responseBytes);
+            
+            // add response headers
+            final Header[] responseHeaders = httpResponse.getAllHeaders();
+            if(AssertUtils.isNotEmpty(responseHeaders)) {
+            	for(Header header : responseHeaders) {
+            		webResponse.addResponseHeader(header.getName(), header.getValue());
+            	}
+            }
             
     	} catch (ClientProtocolException e) {
     		logger.error("Exception invoking the webservice: " + uri, e);
@@ -250,24 +241,6 @@ public class WebInvoker {
 		if(httpClient == null) {
 			throw new RuntimeException("Unable to fetch a valid instance of HttpClient");
 		}
-	}
-
-	/**
-     * Return the value of the given response header
-     *  
-     * @param response
-     * @param headerName
-     * @return
-     */
-	private static String getResponseHeaderValue(HttpResponse response, String headerName) {
-		if(response != null) {
-			Header header = response.getFirstHeader(headerName);
-			if(header != null) {
-				return header.getValue();
-			}
-		}
-		
-		return null;
 	}
 
 	/**
