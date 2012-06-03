@@ -24,6 +24,8 @@ package com.sangupta.jerry.mongodb;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.mapping.model.BeanWrapper;
@@ -60,13 +62,14 @@ import com.sangupta.jerry.util.AssertUtils;
  * @author sangupta
  *
  */
-public abstract class MongoTemplateBasicOperations<T, X> {
+public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplateBasicService<T, X> {
 	
 	private MappingContext<? extends MongoPersistentEntity<?>, MongoPersistentProperty> mappingContext = null;
 	
 	private ConversionService conversionService = null;
 
-	private MongoTemplate mongoTemplate = null;
+	@Autowired
+	protected MongoTemplate mongoTemplate = null;
 	
 	private Class<T> entityClass = null;
 	
@@ -104,7 +107,7 @@ public abstract class MongoTemplateBasicOperations<T, X> {
 		
 		X primaryID = getPrimaryID(entity);
 		if(primaryID != null) {
-			if(!allowEmptyOrZeroID() && AssertUtils.isNotEmpty(primaryID)) {
+			if(!allowEmptyOrZeroID() && AssertUtils.isEmpty(primaryID)) {
 				return false;
 			}
 		}
@@ -239,6 +242,21 @@ public abstract class MongoTemplateBasicOperations<T, X> {
 			this.entityClass = (Class<T>) actualTypeArguments[0];
 			this.primaryIDClass = (Class<X>) actualTypeArguments[1];
 		}
+	}
+
+	/**
+	 * @return the mongoTemplate
+	 */
+	public MongoTemplate getMongoTemplate() {
+		return mongoTemplate;
+	}
+
+	/**
+	 * @param mongoTemplate the mongoTemplate to set
+	 */
+	@Required
+	public void setMongoTemplate(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
 	}
 	
 }
