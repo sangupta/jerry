@@ -35,19 +35,6 @@ public class AssertUtils {
 	}
 
 	/**
-	 * @param headerValue
-	 * @return
-	 */
-	@SuppressWarnings("rawtypes")
-	public static boolean isNotEmpty(Map headers) {
-		if(headers == null || headers.isEmpty()) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
 	 * 
 	 * @param array
 	 * @return
