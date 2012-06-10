@@ -60,10 +60,22 @@ import com.sangupta.jerry.util.AssertUtils;
  */
 public class WebInvoker {
 	
+	/**
+	 * Internal handle to the http client instance
+	 */
 	private static HttpClient httpClient = null;
 	
+	/**
+	 * My private logger
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(WebInvoker.class);
 	
+	/**
+	 * Return the HTTP response body for a GET request to the given URL.
+	 * 
+	 * @param url
+	 * @return
+	 */
 	public static String fetchResponse(String url) {
 		WebResponse response = invokeUrl(null, WebRequestMethod.GET, null, null);
 		if(response != null) {
@@ -73,10 +85,35 @@ public class WebInvoker {
 		return null;
 	}
 	
+	/**
+	 * Return the entire response for a GET request to the given URL.
+	 *  
+	 * @param url
+	 * @return
+	 */
 	public static WebResponse getResponse(String url) {
 		return invokeUrl(url, WebRequestMethod.GET, null, null);
 	}
 	
+	/**
+	 * Returns the HTTP headers etc by making a HEAD request to the given URL
+	 * 
+	 * @param url
+	 */
+	public static WebResponse getHeaders(String url) {
+		return invokeUrl(url, WebRequestMethod.HEAD, null, null);
+	}
+	
+	/**
+	 * Invoke the given URL by the specified method, supplying the header and params as specified and return
+	 * the entire HTTP response.
+	 * 
+	 * @param uri
+	 * @param method
+	 * @param headers
+	 * @param params
+	 * @return
+	 */
 	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final Map<String, String> headers, final Map<String, String> params) {
     	if(AssertUtils.isEmpty(uri)) {
     		return null;

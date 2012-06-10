@@ -56,6 +56,9 @@ public class WebResponse {
      */
     private String charSet;
     
+    /**
+     * The content-type as specified by the server
+     */
     private String contentType;
     
     /**
