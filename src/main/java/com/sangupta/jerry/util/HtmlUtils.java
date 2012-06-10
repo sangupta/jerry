@@ -31,6 +31,12 @@ import net.htmlparser.jericho.Attributes;
 import net.htmlparser.jericho.Source;
 import net.htmlparser.jericho.StartTag;
 
+/**
+ * Utility functions around HTML code.
+ * 
+ * @author sangupta
+ *
+ */
 public class HtmlUtils {
 	
 	/**

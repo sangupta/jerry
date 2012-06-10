@@ -24,8 +24,24 @@ package com.sangupta.jerry.util;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * Common assertion functions that are null safe. These may not be
+ * performant for common Java data types like {@link String} due
+ * to the extra overhead of a method call.
+ * 
+ * @author sangupta
+ *
+ */
 public class AssertUtils {
 	
+	/**
+	 * Check if a given string is <code>null</code> or zero-length.
+	 * Returns <code>false</code> even if the string contains white
+	 * spaces.
+	 * 
+	 * @param string
+	 * @return
+	 */
 	public static boolean isEmpty(String string) {
 		if(string == null || string.length() == 0) {
 			return true;
