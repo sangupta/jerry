@@ -150,6 +150,24 @@ public class UriUtils {
 	}
 
 	/**
+	 * Extract the filename from the URL.
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static String extractFileName(String url) {
+		int index = url.lastIndexOf('/');
+		
+		if(index == -1) {
+			return null;
+		}
+		
+		return url.substring(index + 1);
+	}
+
+	/**
+	 * Extract the extension from the URL
+	 * 
 	 * @param url
 	 * @return
 	 */
@@ -334,4 +352,5 @@ public class UriUtils {
             return string;
         }
     }
+
 }
