@@ -42,6 +42,7 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -77,7 +78,7 @@ public class WebInvoker {
 	 * @return
 	 */
 	public static String fetchResponse(String url) {
-		WebResponse response = invokeUrl(null, WebRequestMethod.GET, null, null);
+		WebResponse response = invokeUrl(null, WebRequestMethod.GET, (String) null, null);
 		if(response != null) {
 			return response.getContent();
 		}
@@ -92,7 +93,7 @@ public class WebInvoker {
 	 * @return
 	 */
 	public static WebResponse getResponse(String url) {
-		return invokeUrl(url, WebRequestMethod.GET, null, null);
+		return invokeUrl(url, WebRequestMethod.GET, (String) null, null);
 	}
 	
 	/**
@@ -101,7 +102,7 @@ public class WebInvoker {
 	 * @param url
 	 */
 	public static WebResponse getHeaders(String url) {
-		return invokeUrl(url, WebRequestMethod.HEAD, null, null);
+		return invokeUrl(url, WebRequestMethod.HEAD, (String) null, null);
 	}
 	
 	/**
@@ -115,8 +116,38 @@ public class WebInvoker {
 	 * @return
 	 */
 	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final Map<String, String> headers, final Map<String, String> params) {
+		return invokeUrl(uri, method, headers, params, null, null);
+	}
+	
+	/**
+	 * 
+	 * @param uri
+	 * @param method
+	 * @param requestContentType
+	 * @param requestBody
+	 * @return
+	 */
+	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final String requestContentType, final String requestBody) {
+		return invokeUrl(uri, method, null, null, requestContentType, requestBody);
+	}
+
+	/**
+	 * 
+	 * @param uri
+	 * @param method
+	 * @param headers
+	 * @param params
+	 * @param requestContentType
+	 * @param requestBody
+	 * @return
+	 */
+	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final Map<String, String> headers, final Map<String, String> params, final String requestContentType, final String requestBody) {
     	if(AssertUtils.isEmpty(uri)) {
     		return null;
+    	}
+    	
+    	if(AssertUtils.isNotEmpty(requestBody) && method != WebRequestMethod.POST) {
+    		throw new IllegalArgumentException("Request body can only be sent with POST request.");
     	}
     	
     	HttpRequestBase requestMethod = null;
@@ -177,6 +208,16 @@ public class WebInvoker {
     				
     				requestMethod.setParams(hp);
     			}
+    		}
+    		
+    		// set the request content type
+    		if(AssertUtils.isNotEmpty(requestContentType)) {
+    			requestMethod.setHeader("Content-Type", requestContentType);
+    		}
+    		
+    		// set the request body if applicable
+    		if(AssertUtils.isNotEmpty(requestBody)) {
+    			((HttpPost) requestMethod).setEntity(new StringEntity(requestBody));
     		}
     		
     		// check for availability of httpClient
