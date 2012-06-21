@@ -148,6 +148,33 @@ public class UriUtils {
 		
 		return buffer.toString();
 	}
+	
+	public static String extractName(String url) {
+		int index1 = url.indexOf('?');
+		int index2 = url.indexOf('#');
+		
+		if(index1 == -1) {
+			index1 = url.length() + 1;
+		}
+		
+		if(index2 == -1) {
+			index2 = url.length() + 1;
+		}
+		
+		int index = Math.min(index1, index2);
+		if(index < url.length()) {
+			url = url.substring(0, index);
+		}
+		
+		index1 = url.lastIndexOf('/');
+		index2 = url.lastIndexOf('\\');
+		
+		index = Math.max(index1, index2);
+		
+		url = url.substring(index + 1);
+		
+		return url;
+	}
 
 	/**
 	 * @param url
