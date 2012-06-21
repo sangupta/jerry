@@ -189,9 +189,5 @@ public class ZipUtils {
 	        e.printStackTrace();
 	    }
 	}
-	
-	public static void main(String[] args) {
-		extractZipToFolder(new File("c:/temp/t.zip"), new File("c:/temp"));
-	}
 
 }
