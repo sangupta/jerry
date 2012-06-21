@@ -233,6 +233,13 @@ public class UriUtils {
 			return taintedURL;
 		}
 		
+		int hasProtocol = taintedURL.indexOf("://");
+		if(hasProtocol == -1) {
+			// no protocol found
+			// append HTTP to the URL
+			taintedURL = "http://" + taintedURL;
+		}
+		
 		final URL url;
         try {
             url = new URL(taintedURL);
