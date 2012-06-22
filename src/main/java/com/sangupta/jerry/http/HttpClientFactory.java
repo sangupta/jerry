@@ -83,7 +83,7 @@ public class HttpClientFactory {
 	/**
 	 * Specifies if we need to use caching during connections or not
 	 */
-	private static boolean enableCaching = true;
+	public static boolean enableCaching = true;
 	
 	/**
 	 * Specifies whether we need to allow all SSL hostnames or not

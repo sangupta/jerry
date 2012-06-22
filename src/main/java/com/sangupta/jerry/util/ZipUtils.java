@@ -37,6 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Utility functions to work around ZIP files.
+ * 
  * @author sangupta
  *
  */
@@ -139,6 +141,53 @@ public class ZipUtils {
         }
         
         return zipFilename;	
+	}
+	
+	/**
+	 * Extract the given ZIP file into the given destination folder.
+	 * 
+	 * @param zipFile file to extract
+	 * @param baseFolder destination folder to extract in
+	 */
+	public static void extractZipToFolder(File zipFile, File baseFolder) {
+		try {
+			byte[] buf = new byte[1024];
+	        
+			ZipInputStream zipinputstream = new ZipInputStream(new FileInputStream(zipFile));
+	        ZipEntry zipentry = zipinputstream.getNextEntry();
+	        
+	        while (zipentry != null) {
+	            // for each entry to be extracted
+	            String entryName = zipentry.getName();
+	            
+	            entryName = entryName.replace('/', File.separatorChar);
+	            entryName = entryName.replace('\\', File.separatorChar);
+	            
+	            int numBytes;
+	            FileOutputStream fileoutputstream;
+	            File newFile = new File(baseFolder, entryName);
+	            if (zipentry.isDirectory()) {
+	                if (!newFile.mkdirs()) {
+	                    break;
+	                }
+	                zipentry = zipinputstream.getNextEntry();
+	                continue;
+	            }
+
+	            fileoutputstream = new FileOutputStream(newFile);
+	            while ((numBytes = zipinputstream.read(buf, 0, 1024)) > -1) {
+	                fileoutputstream.write(buf, 0, numBytes);
+	            }
+
+	            fileoutputstream.close();
+	            zipinputstream.closeEntry();
+	            zipentry = zipinputstream.getNextEntry();
+	        }
+
+	        zipinputstream.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 }

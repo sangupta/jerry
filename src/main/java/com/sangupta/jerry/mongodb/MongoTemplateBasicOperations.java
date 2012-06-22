@@ -75,6 +75,10 @@ public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplat
 	
 	private Class<X> primaryIDClass = null;
 	
+	/**
+	 * Default constructor that goes ahead and infers the entity class via
+	 * generics - it will be needed with {@link MongoTemplate} while working.
+	 */
 	public MongoTemplateBasicOperations() {
 		inferEntityClassViaGenerics();
 	}
@@ -243,6 +247,8 @@ public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplat
 			this.primaryIDClass = (Class<X>) actualTypeArguments[1];
 		}
 	}
+	
+	// Usual accessors follow
 
 	/**
 	 * @return the mongoTemplate
