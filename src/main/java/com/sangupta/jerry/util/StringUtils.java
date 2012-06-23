@@ -22,12 +22,22 @@
 package com.sangupta.jerry.util;
 
 /**
+ * Utility functions around {@link String} objects.
+ * 
  * @author sangupta
  *
  */
 public class StringUtils {
 	
+	/**
+	 * An empty string object containing nothing.
+	 */
 	public static final String EMPTY_STRING = "";
+	
+	/**
+	 * A blank string containing one blank white-space character.
+	 */
+	public static final String BLANK_STRING = " ";
 	
 	/**
 	 * Function to give a HEX representation of the byte array.
