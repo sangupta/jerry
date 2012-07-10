@@ -38,6 +38,11 @@ public class StringUtils {
 	 * A blank string containing one blank white-space character.
 	 */
 	public static final String BLANK_STRING = " ";
+
+	/**
+	 * Defines the platform dependent line encoding
+	 */
+	public static final String SYSTEM_NEW_LINE = System.getProperty("line.separator");
 	
 	/**
 	 * Function to give a HEX representation of the byte array.
