@@ -142,11 +142,11 @@ public class HtmlUtils {
 	 * 
 	 * Tags such as <code>br</code> are skipped for closing.
 	 * 
-	 * @param content
-	 * @param length
-	 * @return
+	 * @param content the HTML content that you want to trim down
+	 * @param length the desired length of the text field
+	 * @return the HTML code that contains text trimmed down to said length
 	 */
-	public static String strip(String content, int length) {
+	public static String trimHTML(String content, int length) {
 		int currentIndex = 0;
 		int chosenTextLength = 0;
 		String tag;
