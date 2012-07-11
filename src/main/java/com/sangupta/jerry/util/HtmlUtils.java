@@ -24,6 +24,7 @@ package com.sangupta.jerry.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.Map.Entry;
 
 import net.htmlparser.jericho.Attribute;
@@ -134,5 +135,86 @@ public class HtmlUtils {
 		
 		return values;
 	}
-
+	
+	/**
+	 * Strip the given HTML content to specified text length. All opening
+	 * tags are then closed to make sure that the HTML is perfectly safe.
+	 * 
+	 * Tags such as <code>br</code> are skipped for closing.
+	 * 
+	 * @param content
+	 * @param length
+	 * @return
+	 */
+	public static String strip(String content, int length) {
+		int currentIndex = 0;
+		int chosenTextLength = 0;
+		String tag;
+		Stack<String> tags = new Stack<String>();
+		do {
+			int index = content.indexOf('<', currentIndex);
+			if(index > currentIndex) {
+				chosenTextLength += (index - currentIndex - 1);
+				currentIndex = index;
+			}
+			
+			if(chosenTextLength >= length) {
+				break;
+			}
+			
+			if(index != -1) {
+				index = content.indexOf('>', index);
+				tag = content.substring(currentIndex + 1, index);
+				if(!tag.startsWith("/")) {
+					if(tag.endsWith("/")) {
+						tag = tag.substring(0, tag.length() - 1);
+					}
+					
+					tags.push(tag.trim());
+				} else {
+					tag = tag.substring(1);
+					do {
+						if(tags.size() == 0) {
+							break;
+						}
+						
+						String pop = tags.pop();
+						if(pop.equalsIgnoreCase(tag)) {
+							break;
+						}
+					} while(true);
+				}
+				
+				currentIndex = index;
+			}
+			
+			if(index == -1) {
+				break;
+			}
+		} while(true);
+		
+		if(chosenTextLength > length) {
+			int subtract = chosenTextLength - length;
+			currentIndex = currentIndex - subtract;
+		}
+		
+		if(tags.size() == 0) {
+			return content.substring(0, currentIndex);
+		}
+		
+		StringBuilder builder = new StringBuilder(content.substring(0, currentIndex));
+		int size = tags.size();
+		for(int index = 0; index < size; index++) {
+			tag = tags.pop();
+			
+			if(!"br".equalsIgnoreCase(tag)) {
+				builder.append("</");
+				builder.append(tag);
+				builder.append('>');
+			}
+		}
+		
+		return builder.toString();
+	}
+	
 }
