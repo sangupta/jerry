@@ -35,6 +35,7 @@ import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty;
 import org.springframework.data.mongodb.core.query.Query;
 
+import com.sangupta.jerry.db.DatabaseBasicOperationsService;
 import com.sangupta.jerry.util.AssertUtils;
 
 /**
@@ -62,7 +63,7 @@ import com.sangupta.jerry.util.AssertUtils;
  * @author sangupta
  *
  */
-public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplateBasicService<T, X> {
+public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasicOperationsService<T, X> {
 	
 	private MappingContext<? extends MongoPersistentEntity<?>, MongoPersistentProperty> mappingContext = null;
 	
