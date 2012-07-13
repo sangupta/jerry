@@ -3,6 +3,14 @@ jerry
 
 `jerry` framework provides much of the common functionality that is used in a standard Java application like checking for application updates, providing template classes for CRUD operations with MongoDB, working with Quartz scheduler, and utility classes to work with HTML, cookies, JSON, XML, reflection, URIs, web and much more.
 
+Features
+--------
+* Collection of utility classes
+* Powerful HTTP framework for handling web requests
+* MongoDB abstract class for writing CRUD operations on objects with single line of code
+* Quartz scheduling framework
+* Basic security framework classes
+
 Dependencies
 ------------
 
@@ -22,6 +30,19 @@ Besides these, `jerry` also uses the following libraries (as in Maven `provided`
 * XStream XML parsing library
 
 The difference in `direct` and `provided` dependency stems from the fact on usage. For example, you will only use `HibernateUtils` class when using Hibernate in your project, and thus we don't declare that as a direct dependency. This helps us keep the size of the `jerry` library small.
+
+Continuous Integration
+----------------------
+The library is continuously integrated and unit tested using the *Travis CI system.
+
+Current status of branch `MASTER`: [![Build Status](https://secure.travis-ci.org/sangupta/jerry.png?branch=master)](http://travis-ci.org/sangupta/jerry)
+
+The library is tested against
+
+* Oracle JDK 7
+* Oracle JDK 6
+* Open JDK 7
+* Open JDK 6
 
 Versioning
 ----------
