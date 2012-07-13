@@ -21,6 +21,8 @@
 
 package com.sangupta.jerry.db;
 
+import java.util.List;
+
 /**
  * Interface that and database-based service implements for common
  * CRUD operations in a database and provides an abstraction layer
@@ -80,4 +82,27 @@ public interface DatabaseBasicOperationsService<T, X> {
 	 */
 	public long count();
 
+	/**
+	 * Retrieves a list of all entities in the datastore.
+	 * 
+	 * <b>Note:</b> If there are too many entities in the data store, the code
+	 * may go out of memory or may take too long to complete. This method should
+	 * be used only by developers at discretion.
+	 * 
+	 * It is recommended not to use this method in production instances. Rather, use
+	 * the method {@link #getEntities(int, int)}.
+	 * 
+	 * @return
+	 */
+	public List<T> getAllEntities();
+
+	/**
+	 * Retrieves a list of entities for the given page number with the give page
+	 * size. The page numbering starts from 1.
+	 * 
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public List<T> getEntities(int page, int pageSize);
 }
