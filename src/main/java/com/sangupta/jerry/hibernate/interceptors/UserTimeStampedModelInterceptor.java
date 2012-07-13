@@ -39,6 +39,11 @@ import com.sangupta.jerry.security.SecurityContext;
 public class UserTimeStampedModelInterceptor extends EmptyInterceptor {
 	
 	/**
+	 * Generated via Eclipse
+	 */
+	private static final long serialVersionUID = -613609435007727874L;
+
+	/**
 	 * Interceptor method called on every save operation to set the last udpated
 	 * user and timestamp on entities that implement the {@link UserTimeStampedModel} contract.
 	 * 

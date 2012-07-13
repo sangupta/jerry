@@ -23,6 +23,7 @@ package com.sangupta.jerry.mongodb;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -35,6 +36,7 @@ import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty;
 import org.springframework.data.mongodb.core.query.Query;
 
+import com.sangupta.jerry.db.DatabaseBasicOperationsService;
 import com.sangupta.jerry.util.AssertUtils;
 
 /**
@@ -62,7 +64,7 @@ import com.sangupta.jerry.util.AssertUtils;
  * @author sangupta
  *
  */
-public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplateBasicService<T, X> {
+public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasicOperationsService<T, X> {
 	
 	private MappingContext<? extends MongoPersistentEntity<?>, MongoPersistentProperty> mappingContext = null;
 	
@@ -89,6 +91,7 @@ public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplat
 	 * @param primaryID
 	 * @return
 	 */
+	@Override
 	public T get(X primaryID) {
 		if(primaryID == null) {
 			return null;
@@ -99,11 +102,33 @@ public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplat
 	}
 	
 	/**
+	 * 
+	 */
+	@Override
+	public List<T> getAllEntities() {
+		return this.mongoTemplate.findAll(this.entityClass);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<T> getEntities(int page, int pageSize) {
+		Query query = new Query();
+		query.limit(pageSize);
+		if(page > 1) {
+			query.skip((page - 1) * pageSize);
+		}
+		return this.mongoTemplate.find(query, this.entityClass);
+	}
+	
+	/**
 	 * Insert the object into the data store. 
 	 * 
 	 * @param entity
 	 * @return
 	 */
+	@Override
 	public boolean insert(T entity) {
 		if(entity == null) {
 			return false;
@@ -126,6 +151,7 @@ public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplat
 	 * @param entity
 	 * @return
 	 */
+	@Override
 	public boolean update(T entity) {
 		if(entity == null) {
 			return false;
@@ -150,6 +176,7 @@ public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplat
 	 * @param object
 	 * @return
 	 */
+	@Override
 	public boolean addOrUpdate(T object) {
 		if(object == null) {
 			return false;
@@ -173,6 +200,7 @@ public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplat
 	 * @param primaryID
 	 * @return
 	 */
+	@Override
 	public T delete(X primaryID) {
 		if(primaryID == null) {
 			return null;
@@ -192,6 +220,7 @@ public abstract class MongoTemplateBasicOperations<T, X> implements MongoTemplat
 	 * 
 	 * @return
 	 */
+	@Override
 	public long count() {
 		long items = this.mongoTemplate.count(new Query(), this.entityClass);
 		return items;
