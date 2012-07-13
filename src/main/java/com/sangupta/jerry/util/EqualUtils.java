@@ -30,9 +30,12 @@ public class EqualUtils {
 	/**
 	 * Tests if two byte arrays are equal in content or not.
 	 * 
-	 * @param bytes1
-	 * @param bytes2
-	 * @return
+	 * @param bytes1 the first byte array
+	 * 
+	 * @param bytes2 the second byte array
+	 * 
+	 * @return <code>true</code> if arrays are equal in object or content,
+	 * <code>false</code> otherwise
 	 */
 	public static boolean equals(byte[] bytes1, byte[] bytes2) {
 		if(bytes1 == null || bytes2 == null) {
@@ -54,6 +57,20 @@ public class EqualUtils {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Test if two byte arrays are not equal in all respects.
+	 * 
+	 * @param bytes1 the first byte array
+	 * 
+	 * @param bytes2 the second byte array
+	 * 
+	 * @return <code>true</code> if arrays are not equal, <code>false</code>
+	 * otherwise
+	 */
+	public static boolean notEquals(byte[] bytes1, byte[] bytes2) {
+		return !equals(bytes1, bytes2);
 	}
 
 }

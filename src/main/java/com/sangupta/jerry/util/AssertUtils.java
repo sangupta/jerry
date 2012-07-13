@@ -49,6 +49,21 @@ public class AssertUtils {
 		
 		return false;
 	}
+	
+	/**
+	 * Check if a given string is <code>non null</code> and non-zero
+	 * length. Whitespaces are considered to be non-empty.
+	 * 
+	 * @param string
+	 * @return
+	 */
+	public static boolean isNotEmpty(String string) {
+		if(string == null || string.length() == 0) {
+			return false;
+		}
+		
+		return true;
+	}
 
 	/**
 	 * 
@@ -60,7 +75,7 @@ public class AssertUtils {
 			return true;
 		}
 		
-		return true;
+		return false;
 	}
 
 	/**
