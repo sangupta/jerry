@@ -42,7 +42,8 @@ The library is tested against
 * Oracle JDK 7
 * Oracle JDK 6
 * Open JDK 7
-* Open JDK 6
+
+Note: Build are not tested against `Open JDK 6` because of a compilation failure in code on generics. It does not seem to be a code issue as it passes on `Oracle JDK 6`. Will fix the error once I get to know more on the cause and its remedy.
 
 Versioning
 ----------
