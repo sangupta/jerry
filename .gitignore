@@ -33,3 +33,5 @@ docs/*
 target/*
 
 # Project specific
+.settings/*
+nosubmit/*
