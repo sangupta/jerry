@@ -23,6 +23,8 @@ package com.sangupta.jerry.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -386,5 +388,22 @@ public class UriUtils {
             return string;
         }
     }
+
+	/**
+	 * Extract the host value from the URL.
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static String extractHost(String url) {
+		try {
+			URI uri = new URI(url);
+			return uri.getHost();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 
 }
