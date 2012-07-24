@@ -51,17 +51,11 @@ public class StringUtils {
 	 * @return the HEX coded string representing the byte array
 	 */
 	public static String getHex(byte bytes[]) {
-		StringBuilder o = new StringBuilder(bytes.length * 3);
-		for (int i = 0; i < bytes.length; i++) {
-			int n = (int) bytes[i] & 0xff;
-			o.append("%");
-			if (n < 0x10) {
-				o.append("0");
-			}
-			o.append(Long.toString(n, 16).toUpperCase());
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < bytes.length; ++i) {
+			sb.append(Integer.toHexString((bytes[i] & 0xFF) | 0x100).substring(1, 3));
 		}
-		
-		return o.toString();
+		return sb.toString();
 	}
 
 }
