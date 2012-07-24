@@ -35,9 +35,11 @@ public class CryptoUtil {
 	/**
 	 * Computes the MD5 hash of the given data.
 	 * 
-	 * @param data
-	 * @return
-	 * @throws NoSuchAlgorithmException
+	 * @param data the data for which the hash needs to be computed
+	 * 
+	 * @return the hash represented in a byte-array
+	 * 
+	 * @throws NoSuchAlgorithmException when no provider for MD5 algorithm is found
 	 */
 	public static byte[] getMD5(byte[] data) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("MD5");
@@ -49,9 +51,11 @@ public class CryptoUtil {
 	 * Computes the MD5 hash of the given data and returns 
 	 * the representation in Hex format.
 	 * 
-	 * @param data
-	 * @return
-	 * @throws NoSuchAlgorithmException
+	 * @param data the data for which the hash needs to be computed
+	 * 
+	 * @return the hash represented as String in hex-format
+	 * 
+	 * @throws NoSuchAlgorithmException when no provider for MD5 algorithm is found
 	 */
 	public static String getMD5Hex(byte[] data) throws NoSuchAlgorithmException {
 		byte[] digest = getMD5(data);
@@ -61,9 +65,11 @@ public class CryptoUtil {
 	/**
 	 * Computes the SHA-1 hash of the given data.
 	 * 
-	 * @param data
-	 * @return
-	 * @throws NoSuchAlgorithmException
+	 * @param data the data for which the hash needs to be computed
+	 * 
+	 * @return the hash represented in a byte-array
+	 * 
+	 * @throws NoSuchAlgorithmException when no provider for SHA-1 algorithm is found
 	 */
 	public static byte[] getSHA1(byte[] data) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -75,9 +81,11 @@ public class CryptoUtil {
 	 * Computes the SHA-1 hash of the given data and returns the
 	 * representation in Hex format.
 	 * 
-	 * @param data
-	 * @return
-	 * @throws NoSuchAlgorithmException
+	 * @param data the data for which the hash needs to be computed
+	 * 
+	 * @return the hash represented as String in hex-format
+	 * 
+	 * @throws NoSuchAlgorithmException when no provider for SHA-1 algorithm is found
 	 */
 	public static String getSHA1Hex(byte[] data) throws NoSuchAlgorithmException {
 		byte[] digest = getSHA1(data);
@@ -87,9 +95,11 @@ public class CryptoUtil {
 	/**
 	 * Computes the SHA-256 hash of the given data.
 	 * 
-	 * @param data
-	 * @return
-	 * @throws NoSuchAlgorithmException
+	 * @param data the data for which the hash needs to be computed
+	 * 
+	 * @return the hash represented in a byte-array
+	 * 
+	 * @throws NoSuchAlgorithmException when no provider for SHA-1 algorithm is found
 	 */
 	public static byte[] getSHA256(byte[] data) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -101,9 +111,11 @@ public class CryptoUtil {
 	 * Computes the SHA-256 hash of the given data and returns the
 	 * representation in Hex format.
 	 * 
-	 * @param data
-	 * @return
-	 * @throws NoSuchAlgorithmException
+	 * @param data the data for which the hash needs to be computed
+	 * 
+	 * @return the hash represented as String in hex-format
+	 * 
+	 * @throws NoSuchAlgorithmException when no provider for SHA-1 algorithm is found
 	 */
 	public static String getSHA256Hex(byte[] data) throws NoSuchAlgorithmException {
 		byte[] digest = getSHA256(data);
