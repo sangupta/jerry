@@ -406,4 +406,34 @@ public class UriUtils {
 		return null;
 	}
 
+	/**
+	 * @param href
+	 * @return
+	 */
+	public static String extractProtocol(String url) {
+		try {
+			URI uri = new URI(url);
+			return uri.getScheme();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	/**
+	 * @param link
+	 * @return
+	 */
+	public static String getBaseUrl(String url) {
+		try {
+			URI uri = new URI(url);
+			return uri.getScheme() + "://" + uri.getHost();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
 }
