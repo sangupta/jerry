@@ -83,4 +83,30 @@ public class CryptoUtil {
 		byte[] digest = getSHA1(data);
 		return StringUtils.getHex(digest);
 	}
+	
+	/**
+	 * Computes the SHA-256 hash of the given data.
+	 * 
+	 * @param data
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static byte[] getSHA256(byte[] data) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		byte[] digest = md.digest(data);
+		return digest;
+	}
+	
+	/**
+	 * Computes the SHA-256 hash of the given data and returns the
+	 * representation in Hex format.
+	 * 
+	 * @param data
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static String getSHA256Hex(byte[] data) throws NoSuchAlgorithmException {
+		byte[] digest = getSHA256(data);
+		return StringUtils.getHex(digest);
+	}
 }
