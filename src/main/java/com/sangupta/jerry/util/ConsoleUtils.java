@@ -39,6 +39,17 @@ public class ConsoleUtils {
 	private static BufferedReader reader;
 	
 	/**
+	 * Function to read a line from the command line
+	 * 
+	 * @param allowEmpty whether empty strings should be accepted as input or not
+	 * 
+	 * @return the String representation of the user input
+	 */
+	public static String readLine(boolean allowEmpty) {
+		return readLine("", allowEmpty);
+	}
+	
+	/**
 	 * Function to read a line from the command line with the given message.
 	 * 
 	 * @param message message to be shown before waiting for user input
@@ -63,6 +74,7 @@ public class ConsoleUtils {
 						reader = new BufferedReader(new InputStreamReader(System.in));
 					}
 					
+					System.out.print(message);
 					line = reader.readLine();
 				} catch (IOException e) {
 					throw new RuntimeException("Unable to read password from standard input", e);
@@ -84,6 +96,18 @@ public class ConsoleUtils {
 		
 		return line;
 	}
+	
+	/**
+	 * Function to read a password from the command line.
+	 * 
+	 * @param allowEmpty whether empty strings should be accepted as input or not
+	 * 
+	 * @return the String representation of the user input
+	 */
+	public static String readPassword(boolean allowEmpty) {
+		return readPassword("", allowEmpty);
+	}
+	
 
 	/**
 	 * Function to read a password from the command line with the given message.
@@ -111,6 +135,7 @@ public class ConsoleUtils {
 						reader = new BufferedReader(new InputStreamReader(System.in));
 					}
 					
+					System.out.print(message);
 					password = reader.readLine();
 				} catch (IOException e) {
 					throw new RuntimeException("Unable to read password from standard input", e);
