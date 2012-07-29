@@ -30,14 +30,34 @@ import java.security.Principal;
  */
 public class SecurityContext {
 	
+	/**
+	 * Thread local instance to store the principal per thread
+	 */
 	private static ThreadLocal<Principal> holder = new ThreadLocal<Principal>();
 	
+	/**
+	 * Setup a principal in this context
+	 *  
+	 * @param principal
+	 */
 	public static void setContext(Principal principal) {
 		holder.set(principal);
 	}
 
+	/**
+	 * Return the currently set principal
+	 * 
+	 * @return
+	 */
 	public static Principal getPrincipal() {
 		return holder.get();
 	}
 	
+	/**
+	 * Clear the security context of set principal
+	 * 
+	 */
+	public static void clearPrincipal() {
+		holder.remove();
+	}
 }

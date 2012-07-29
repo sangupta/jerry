@@ -33,19 +33,46 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class UserAwareHttpServletRequestWrapper extends HttpServletRequestWrapper {
 	
+	/**
+	 * Internal variable to hold the principal.
+	 * 
+	 */
 	protected Principal principal;
 
+	/**
+	 * Convenience constructor
+	 * 
+	 * @param request
+	 */
 	public UserAwareHttpServletRequestWrapper(HttpServletRequest request) {
 		super(request);
 	}
 
+	/**
+	 * Convenience constructor
+	 * 
+	 * @param request
+	 * @param principal
+	 */
 	public UserAwareHttpServletRequestWrapper(HttpServletRequest request, Principal principal) {
 		super(request);
 		this.principal = principal;
 	}
 	
+	/**
+	 * Retrieve the currently signed-in principal.
+	 * 
+	 */
 	@Override
 	public Principal getUserPrincipal() {
 		return this.principal;
+	}
+
+	/**
+	 * Sign-out the currently signed-in principal.
+	 * 
+	 */
+	public void signOutPrincipal() {
+		this.principal = null;
 	}
 }
