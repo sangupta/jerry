@@ -146,7 +146,7 @@ public class HtmlUtils {
 	 * @param length the desired length of the text field
 	 * @return the HTML code that contains text trimmed down to said length
 	 */
-	public static String trimHTML(String content, int length) {
+	public static String trimHTML(final String content, final int length) {
 		int currentIndex = 0;
 		int chosenTextLength = 0;
 		String tag;
@@ -192,6 +192,19 @@ public class HtmlUtils {
 				break;
 			}
 		} while(true);
+		
+		// this implies that the content did not have
+		// any HTML tag in it
+		if(chosenTextLength == 0) {
+			// trim the text to last available word within the length
+			String text = content.substring(0, length);
+			int index = text.lastIndexOf(' ');
+			if(index > -1) {
+				text = text.substring(0, index);
+			}
+			
+			return text;
+		}
 		
 		if(chosenTextLength > length) {
 			int subtract = chosenTextLength - length;
