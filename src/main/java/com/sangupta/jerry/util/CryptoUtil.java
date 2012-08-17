@@ -28,7 +28,7 @@ import java.security.NoSuchAlgorithmException;
  * Provides easier access to cryptographic functions.
  * 
  * @author sangupta
- *
+ * @since 0.2
  */
 public class CryptoUtil {
 	
@@ -37,14 +37,20 @@ public class CryptoUtil {
 	 * 
 	 * @param data the data for which the hash needs to be computed
 	 * 
-	 * @return the hash represented in a byte-array
+	 * @return the hash represented in a byte-array, or <code>null</code> if
+	 * there is no provider available for the given hash algorithm.
 	 * 
-	 * @throws NoSuchAlgorithmException when no provider for MD5 algorithm is found
 	 */
-	public static byte[] getMD5(byte[] data) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("MD5");
-		byte[] digest = md.digest(data);
-		return digest;
+	public static byte[] getMD5(byte[] data) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] digest = md.digest(data);
+			return digest;
+		} catch (NoSuchAlgorithmException e) {
+			// eat up
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -55,11 +61,23 @@ public class CryptoUtil {
 	 * 
 	 * @return the hash represented as String in hex-format
 	 * 
-	 * @throws NoSuchAlgorithmException when no provider for MD5 algorithm is found
 	 */
-	public static String getMD5Hex(byte[] data) throws NoSuchAlgorithmException {
+	public static String getMD5Hex(byte[] data) {
 		byte[] digest = getMD5(data);
+		if(digest == null) {
+			return null;
+		}
+		
 		return StringUtils.getHex(digest);
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getMD5Hex(String data) {
+		return getMD5Hex(data.getBytes());
 	}
 	
 	/**
@@ -69,12 +87,17 @@ public class CryptoUtil {
 	 * 
 	 * @return the hash represented in a byte-array
 	 * 
-	 * @throws NoSuchAlgorithmException when no provider for SHA-1 algorithm is found
 	 */
-	public static byte[] getSHA1(byte[] data) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-1");
-		byte[] digest = md.digest(data);
-		return digest;
+	public static byte[] getSHA1(byte[] data) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			byte[] digest = md.digest(data);
+			return digest;
+		} catch (NoSuchAlgorithmException e) {
+			// eat up
+		}
+		
+		return null;
 	}
 
 	/**
@@ -85,11 +108,23 @@ public class CryptoUtil {
 	 * 
 	 * @return the hash represented as String in hex-format
 	 * 
-	 * @throws NoSuchAlgorithmException when no provider for SHA-1 algorithm is found
 	 */
-	public static String getSHA1Hex(byte[] data) throws NoSuchAlgorithmException {
+	public static String getSHA1Hex(byte[] data) {
 		byte[] digest = getSHA1(data);
+		if(digest == null) {
+			return null;
+		}
+		
 		return StringUtils.getHex(digest);
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getSHA1Hex(String data) {
+		return getSHA1Hex(data.getBytes());
 	}
 	
 	/**
@@ -99,12 +134,17 @@ public class CryptoUtil {
 	 * 
 	 * @return the hash represented in a byte-array
 	 * 
-	 * @throws NoSuchAlgorithmException when no provider for SHA-1 algorithm is found
 	 */
-	public static byte[] getSHA256(byte[] data) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		byte[] digest = md.digest(data);
-		return digest;
+	public static byte[] getSHA256(byte[] data) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] digest = md.digest(data);
+			return digest;
+		} catch(NoSuchAlgorithmException e) {
+			// eat up
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -115,10 +155,205 @@ public class CryptoUtil {
 	 * 
 	 * @return the hash represented as String in hex-format
 	 * 
-	 * @throws NoSuchAlgorithmException when no provider for SHA-1 algorithm is found
 	 */
-	public static String getSHA256Hex(byte[] data) throws NoSuchAlgorithmException {
+	public static String getSHA256Hex(byte[] data) {
 		byte[] digest = getSHA256(data);
+		if(digest == null) {
+			return null;
+		}
+		
 		return StringUtils.getHex(digest);
 	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getSHA256Hex(String data) {
+		return getSHA256Hex(data.getBytes());
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static byte[] getSHA224(byte[] data) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-224");
+			byte[] digest = md.digest(data);
+			return digest;
+		} catch(NoSuchAlgorithmException e) {
+			// eat up
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getSHA224Hex(byte[] data) {
+		byte[] digest = getSHA224(data);
+		if(digest == null) {
+			return null;
+		}
+		
+		return StringUtils.getHex(digest);
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getSHA224Hex(String data) {
+		return getSHA224Hex(data.getBytes());
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static byte[] getSHA384(byte[] data) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-384");
+			byte[] digest = md.digest(data);
+			return digest;
+		} catch(NoSuchAlgorithmException e) {
+			// eat up
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getSHA384Hex(byte[] data) {
+		byte[] digest = getSHA384(data);
+		if(digest == null) {
+			return null;
+		}
+		
+		return StringUtils.getHex(digest);
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getSHA384Hex(String data) {
+		return getSHA384Hex(data.getBytes());
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static byte[] getSHA512(byte[] data) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-512");
+			byte[] digest = md.digest(data);
+			return digest;
+		} catch(NoSuchAlgorithmException e) {
+			// eat up
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getSHA512Hex(byte[] data) {
+		byte[] digest = getSHA512(data);
+		if(digest == null) {
+			return null;
+		}
+		
+		return StringUtils.getHex(digest);
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getSHA512Hex(String data) {
+		return getSHA512Hex(data.getBytes());
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static byte[] getWhirlpool(byte[] data) {
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getWhirlpoolHex(byte[] data) {
+		byte[] digest = getWhirlpool(data);
+		if(digest == null) {
+			return null;
+		}
+		
+		return StringUtils.getHex(digest);
+	}
+	
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getWhirlpoolHex(String data) {
+		return getWhirlpoolHex(data.getBytes());
+	}
+
+	/**
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static byte[] getRipemd160(byte[] data) {
+		return null;
+	}
+	
+	/**
+	 * @param bytes
+	 * @return
+	 */
+	public static String getRipemd160Hex(byte[] data) {
+		byte[] digest = getRipemd160(data);
+		if(digest == null) {
+			return null;
+		}
+		
+		return StringUtils.getHex(digest);
+	}
+
+	/**
+	 * @param text
+	 * @return
+	 */
+	public static String getRipemd160Hex(String data) {
+		return getRipemd160Hex(data.getBytes());
+	}
+
 }
