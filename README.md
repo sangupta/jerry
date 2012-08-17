@@ -11,6 +11,19 @@ Features
 * Quartz scheduling framework
 * Basic security framework classes
 
+Downloads
+---------
+
+The library can be downloaded from Maven Central using:
+
+```xml
+<dependency>
+    <groupId>com.sangupta</groupId>
+    <artifactId>jerry</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
 Dependencies
 ------------
 
