@@ -57,7 +57,9 @@ public class UriUtils {
 	/**
 	 * Function to convert a given string into URI encoded format.
 	 * 
-	 * @param input the source string
+	 * @param input
+	 *            the source string
+	 * 
 	 * @return the encoded string
 	 */
 	public static String encodeURIComponent(String input) {
@@ -151,6 +153,14 @@ public class UriUtils {
 		return buffer.toString();
 	}
 	
+	/**
+	 * Extract the file name from the URL removing the scheme, domain,
+	 * query params and named anchor, if present.
+	 * 
+	 * @param url the URL to be used
+	 * 
+	 * @return extracted filename from the URL
+	 */
 	public static String extractName(String url) {
 		int index1 = url.indexOf('?');
 		int index2 = url.indexOf('#');
@@ -191,7 +201,21 @@ public class UriUtils {
 			return null;
 		}
 		
-		return url.substring(index + 1);
+		url = url.substring(index + 1);
+		
+		// query param
+		int end = url.indexOf('?');
+		if(end != -1) {
+			url = url.substring(0, end);
+		}
+		
+		// anchor name
+		end = url.indexOf('#');
+		if(end != -1) {
+			url = url.substring(0, end);
+		}
+		
+		return url; 
 	}
 
 	/**
@@ -208,7 +232,21 @@ public class UriUtils {
 			return null;
 		}
 		
-		return url.substring(index + 1);
+		url = url.substring(index + 1);
+		
+		// query param
+		int end = url.indexOf('?');
+		if(end != -1) {
+			url = url.substring(0, end);
+		}
+		
+		// anchor name
+		end = url.indexOf('#');
+		if(end != -1) {
+			url = url.substring(0, end);
+		}
+
+		return url;
 	}
 	
 	public static String urlEncode(Map<String, String> params) {
@@ -422,18 +460,54 @@ public class UriUtils {
 	}
 
 	/**
-	 * @param link
-	 * @return
+	 * Extract the base url (scheme + domain) from the given URL.
+	 * 
+	 * @param url
+	 *            the url from which the information needs to be extracted
+	 * 
+	 * @return the base URL as extracted, or <code>null</code> in case the URL
+	 * 		   is empty or cannot be parsed properly.
 	 */
 	public static String getBaseUrl(String url) {
-		try {
-			URI uri = new URI(url);
-			return uri.getScheme() + "://" + uri.getHost();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
+		if(AssertUtils.isEmpty(url)) {
+			return null;
+		}
+
+		int index = url.indexOf("://");
+		index = url.indexOf('/', index + 3);
+		
+		if(index == -1) {
+			return null;
 		}
 		
-		return null;
+		return url.substring(0, index);
+	}
+	
+	/**
+	 * Remove the scheme and domain name from the url and return the entire
+	 * path, query string and name anchor, if present.
+	 * 
+	 * @param url
+	 *            the URL from which the information that needs to be stripped
+	 *            off
+	 * 
+	 * @return the url without scheme and domain, or <code>null</code> in case
+	 *         the URL is empty or cannot be parsed properly.
+	 * 
+	 */
+	public static String removeSchemeAndDomain(String url) {
+		if(AssertUtils.isEmpty(url)) {
+			return null;
+		}
+		
+		int index = url.indexOf("://");
+		index = url.indexOf('/', index + 3);
+		
+		if(index == -1) {
+			return null;
+		}
+		
+		return url.substring(index + 1);
 	}
 
 }
