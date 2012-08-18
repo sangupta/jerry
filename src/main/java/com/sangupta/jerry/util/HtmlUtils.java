@@ -21,6 +21,7 @@
 
 package com.sangupta.jerry.util;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.Map.Entry;
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Attributes;
 import net.htmlparser.jericho.Source;
+import net.htmlparser.jericho.SourceFormatter;
 import net.htmlparser.jericho.StartTag;
 
 /**
@@ -41,11 +43,44 @@ import net.htmlparser.jericho.StartTag;
 public class HtmlUtils {
 	
 	/**
+	 * Tidy the HTML source by reformatting the entire HTML. This is
+	 * particularly useful when the application needs to emit HTML.
+	 * 
+	 * @param htmlSource
+	 *            the unformatted HTML source
+	 * 
+	 * @return the formatted HTML source.
+	 * 
+	 */
+	public static String tidyHtml(String htmlSource) {
+		if(htmlSource == null) {
+			return htmlSource;
+		}
+		
+		try {
+			Source source = new Source(htmlSource) ;
+			StringWriter writer = new StringWriter();
+			new SourceFormatter(source).setIndentString("  ").setTidyTags(true).writeTo(writer);
+			writer.close();
+			
+			return writer.toString();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return htmlSource;
+	}
+	
+	/**
 	 * Return all tags that start with the given name.
 	 * 
-	 * @param htmlBody the HTML of the page
-	 * @param tagName the name of the tag being looked for
-	 * @return
+	 * @param htmlBody
+	 *            the HTML of the page
+	 *            
+	 * @param tagName
+	 *            the name of the tag being looked for
+	 *            
+	 * @return an {@link ArrayList} of all starting tags
 	 */
 	public static List<StartTag> getAllTags(String htmlBody, String tagName) {
 		if(AssertUtils.isEmpty(htmlBody)) {
@@ -67,9 +102,11 @@ public class HtmlUtils {
 	}
 	
 	/**
-	 * Extract the values of the specified attribute 'attributeToExtract' of all tags that start with the given 'tagName' in the HTML body.
-	 * Also, if matching attributes are specified then they must match the given values. Also, 'ignoreMissingAttributes' this defines
-	 * what to do if the matching attribute is not present in the given attributes of the tag.
+	 * Extract the values of the specified attribute 'attributeToExtract' of all
+	 * tags that start with the given 'tagName' in the HTML body. Also, if
+	 * matching attributes are specified then they must match the given values.
+	 * Also, 'ignoreMissingAttributes' this defines what to do if the matching
+	 * attribute is not present in the given attributes of the tag.
 	 * 
 	 * @param htmlBody
 	 * @param tagName
