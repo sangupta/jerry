@@ -58,11 +58,20 @@ import com.sangupta.jerry.util.AssertUtils;
  * capturing the responses obtained from the same.
  * 
  * @author sangupta
+ * @since 0.1.0
+ * 
  */
 public class WebInvoker {
 	
 	/**
-	 * Internal handle to the http client instance
+	 * An instance of {@link WebInvocationInterceptor} that needs to be used when handling interceptors.
+	 * If an interceptor is added while a call is being made, it will not apply to that request. Interceptors
+	 * will work only on a fresh request. 
+	 */
+	public static WebInvocationInterceptor interceptor = null;
+	
+	/**
+	 * Internal handle to the http clisent instance
 	 */
 	private static HttpClient httpClient = null;
 	
@@ -149,10 +158,38 @@ public class WebInvoker {
     	if(AssertUtils.isNotEmpty(requestBody) && method != WebRequestMethod.POST) {
     		throw new IllegalArgumentException("Request body can only be sent with POST request.");
     	}
-    	
-    	HttpRequestBase requestMethod = null;
+
+    	// the final response object that is sent back
         WebResponse webResponse = null;
 
+        // we store a copy of thread local interceptor. this allows us to
+        // not use the interceptor in case it has been added later, by the time
+        // we already had crossed the beforeInvocation phase
+        final WebInvocationInterceptor threadLocalInterceptor = interceptor;
+        
+    	// check for interception
+    	if(threadLocalInterceptor != null) {
+			webResponse = threadLocalInterceptor.beforeInvocation(uri, method);
+			if(!threadLocalInterceptor.continueInvocation()) {
+				return webResponse;
+			}
+    	}
+    	
+    	// none of the interceptors has stopped execution
+		webResponse = fetchViaInternet(uri, method, headers, params, requestContentType, requestBody);
+    	
+    	// run any interceptor that may have been provided
+    	if(threadLocalInterceptor != null) {
+			webResponse = threadLocalInterceptor.afterInvocation(webResponse);
+    	}
+
+    	// return the response
+    	return webResponse;
+	}
+	
+	private static WebResponse fetchViaInternet(final String uri, final WebRequestMethod method, final Map<String, String> headers, final Map<String, String> params, final String requestContentType, final String requestBody) {
+		WebResponse webResponse = null;
+    	HttpRequestBase requestMethod = null;
     	switch(method) {
     		case POST:
     			requestMethod = new HttpPost(uri);

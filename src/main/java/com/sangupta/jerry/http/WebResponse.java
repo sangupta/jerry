@@ -21,6 +21,7 @@
 
 package com.sangupta.jerry.http;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,8 +35,13 @@ import org.apache.http.HttpHeaders;
  * 
  * @author sangupta
  */
-public class WebResponse {
+public class WebResponse implements Serializable {
 	
+	/**
+	 * Generated using Eclipse
+	 */
+	private static final long serialVersionUID = 5896497905018410580L;
+
 	/**
      * The response code returned by the webservice invocation.
      */
