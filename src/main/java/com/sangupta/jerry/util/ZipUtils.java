@@ -83,6 +83,7 @@ public class ZipUtils {
 				        outStream.write(buf, 0, readBytes);
 					}
 					
+					stream.close();
 					outStream.close();
 					
 					return tempFile;
