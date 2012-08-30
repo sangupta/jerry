@@ -21,6 +21,11 @@
 
 package com.sangupta.jerry.email.domain;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
+
 /**
  * Value object to store one email address. Two {@link EmailAddress} objects
  * are considered to be equal if the email address provided in them is equal.
@@ -94,6 +99,17 @@ public class EmailAddress {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * @return
+	 */
+	public Address getInternetAddress() {
+		try {
+			return new InternetAddress(this.email, this.name);
+		} catch(UnsupportedEncodingException e) {
+			throw new RuntimeException("Unable to encode the email address", e);
+		}
 	}
 
 }

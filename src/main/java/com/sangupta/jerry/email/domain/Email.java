@@ -40,7 +40,7 @@ public class Email {
 	
 	private Set<EmailAddress> bcc;
 	
-	private EmailAddress replyTo;
+	private Set<EmailAddress> replyTo;
 
 	private String subject;
 	
@@ -133,14 +133,14 @@ public class Email {
 	/**
 	 * @return the replyTo
 	 */
-	public EmailAddress getReplyTo() {
+	public Set<EmailAddress> getReplyTo() {
 		return replyTo;
 	}
 
 	/**
 	 * @param replyTo the replyTo to set
 	 */
-	public void setReplyTo(EmailAddress replyTo) {
+	public void setReplyTo(Set<EmailAddress> replyTo) {
 		this.replyTo = replyTo;
 	}
 
