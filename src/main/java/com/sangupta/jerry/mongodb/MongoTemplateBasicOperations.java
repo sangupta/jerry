@@ -184,7 +184,8 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 		
 		X primaryID = getPrimaryID(object);
 		if(primaryID == null) {
-			return false;
+			this.mongoTemplate.save(object);
+			return true;
 		}
 		
 		if(!allowEmptyOrZeroID() && AssertUtils.isEmpty(primaryID)) {

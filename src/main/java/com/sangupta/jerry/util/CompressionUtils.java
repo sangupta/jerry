@@ -26,6 +26,9 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Utility function to compress given data into a byte-array and vice-versa.
  * Useful for situation where data needs to be stored in database etc.
@@ -34,6 +37,8 @@ import java.util.zip.Inflater;
  *
  */
 public class CompressionUtils {
+	
+	private static final Log LOGGER = LogFactory.getLog(CompressionUtils.class);
 	
 	/**
 	 * Compress the given string data into byte-array.
@@ -118,7 +123,7 @@ public class CompressionUtils {
 			
 			return Arrays.copyOf(output, total);
 		} catch (DataFormatException e) {
-			e.printStackTrace();
+			LOGGER.error("Unable to uncompress data", e);
 		}
 		
 		return null;

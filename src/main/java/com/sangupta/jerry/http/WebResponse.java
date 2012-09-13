@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
 
 
@@ -36,6 +38,8 @@ import org.apache.http.HttpHeaders;
  * @author sangupta
  */
 public class WebResponse implements Serializable {
+	
+	private static final Log LOGGER = LogFactory.getLog(WebResponse.class);
 	
 	/**
 	 * Generated using Eclipse
@@ -97,7 +101,7 @@ public class WebResponse implements Serializable {
         		try {
 					return new String(this.bytes, charSet);
 				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
+					LOGGER.error("Unable to convert content into string with given charset: " + this.charSet, e);
 				}
         	}
 
