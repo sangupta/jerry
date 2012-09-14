@@ -21,11 +21,11 @@
 
 package com.sangupta.jerry.quartz;
 
-import org.apache.commons.logging.Log;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.SchedulerException;
+import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -57,7 +57,7 @@ public abstract class BaseQuartzJob implements Job {
      * 
      * @return
      */
-    protected abstract Log getLogger();
+    protected abstract Logger getLogger();
     
     /**
      * Actual job execution method.
