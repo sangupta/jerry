@@ -52,7 +52,7 @@ public class UriUtils {
 	 */
 	private static final String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*'()";
 	
-	private static final Logger logger = LoggerFactory.getLogger(UriUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UriUtils.class);
 
 	/**
 	 * Function to convert a given string into URI encoded format.
@@ -81,7 +81,7 @@ public class UriUtils {
 			}
 			return output.toString();
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Unable to encode bytes to UTF-8", e);
+			LOGGER.error("Unable to encode bytes to UTF-8", e);
 		}
 		
 		return input;
@@ -445,18 +445,31 @@ public class UriUtils {
 	}
 
 	/**
+	 * Extract the protocol or the scheme from the given URL. For example,
+	 * in the URL http://www.sangupta.com, the protocol is http.
+	 * 
 	 * @param href
 	 * @return
 	 */
 	public static String extractProtocol(String url) {
+		if(url == null) {
+			return null;
+		}
+		
 		try {
 			URI uri = new URI(url);
 			return uri.getScheme();
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			// eat up
 		}
 		
-		return null;
+		// we will try and fall back to approach of sub-strings
+		int index = url.indexOf("://");
+		if(index == -1) {
+			return null;
+		}
+		
+		return url.substring(0, index);	
 	}
 
 	/**

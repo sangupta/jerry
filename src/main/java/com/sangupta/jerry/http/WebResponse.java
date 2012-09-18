@@ -129,12 +129,44 @@ public class WebResponse implements Serializable {
     	return -1;
     }
     
+    /**
+     * Return the value of the header if present, or <code>null</code>
+     * 
+     * @param headerName
+     * @return
+     */
     private String getHeader(String headerName) {
     	if(headers == null) {
     		return null;
     	}
     	
     	return headers.get(headerName);
+    }
+    
+    /**
+     * Utility function that returns a string representation of this response
+     * which can be used for debugging purposes. Should not be used in production
+     * code as is slow.
+     * 
+     * @return
+     */
+    public String trace() {
+    	StringBuilder builder = new StringBuilder();
+    	
+    	builder.append("[Response: code=");
+    	builder.append(this.responseCode);
+    	
+    	builder.append(", message=");
+    	builder.append(this.message);
+    	
+    	builder.append(", contentType=");
+    	builder.append(this.contentType);
+    	
+    	builder.append(", size=");
+    	builder.append(this.size);
+    	
+    	builder.append("]");
+    	return builder.toString();
     }
     
     // Usual accessor's follow
