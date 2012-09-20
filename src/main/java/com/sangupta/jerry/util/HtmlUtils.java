@@ -234,10 +234,16 @@ public class HtmlUtils {
 		// any HTML tag in it
 		if(chosenTextLength == 0) {
 			// trim the text to last available word within the length
-			String text = content.substring(0, length);
-			int index = text.lastIndexOf(' ');
-			if(index > -1) {
-				text = text.substring(0, index);
+			String text;
+			if(length < content.length()) {
+				text = content.substring(0, length);
+
+				int index = text.lastIndexOf(' ');
+				if(index > -1) {
+					text = text.substring(0, index);
+				}
+			} else {
+				text = content;
 			}
 			
 			return text;
