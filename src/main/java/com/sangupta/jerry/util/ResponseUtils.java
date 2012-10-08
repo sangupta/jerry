@@ -46,7 +46,9 @@ public class ResponseUtils {
 		response.setStatus(HttpServletResponse.SC_OK);
 		
 		ServletOutputStream stream = response.getOutputStream();
-		stream.write(data.getBytes("UTF-8"));
+		byte[] bytes = data.getBytes("UTF-8");
+		response.setContentLength(bytes.length);
+		stream.write(bytes);
 		stream.flush();
 		stream.close();
 	}
