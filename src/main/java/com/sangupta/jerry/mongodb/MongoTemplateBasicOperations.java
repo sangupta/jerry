@@ -233,7 +233,9 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 	 * 
 	 * @return
 	 */
-	public abstract boolean allowEmptyOrZeroID();
+	public boolean allowEmptyOrZeroID() {
+		return false;
+	}
 	
 	/**
 	 * Extract the value of the primary ID of the entity object
