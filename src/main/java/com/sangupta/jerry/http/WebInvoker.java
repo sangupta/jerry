@@ -112,6 +112,27 @@ public class WebInvoker {
 	}
 	
 	/**
+	 * Make a HEAD request to the URL and return the web response.
+	 * 
+	 * @param url
+	 * @param followRedirects
+	 * @return
+	 */
+	public static WebResponse headRequest(String url, boolean followRedirects) {
+		try {
+			if(followRedirects) {
+				return WebRequest.head(url).followRedirects().execute().webResponse();
+			}
+			
+			return WebRequest.head(url).noRedirects().execute().webResponse();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch response headers from url: {}", url, e);
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Invoke the given URL by the specified method, supplying the header and params as specified and return
 	 * the entire HTTP response.
 	 * 

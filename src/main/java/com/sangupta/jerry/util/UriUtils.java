@@ -255,17 +255,19 @@ public class UriUtils {
 		
 		return url;
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(extractExtension("http://news.ycombinator.com/rss"));
-	}
-	
+
+	/**
+	 * Encode the given set of parameters into a URL format, considering that the parameter
+	 * values are already encoded.
+	 * 
+	 * @param params
+	 * @return
+	 */
 	public static String urlEncode(Map<String, String> params) {
 		return urlEncode(params, false);
 	}
 
 	/**
-	 * The method is NOT thread-safe.
 	 * 
 	 * @param testParams
 	 * @return
