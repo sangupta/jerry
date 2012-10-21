@@ -24,12 +24,11 @@ package com.sangupta.jerry.util;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sangupta.jerry.http.WebInvoker;
-import com.sangupta.jerry.http.WebResponse;
+import com.sangupta.jerry.http.WebRequest;
 
 /**
  * @author sangupta
@@ -59,12 +58,13 @@ public class WebUtils {
 			logger.debug("Downloading " + url + " to " + tempFile.getAbsolutePath());
 		}
 		
-		WebResponse response = WebInvoker.getResponse(url);
-		if(response != null) {
-			if(response.getResponseCode() == 200 && response.getBytes() != null) {
-				FileUtils.writeByteArrayToFile(tempFile, response.getBytes());
-				return tempFile;
-			}
+		try {
+			WebRequest.get(url).execute().writeToFile(tempFile);
+			return tempFile;
+		} catch(HttpResponseException e) {
+			logger.error("HTTP response did not yield an OK status", e);
+		} catch(IOException e) {
+			logger.error("Unable to download url to temp file", e);
 		}
 		
 		return null;
@@ -83,12 +83,13 @@ public class WebUtils {
 	 * @throws IOException in case something fails
 	 */
 	public static boolean downloadToFile(String url, File fileToDownloadIn) throws IOException {
-		WebResponse response = WebInvoker.getResponse(url);
-		if(response != null) {
-			if(response.getResponseCode() == 200 && response.getBytes() != null) {
-				FileUtils.writeByteArrayToFile(fileToDownloadIn, response.getBytes());
-				return true;
-			}
+		try {
+			WebRequest.get(url).execute().writeToFile(fileToDownloadIn);
+			return true;
+		} catch(HttpResponseException e) {
+			logger.error("HTTP response did not yield an OK status", e);
+		} catch(IOException e) {
+			logger.error("Unable to download url to temp file", e);
 		}
 		
 		return false;
