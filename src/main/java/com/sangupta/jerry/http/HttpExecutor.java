@@ -202,12 +202,6 @@ public class HttpExecutor {
 	private final AuthCache authCache;
 	
 	/**
-	 * The {@link HttpContext} instance that will be used by the executor
-	 * 
-	 */
-	private final BasicHttpContext localHttpContext;
-	
-	/**
 	 * Not declared final - for an instance may not be required throught the application life-cycle
 	 */
 	private CredentialsProvider credentialsProvider;
@@ -224,7 +218,6 @@ public class HttpExecutor {
 
 		this.client = client;
 		this.authCache = new BasicAuthCache();
-		this.localHttpContext = new BasicHttpContext();
 	}
 	
 	/**
@@ -234,13 +227,21 @@ public class HttpExecutor {
 	 * @throws ClientProtocolException 
 	 */
 	public WebRawResponse execute(WebRequest webRequest) throws ClientProtocolException, IOException {
-        this.localHttpContext.setAttribute(ClientContext.CREDS_PROVIDER, this.credentialsProvider);
-        this.localHttpContext.setAttribute(ClientContext.AUTH_CACHE, this.authCache);
-        this.localHttpContext.setAttribute(ClientContext.COOKIE_STORE, this.cookieStore);
+		// sharing the context may lead to circular redirects in case
+		// of redirections from two request objects towards a single
+		// URI - like hitting http://google.com twice leads to circular
+		// redirects in the second request
+		HttpContext localHttpContext = new BasicHttpContext();
+		
+        localHttpContext.setAttribute(ClientContext.CREDS_PROVIDER, this.credentialsProvider);
+        localHttpContext.setAttribute(ClientContext.AUTH_CACHE, this.authCache);
+        localHttpContext.setAttribute(ClientContext.COOKIE_STORE, this.cookieStore);
+        
+        // localHttpContext.removeAttribute(DefaultRedirectStrategy.REDIRECT_LOCATIONS);
         
         HttpRequestBase httpRequest = webRequest.getHttpRequest();
         httpRequest.reset();
-        return new WebRawResponse(this.client.execute(httpRequest, this.localHttpContext));
+        return new WebRawResponse(this.client.execute(httpRequest, localHttpContext));
 	}
     
 	// Methods related to rate limiting
@@ -452,6 +453,22 @@ public class HttpExecutor {
 		HttpRoute route = new HttpRoute(new HttpHost(hostName, port));
 		setMaxConnectionsOnHost(route, numConnections);
 		return this;
+	}
+	
+	// Finalization methods
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+
+		try {
+			HTTP_CONNECTION_MANAGER.shutdown();
+		} catch(Throwable t) {
+			// eat up
+		}
 	}
 
 }

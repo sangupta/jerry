@@ -29,7 +29,6 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
@@ -54,11 +53,11 @@ public class WebResponseHandler implements ResponseHandler<WebResponse> {
 		StatusLine statusLine = response.getStatusLine();
         HttpEntity entity = response.getEntity();
         
-        if (statusLine.getStatusCode() >= 300) {
-            throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
+        byte[] bytes = null;
+        if(entity != null) {
+        	bytes = EntityUtils.toByteArray(entity);
         }
-        
-		final WebResponse webResponse = new WebResponse(EntityUtils.toByteArray(entity));
+		final WebResponse webResponse = new WebResponse(bytes);
 		
 		// decipher from status line
 		webResponse.responseCode = statusLine.getStatusCode();

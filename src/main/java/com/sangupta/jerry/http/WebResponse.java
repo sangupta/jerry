@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpHeaders;
@@ -74,7 +75,7 @@ public class WebResponse implements Serializable {
     /**
      * The response headers received
      */
-    Map<String, String> headers;
+    final Map<String, String> headers = new HashMap<String, String>();
     
     /**
      * The size of the response

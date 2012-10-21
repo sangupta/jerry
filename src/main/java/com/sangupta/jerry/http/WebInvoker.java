@@ -97,9 +97,13 @@ public class WebInvoker {
 	 * 
 	 * @param url
 	 */
-	public static Map<String, String> getHeaders(String url) {
+	public static Map<String, String> getHeaders(String url, boolean followRedirects) {
 		try {
-			return WebRequest.head(url).execute().webResponse().getHeaders();
+			if(followRedirects) {
+				return WebRequest.head(url).followRedirects().execute().webResponse().getHeaders();
+			}
+			
+			return WebRequest.head(url).noRedirects().execute().webResponse().getHeaders();
 		} catch(IOException e) {
 			logger.debug("Unable to fetch response headers from url: {}", url, e);
 		}

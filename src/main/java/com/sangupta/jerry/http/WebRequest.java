@@ -49,6 +49,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpTrace;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
@@ -439,7 +440,29 @@ public class WebRequest {
     }
 
     //// HTTP connection parameter operations
+    
+    /**
+     * Follow redirects for the request
+     * 
+     * @return
+     */
+    public WebRequest followRedirects() {
+    	HttpParams params = this.request.getParams();
+    	params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
+    	return this;
+    }
 
+    /**
+     * Do not follow any redirects
+     * 
+     * @return
+     */
+    public WebRequest noRedirects() {
+    	HttpParams params = this.request.getParams();
+    	params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
+    	return this;
+    }
+    
     /**
      * Specify the socket time out to the given value.
      * 
@@ -449,7 +472,7 @@ public class WebRequest {
     public WebRequest socketTimeout(int timeout) {
         return config(CoreConnectionPNames.SO_TIMEOUT, timeout);
     }
-
+    
     /**
      * Specify the connection time out to the given value.
      * 
@@ -464,7 +487,7 @@ public class WebRequest {
      * Specifies if stale connection check needs to be performed before
      * making a connection.
      * 
-     * @param b
+     * @param perform
      * @return
      */
     public WebRequest staleConnectionCheck(boolean perform) {
