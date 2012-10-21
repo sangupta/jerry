@@ -67,6 +67,7 @@ public class UriUtilsTest {
 		Assert.assertEquals("html", UriUtils.extractExtension("http://www.sangupta.com/abc.html?format=xml&text=help"));
 		Assert.assertEquals("html", UriUtils.extractExtension("http://www.sangupta.com/abc.html?format=xml&text=help#anchorName"));
 		Assert.assertEquals("html", UriUtils.extractExtension("http://www.sangupta.com/abc.html#anchorName?format=xml&text=help"));
+		Assert.assertEquals(null, UriUtils.extractExtension("http://news.ycombinator.com/rss"));
 	}
 	
 }

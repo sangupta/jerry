@@ -225,7 +225,14 @@ public class UriUtils {
 	 * @return
 	 */
 	public static String extractExtension(String url) {
-		int index = url.lastIndexOf('.');
+		// check for any slash characters that remain
+		int index = url.lastIndexOf('/');
+		if(index != -1) {
+			url = url.substring(index + 1);
+		}
+
+		// now for the dot part
+		index = url.lastIndexOf('.');
 		
 		// check if extension present
 		if(index == -1) {
@@ -245,8 +252,12 @@ public class UriUtils {
 		if(end != -1) {
 			url = url.substring(0, end);
 		}
-
+		
 		return url;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(extractExtension("http://news.ycombinator.com/rss"));
 	}
 	
 	public static String urlEncode(Map<String, String> params) {

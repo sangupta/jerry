@@ -53,4 +53,30 @@ public class ResponseUtils {
 		stream.close();
 	}
 
+	/**
+	 * Make sure that IE8+ do not sniff for MIME when already
+	 * specified in response.
+	 * 
+	 * Refer to http://blogs.msdn.com/b/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
+	 * for more details.
+	 * 
+	 * @param repsonse
+	 */
+	public static void sendNoSniff(HttpServletResponse repsonse) {
+		repsonse.addHeader("X-Content-Type-Options", "nosniff");
+	}
+	
+	/**
+	 * Instruct the response to only allow file download, and not
+	 * let it open directly in the client browser.
+	 * 
+	 * Refer to http://blogs.msdn.com/b/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
+	 * for more details.
+	 * 
+	 * @param response
+	 */
+	public static void setOnlyDownload(HttpServletResponse response, String fileName) {
+		response.addHeader("X-Download-Options", "noopen");
+		response.addHeader("Content--Disposition", "attachment; filename=" + fileName);
+	}
 }
