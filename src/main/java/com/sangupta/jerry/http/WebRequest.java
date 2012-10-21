@@ -221,16 +221,18 @@ public class WebRequest {
     private SimpleDateFormat dateFormatter;
 
     /**
+     * Create the {@link WebRequest} object using the given {@link HttpRequestBase} object.
      * 
      * @param request
      */
-    protected WebRequest(final HttpRequestBase request) {
+    WebRequest(final HttpRequestBase request) {
         super();
         this.request = request;
         this.localParams = request.getParams();
     }
 
     /**
+     * Get the underlying {@link HttpRequestBase} object.
      * 
      * @return
      */
@@ -261,6 +263,7 @@ public class WebRequest {
     //// HTTP header operations
 
     /**
+     * Add the given header to the request
      * 
      * @param header
      * @return
@@ -271,6 +274,7 @@ public class WebRequest {
     }
 
     /**
+     * Add a new header with the given name and value
      * 
      * @param name
      * @param value
@@ -282,6 +286,7 @@ public class WebRequest {
     }
 
     /**
+     * Remove the given header
      * 
      * @param header
      * @return
@@ -292,6 +297,7 @@ public class WebRequest {
     }
 
     /**
+     * Remove all headers with the given name.
      * 
      * @param name
      * @return
@@ -302,6 +308,7 @@ public class WebRequest {
     }
 
     /**
+     * Set the request headers to the given list of headers.
      * 
      * @param headers
      * @return
@@ -312,6 +319,7 @@ public class WebRequest {
     }
 
     /**
+     * Set cache-control as the given one.
      * 
      * @param cacheControl
      * @return
@@ -334,6 +342,7 @@ public class WebRequest {
     }
 
     /**
+     * Set the request date header to the given date value.
      * 
      * @param date
      * @return
@@ -344,6 +353,7 @@ public class WebRequest {
     }
 
     /**
+     * Set the If-Modified-Since header to the given date value.
      * 
      * @param date
      * @return
@@ -354,7 +364,8 @@ public class WebRequest {
     }
 
     /**
-     * 
+     * Set the If-Unmodified-Since header to the given date value
+     *  
      * @param date
      * @return
      */
@@ -366,6 +377,7 @@ public class WebRequest {
     //// HTTP config parameter operations
 
     /**
+     * Set the local param for this request to the value.
      * 
      * @param param
      * @param object
@@ -377,6 +389,7 @@ public class WebRequest {
     }
 
     /**
+     * Remove the local config param from this request with the given name
      * 
      * @param param
      * @return
@@ -389,6 +402,7 @@ public class WebRequest {
     //// HTTP protocol parameter operations
 
     /**
+     * Set the request HTTP Protocol version
      * 
      * @param version
      * @return
@@ -415,6 +429,7 @@ public class WebRequest {
     }
 
     /**
+     * Set the request User-Agent string to the given one.
      * 
      * @param agent
      * @return
@@ -426,6 +441,7 @@ public class WebRequest {
     //// HTTP connection parameter operations
 
     /**
+     * Specify the socket time out to the given value.
      * 
      * @param timeout
      * @return
@@ -435,6 +451,7 @@ public class WebRequest {
     }
 
     /**
+     * Specify the connection time out to the given value.
      * 
      * @param timeout
      * @return
@@ -444,12 +461,14 @@ public class WebRequest {
     }
 
     /**
+     * Specifies if stale connection check needs to be performed before
+     * making a connection.
      * 
      * @param b
      * @return
      */
-    public WebRequest staleConnectionCheck(boolean b) {
-        return config(CoreConnectionPNames.STALE_CONNECTION_CHECK, b);
+    public WebRequest staleConnectionCheck(boolean perform) {
+        return config(CoreConnectionPNames.STALE_CONNECTION_CHECK, perform);
     }
 
     //// HTTP connection route operations
