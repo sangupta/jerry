@@ -36,5 +36,9 @@ public enum WebRequestMethod {
     
     PUT,
     
-    DELETE
+    DELETE,
+    
+    OPTIONS,
+    
+    TRACE;
 }

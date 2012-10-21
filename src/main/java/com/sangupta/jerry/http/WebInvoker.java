@@ -27,27 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +37,8 @@ import com.sangupta.jerry.util.AssertUtils;
 
 /**
  * Utility class containing methods pertaining to invocation of REST based webservices and
- * capturing the responses obtained from the same.
+ * capturing the responses obtained from the same. For advanced usage, the {@link WebRequest} facade
+ * can be used directly to gain much more control over the request/response handling.
  * 
  * @author sangupta
  * @since 0.1.0
@@ -71,25 +54,22 @@ public class WebInvoker {
 	public static WebInvocationInterceptor interceptor = null;
 	
 	/**
-	 * Internal handle to the http clisent instance
-	 */
-	private static HttpClient httpClient = null;
-	
-	/**
 	 * My private logger
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(WebInvoker.class);
 	
 	/**
-	 * Return the HTTP response body for a GET request to the given URL.
+	 * Return the HTTP response body for a GET request to the given URL. In case an {@link IOException}
+	 * is thrown, it will be eaten up, logged at DEBUG level, and <code>null</code> returned.
 	 * 
 	 * @param url
 	 * @return
 	 */
 	public static String fetchResponse(String url) {
-		WebResponse response = invokeUrl(null, WebRequestMethod.GET, (String) null, null);
-		if(response != null) {
-			return response.getContent();
+		try {
+			return WebRequest.get(url).execute().webResponse().asString();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch repsonse from url: {}", url, e);
 		}
 		
 		return null;
@@ -102,16 +82,29 @@ public class WebInvoker {
 	 * @return
 	 */
 	public static WebResponse getResponse(String url) {
-		return invokeUrl(url, WebRequestMethod.GET, (String) null, null);
+		try {
+			return WebRequest.get(url).execute().webResponse();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch repsonse from url: {}", url, e);
+		}
+		
+		return null;
 	}
 	
 	/**
-	 * Returns the HTTP headers etc by making a HEAD request to the given URL
+	 * Returns the HTTP headers etc by making a HEAD request to the given URL as
+	 * a {@link Map}.
 	 * 
 	 * @param url
 	 */
-	public static WebResponse getHeaders(String url) {
-		return invokeUrl(url, WebRequestMethod.HEAD, (String) null, null);
+	public static Map<String, String> getHeaders(String url) {
+		try {
+			return WebRequest.head(url).execute().webResponse().getHeaders();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch response headers from url: {}", url, e);
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -125,7 +118,25 @@ public class WebInvoker {
 	 * @return
 	 */
 	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final Map<String, String> headers, final Map<String, String> params) {
-		return invokeUrl(uri, method, headers, params, null, null);
+		WebRequest request = getWebRequest(uri, method);
+		
+		if(AssertUtils.isNotEmpty(headers)) {
+			for(Entry<String, String> header : headers.entrySet()) {
+				request.addHeader(header.getKey(), header.getValue());
+			}
+		}
+		
+		if(AssertUtils.isNotEmpty(params)) {
+			request.bodyForm(getFormParams(params));
+		}
+		
+		try {
+			return request.execute().webResponse();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -137,236 +148,71 @@ public class WebInvoker {
 	 * @return
 	 */
 	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final String requestContentType, final String requestBody) {
-		return invokeUrl(uri, method, null, null, requestContentType, requestBody);
+		WebRequest request = getWebRequest(uri, method);
+		
+		request.bodyString(requestBody, ContentType.create(requestContentType));
+		
+		try {
+			return request.execute().webResponse();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+		}
+		
+		return null;
 	}
 
 	/**
+	 * Get the {@link WebRequest} object for the given method.
 	 * 
 	 * @param uri
 	 * @param method
-	 * @param headers
-	 * @param params
-	 * @param requestContentType
-	 * @param requestBody
 	 * @return
 	 */
-	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method, final Map<String, String> headers, final Map<String, String> params, final String requestContentType, final String requestBody) {
-    	if(AssertUtils.isEmpty(uri)) {
-    		return null;
-    	}
-    	
-    	if(AssertUtils.isNotEmpty(requestBody) && method != WebRequestMethod.POST) {
-    		throw new IllegalArgumentException("Request body can only be sent with POST request.");
-    	}
-
-    	// the final response object that is sent back
-        WebResponse webResponse = null;
-
-        // we store a copy of thread local interceptor. this allows us to
-        // not use the interceptor in case it has been added later, by the time
-        // we already had crossed the beforeInvocation phase
-        final WebInvocationInterceptor threadLocalInterceptor = interceptor;
-        
-    	// check for interception
-    	if(threadLocalInterceptor != null) {
-			webResponse = threadLocalInterceptor.beforeInvocation(uri, method);
-			if(!threadLocalInterceptor.continueInvocation()) {
-				return webResponse;
-			}
-    	}
-    	
-    	// none of the interceptors has stopped execution
-		webResponse = fetchViaInternet(uri, method, headers, params, requestContentType, requestBody);
-    	
-    	// run any interceptor that may have been provided
-    	if(threadLocalInterceptor != null) {
-			webResponse = threadLocalInterceptor.afterInvocation(webResponse);
-    	}
-
-    	// return the response
-    	return webResponse;
+	private static WebRequest getWebRequest(final String uri, final WebRequestMethod method) {
+		if(method == null) {
+			throw new IllegalArgumentException("WebRequestMethod cannot be null");
+		}
+		
+		switch(method) {
+			case DELETE:
+				return WebRequest.delete(uri);
+				
+			case GET:
+				return WebRequest.get(uri);
+				
+			case HEAD:
+				return WebRequest.head(uri);
+				
+			case OPTIONS:
+				return WebRequest.options(uri);
+				
+			case POST:
+				return WebRequest.post(uri);
+				
+			case PUT:
+				return WebRequest.put(uri);
+				
+			case TRACE:
+				return WebRequest.trace(uri);
+		}
+		
+		throw new IllegalStateException("All options of enumeration have a check above, reaching this is impossible. This is a coding horror.");
 	}
 	
-	private static WebResponse fetchViaInternet(final String uri, final WebRequestMethod method, final Map<String, String> headers, final Map<String, String> params, final String requestContentType, final String requestBody) {
-		WebResponse webResponse = null;
-    	HttpRequestBase requestMethod = null;
-    	switch(method) {
-    		case POST:
-    			requestMethod = new HttpPost(uri);
-    			break;
-    			
-    		case DELETE:
-    			requestMethod = new HttpDelete(uri);
-    			break;
-    			
-    		case HEAD:
-    			requestMethod = new HttpHead(uri);
-    			break;
-    			
-    		case PUT:
-    			requestMethod = new HttpPut(uri);
-    			break;
-
-    		case GET:
-			default:
-    			requestMethod = new HttpGet(uri);
-    			break;
-    			
-    	}
-    	
-    	String headerValue = null;
-    	
-    	try {
-    		logger.info("Invoking webservice at URI: " + uri);
-    		
-    		// set the headers if any is present
-    		if(AssertUtils.isNotEmpty(headers)) {
-    			for(Entry<String, String> entry : headers.entrySet()) {
-    				requestMethod.addHeader(entry.getKey(), entry.getValue());
-    			}
-    		}
-    		
-    		// add the params
-    		if(AssertUtils.isNotEmpty(params)) {
-    			if(requestMethod instanceof HttpPost) {
-        			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-        			for(Entry<String, String> entry : params.entrySet()) {
-        				nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        			}
-        			
-    				HttpPost post = (HttpPost) requestMethod;
-    				post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-    			} else {
-    				HttpParams hp = new BasicHttpParams();
-    				
-    				for(Entry<String, String> entry : params.entrySet()) {
-    					hp.setParameter(entry.getKey(), entry.getValue());
-    				}
-    				
-    				requestMethod.setParams(hp);
-    			}
-    		}
-    		
-    		// set the request content type
-    		if(AssertUtils.isNotEmpty(requestContentType)) {
-    			requestMethod.setHeader("Content-Type", requestContentType);
-    		}
-    		
-    		// set the request body if applicable
-    		if(AssertUtils.isNotEmpty(requestBody)) {
-    			((HttpPost) requestMethod).setEntity(new StringEntity(requestBody));
-    		}
-    		
-    		// check for availability of httpClient
-    		if(httpClient == null) {
-    			checkHttpClientAvailability();
-    		}
-    		
-    		// Invoke the URL now
-    		final HttpResponse httpResponse = httpClient.execute(requestMethod);
-    		
-    		final HttpEntity entity = httpResponse.getEntity();
-
-    		// collect the data and send back to the function
-    		final StatusLine statusLine = httpResponse.getStatusLine();
-    		final int responseCode = statusLine.getStatusCode();
-    		final String responseMessage = statusLine.getReasonPhrase();
-            final String contentType;
-            if(entity != null && entity.getContentType() != null) {
-            	contentType = entity.getContentType().getValue();
-            } else {
-            	contentType = "";
-            }
-            
-            // get response size
-        	long size;
-            if(entity != null) {
-				size = entity.getContentLength();
-            } else {
-        		long value = 0;
-            	Header header = httpResponse.getFirstHeader(HttpHeaders.CONTENT_LENGTH);
-            	if(header != null) {
-            		headerValue = header.getValue();
-	            	if(AssertUtils.isNotEmpty(headerValue)) {
-	            		try {
-	            			value = Long.parseLong(headerValue);
-	            		} catch(Exception e) {
-	            			
-	            		}
-	            	}
-            	}
-            	size = value;
-            }
-            
-            // get the response bytes
-        	String charSet = null;
-            byte[] responseBytes = null;
-            if(entity != null) {
-            	responseBytes = EntityUtils.toByteArray(entity);
-				charSet = EntityUtils.getContentCharSet(entity);
-            	
-            }
-            
-            // process response cookies only if cookies were sent via the client side
-            if (logger.isDebugEnabled()) {
-                logger.debug("Response code: " + responseCode);
-                logger.debug("Response message: " + responseMessage);
-                logger.debug("Content Type: " + contentType);
-                logger.debug("Content Length: " + size);
-                logger.debug("CharSet: " + charSet);
-            }
-            
-            logger.info("Webservice invocation returned with response code of " + responseCode);
-            
-            // encapsulate the response
-			webResponse = new WebResponse();
-            
-            webResponse.setResponseCode(responseCode);
-            webResponse.setMessage(responseMessage);
-            webResponse.setCharSet(charSet);
-            webResponse.setContentType(contentType);
-            webResponse.setSize(size);
-            webResponse.setBytes(responseBytes);
-            
-            // add response headers
-            final Header[] responseHeaders = httpResponse.getAllHeaders();
-            if(AssertUtils.isNotEmpty(responseHeaders)) {
-            	for(Header header : responseHeaders) {
-            		webResponse.addResponseHeader(header.getName(), header.getValue());
-            	}
-            }
-            
-    	} catch (ClientProtocolException e) {
-    		logger.error("Exception invoking the webservice: " + uri, e);
-		} catch (IOException e) {
-			logger.error("Exception invoking the webservice: " + uri, e);
-		}
-		
-		return webResponse;
-    }
-    
-    /**
-	 * 
-	 */
-	private static synchronized void checkHttpClientAvailability() {
-		if(httpClient == null) {
-			httpClient = HttpClientFactory.getInstance();
-		}
-		
-		if(httpClient == null) {
-			throw new RuntimeException("Unable to fetch a valid instance of HttpClient");
-		}
-	}
-
 	/**
-	 * @param httpClient the httpClient to set
+	 * Create a {@link NameValuePair} list from the given {@link Map} of params to be passed.
+	 * 
+	 * @param params
+	 * @return
 	 */
-	public static void setHttpClient(HttpClient httpClient) {
-		if(httpClient == null) {
-			throw new IllegalArgumentException("HttpClient cannot be null.");
+	private static List<NameValuePair> getFormParams(Map<String, String> params) {
+		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		
+		for(Entry<String, String> entry : params.entrySet()) {
+			nvps.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
 		}
 		
-		WebInvoker.httpClient = httpClient;
+		return nvps;
 	}
-	
+
 }

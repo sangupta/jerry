@@ -21,15 +21,17 @@
 
 package com.sangupta.jerry.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
+import org.apache.http.protocol.HTTP;
 
 
 /**
@@ -39,8 +41,6 @@ import org.apache.http.HttpHeaders;
  */
 public class WebResponse implements Serializable {
 	
-	private static final Log LOGGER = LogFactory.getLog(WebResponse.class);
-	
 	/**
 	 * Generated using Eclipse
 	 */
@@ -49,12 +49,12 @@ public class WebResponse implements Serializable {
 	/**
      * The response code returned by the webservice invocation.
      */
-    private int responseCode;
+    int responseCode;
     
     /**
      * The response message returned by the webservice invocation.
      */
-    private String message;
+    String message;
     
     /**
      * The response body returned by the webservice invocation.
@@ -64,51 +64,76 @@ public class WebResponse implements Serializable {
     /**
      * The charset of the content received
      */
-    private String charSet;
+    Charset charSet;
     
     /**
      * The content-type as specified by the server
      */
-    private String contentType;
+    String contentType;
     
     /**
      * The response headers received
      */
-    private Map<String, String> headers;
+    Map<String, String> headers;
     
     /**
      * The size of the response
      */
-    private long size;
+    long size;
     
-    /**
-     * Utility method to add a header to this response
-     * 
-     * @param header
-     * @param value
-     */
-    public void addResponseHeader(String header, String value) {
-    	if(headers == null) {
-    		headers = new HashMap<String, String>();
-    	}
-    	
-    	headers.put(header, value);
+    public WebResponse(byte[] bytes) {
+    	this.bytes = bytes;
     }
     
     public String getContent() {
+    	return asString();
+    }
+    
+    /**
+     * Returns the fetched response as a {@link String} parsed using the
+     * response {@link Charset} or a default {@link Charset} if none is specified.
+     * 
+     * @return
+     */
+    public String asString() {
     	if(this.bytes != null) {
-        	if(this.charSet != null) {
-        		try {
-					return new String(this.bytes, charSet);
-				} catch (UnsupportedEncodingException e) {
-					LOGGER.error("Unable to convert content into string with given charset: " + this.charSet, e);
-				}
-        	}
-
-        	return new String(this.bytes);
+            try {
+                if (this.charSet != null) {
+	                return new String(this.bytes, this.charSet.name());
+                }
+                
+                return new String(this.bytes, HTTP.DEF_CONTENT_CHARSET);
+            } catch (UnsupportedEncodingException ex) {
+                // eat up
+            }
+            
+            return new String(this.bytes);
     	}
     	
     	return null;
+    }
+    
+    /**
+     * Returns the fetched response as an {@link InputStream}.
+     * 
+     * @return
+     */
+    public InputStream asStream() {
+    	if(this.bytes != null) {
+    		return new ByteArrayInputStream(this.bytes);
+    	}
+    	
+    	return null;
+    }
+    
+    /**
+     * Return the fetched response as a byte-array. The returned byte-array is
+     * a clone of the response array.
+     * 
+     * @return
+     */
+    public byte[] asBytes() {
+    	return this.bytes.clone();
     }
     
     /**
@@ -180,15 +205,6 @@ public class WebResponse implements Serializable {
         return this.responseCode;
     }
 
-    /** 
-     * Sets the responseCode to the specified value.
-     *
-     * @param responseCode responseCode to set.
-     */
-    public void setResponseCode(int responseCode) {
-        this.responseCode = responseCode;
-    }
-
 	/**
 	 * @return the size
 	 */
@@ -197,26 +213,10 @@ public class WebResponse implements Serializable {
 	}
 
 	/**
-	 * @param size the size to set
-	 */
-	public void setSize(long size) {
-		this.size = size;
-	}
-
-
-	/**
 	 * @return the bytes
 	 */
 	public byte[] getBytes() {
 		return bytes;
-	}
-
-
-	/**
-	 * @param bytes the bytes to set
-	 */
-	public void setBytes(byte[] bytes) {
-		this.bytes = bytes;
 	}
 
 	/**
@@ -227,24 +227,10 @@ public class WebResponse implements Serializable {
 	}
 
 	/**
-	 * @param message the message to set
-	 */
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	/**
 	 * @return the headers
 	 */
 	public Map<String, String> getHeaders() {
-		return headers;
-	}
-
-	/**
-	 * @param headers the headers to set
-	 */
-	public void setHeaders(Map<String, String> headers) {
-		this.headers = headers;
+		return Collections.unmodifiableMap(headers);
 	}
 
 	/**
@@ -255,24 +241,10 @@ public class WebResponse implements Serializable {
 	}
 
 	/**
-	 * @param contentType the contentType to set
-	 */
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
-
-	/**
 	 * @return the charSet
 	 */
-	public String getCharSet() {
+	public Charset getCharSet() {
 		return charSet;
-	}
-
-	/**
-	 * @param charSet the charSet to set
-	 */
-	public void setCharSet(String charSet) {
-		this.charSet = charSet;
 	}
 
 }
