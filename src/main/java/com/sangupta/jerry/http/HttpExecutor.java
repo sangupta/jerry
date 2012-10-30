@@ -114,6 +114,17 @@ public class HttpExecutor {
 	public static final HttpExecutor DEFAULT = new HttpExecutor(HTTP_CLIENT);
 	
 	/**
+	 * Return the underlying {@link HttpClient} instance that can be used
+	 * to make web requests. All requests shot using this client honor
+	 * rate-limiting.
+	 * 
+	 * @return
+	 */
+	public static final HttpClient getHttpClient() {
+		return HTTP_CLIENT;
+	}
+	
+	/**
 	 * Get a new {@link HttpExecutor} instance based on default client
 	 * 
 	 * @return

@@ -40,8 +40,9 @@ public class ResponseUtils {
 	 * @throws IOException 
 	 */
 	public static void pushForUserDownload(HttpServletResponse response, String data, String fileName, String mimeType) throws IOException {
+		setOnlyDownload(response, fileName);
+
 		response.setContentType(mimeType + "; charset=UTF-8");
-		response.addHeader("Content-Disposition", "attachment; filename="  + fileName);
 		response.setCharacterEncoding("UTF-8");
 		response.setStatus(HttpServletResponse.SC_OK);
 		

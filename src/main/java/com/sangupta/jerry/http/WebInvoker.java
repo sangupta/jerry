@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sangupta.jerry.util.AssertUtils;
+import com.sangupta.jerry.util.XStreamUtils;
 
 /**
  * Utility class containing methods pertaining to invocation of REST based webservices and
@@ -185,7 +186,28 @@ public class WebInvoker {
 		
 		return null;
 	}
-
+	
+	/**
+	 * 
+	 * @param uri
+	 * @param object
+	 * @return
+	 */
+	public static WebResponse postXML(final String uri, final Object object) {
+		WebRequest request = getWebRequest(uri, WebRequestMethod.POST);
+		
+		String requestBody = XStreamUtils.getXStream(object.getClass()).toXML(object);
+		request.bodyString(requestBody, ContentType.create("text/xml"));
+		
+		try {
+			return request.execute().webResponse();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Get the {@link WebRequest} object for the given method.
 	 * 
