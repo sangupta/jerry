@@ -46,7 +46,7 @@ public class TimeDurationUtils {
 		
 		long delta = System.currentTimeMillis() - date.getTime();
 		if(delta < 0) {
-			throw new IllegalArgumentException("Date cannot be in future");
+			return "moments ago";
 		}
 		
 		if(delta < MINUTE) {
