@@ -273,4 +273,27 @@ public class HtmlUtils {
 		return builder.toString();
 	}
 	
+	/**
+	 * Convert the entries in the map to a string object separated by a <code>&lt;br /&gt;</code>
+	 * tag.
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public static String mapAsHtmlString(Map<String, String> map) {
+		if(AssertUtils.isEmpty(map)) {
+			return StringUtils.BLANK_STRING;
+		}
+		
+		StringBuilder builder = new StringBuilder();
+		for(Entry<String, String> entry : map.entrySet()) {
+			builder.append(entry.getKey());
+			builder.append(": ");
+			builder.append(entry.getValue());
+			builder.append("<br />");
+		}
+		
+		return builder.toString();
+	}
+	
 }
