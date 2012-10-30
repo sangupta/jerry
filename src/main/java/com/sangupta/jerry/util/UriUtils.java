@@ -536,4 +536,31 @@ public class UriUtils {
 		return url.substring(index + 1);
 	}
 
+	/**
+	 * Add two web paths making sure that we only have one forward slash in the URL.
+	 * 
+	 * @param base
+	 * @param suffix
+	 * @return
+	 */
+	public static String addWebPaths(String base, String suffix) {
+		StringBuilder builder = new StringBuilder(base);
+		if(base.endsWith("/")) {
+			if(suffix.startsWith("/")) {
+				builder.append(suffix.substring(1));
+			} else {
+				builder.append(suffix);
+			}
+		} else {
+			if(suffix.startsWith("/")) {
+				builder.append(suffix);
+			} else {
+				builder.append('/');
+				builder.append(suffix);
+			}
+		}
+		
+		return builder.toString();
+	}
+	
 }

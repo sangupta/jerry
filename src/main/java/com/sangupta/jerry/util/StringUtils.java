@@ -21,6 +21,9 @@
 
 package com.sangupta.jerry.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Utility functions around {@link String} objects.
  * 
@@ -28,6 +31,8 @@ package com.sangupta.jerry.util;
  *
  */
 public class StringUtils {
+	
+	public static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
 	
 	/**
 	 * An empty string object containing nothing.
@@ -56,6 +61,42 @@ public class StringUtils {
 			sb.append(Integer.toHexString((bytes[i] & 0xFF) | 0x100).substring(1, 3));
 		}
 		return sb.toString();
+	}
+	
+	/**
+     * Return true if the string is equal to "true" or "yes"
+     * otherwise return false.
+     * 
+     * @param string string whose content is checked for true or false
+     * @return boolean flag indicating whether the input was true or false
+     */
+	public static boolean getBoolean(String boolString) {
+	    return getBoolean(boolString, false); 
+ 	}
+		
+	public static boolean getBoolean(String boolString, boolean defaultValue) {
+		if (AssertUtils.isNotEmpty(boolString)) {
+	        boolString = boolString.toLowerCase();
+	        if ("yes".equals(boolString) || "true".equals(boolString)) {
+	            return true;
+	        }
+	        
+	        return false;
+	    }
+		
+	    return defaultValue; 
+ 	}
+	
+	public static int getIntValue(String string, int defaultValue) {
+		try {
+			if(AssertUtils.isNotEmpty(string)) {
+				return Integer.parseInt(string);
+			}
+		} catch(NumberFormatException e) {
+			LOGGER.debug("error getting integer from string: " + string, e);
+		}
+		
+		return defaultValue;
 	}
 
 }
