@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+    version="2.1">
+	
+	<description>Jerry tag library.</description>
+	<tlib-version>1.2</tlib-version>
+	<short-name>jerry</short-name>
+	<uri>http://www.sangupta.com/projects/jerry</uri>
+
+	<!-- Formats a given date in a standard default pattern, or used supplied pattern. -->
+	<tag>
+		<name>formatDate</name>
+		<tag-class>com.sangupta.jerry.taglib.DateFormatTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<!-- Formats the given value into hex -->
+	<tag>
+		<name>hex</name>
+		<tag-class>com.sangupta.jerry.taglib.HexFormatTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<!-- Displays currnet user's name -->
+	<tag>
+		<name>username</name>
+		<tag-class>com.sangupta.jerry.taglib.UserNameTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>onAnonymous</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+</taglib>
