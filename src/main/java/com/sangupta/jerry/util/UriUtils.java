@@ -562,5 +562,23 @@ public class UriUtils {
 		
 		return builder.toString();
 	}
+
+	/**
+	 * Simple function to see if a string resembles a URL or not.
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static boolean appearsValidUrl(String url) {
+		if(AssertUtils.isEmpty(url)) {
+			return false;
+		}
+		
+		if(!url.contains(".")) {
+			return false;
+		}
+		
+		return true;
+	}
 	
 }
