@@ -36,6 +36,21 @@ public class SecurityContext {
 	private static ThreadLocal<Principal> holder = new ThreadLocal<Principal>();
 	
 	/**
+	 * The anonymous user account
+	 */
+	private static Principal ANONYMOUS_USER_PRINCIPAL = null;
+	
+	/**
+	 * Method that sets up the anonymous user account. If no user is assigned
+	 * to the request, the anonymous user account will be returned.
+	 * 
+	 * @param principal
+	 */
+	public static void setupAnonymousUserAccount(Principal principal) {
+		ANONYMOUS_USER_PRINCIPAL = principal;
+	}
+	
+	/**
 	 * Setup a principal in this context
 	 *  
 	 * @param principal
@@ -50,7 +65,27 @@ public class SecurityContext {
 	 * @return
 	 */
 	public static Principal getPrincipal() {
-		return holder.get();
+		Principal principal = holder.get();
+		if(principal != null) {
+			return principal;
+		}
+		
+		return ANONYMOUS_USER_PRINCIPAL;
+	}
+	
+	public static boolean isAnonymousUser() {
+		Principal principal = holder.get();
+		if(principal == null) {
+			return true;
+		}
+		
+		// the following == check is intentional for we want to compare
+		// object instances here, and not object values
+		if(principal == ANONYMOUS_USER_PRINCIPAL) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
