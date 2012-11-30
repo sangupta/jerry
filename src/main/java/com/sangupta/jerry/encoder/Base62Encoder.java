@@ -105,29 +105,30 @@ public class Base62Encoder {
 		return num;
 	}
 	
-//	/**
-//	 * Test function
-//	 * 
-//	 * @param args
-//	 */
-//	public static void main(String[] args) {
-//		long start = System.currentTimeMillis();
-//		
-//		int num = 0;
-//		final long MAX = 100 * 1000 * 1000; // 100 million
-//		do {
-//			String enc = encode(++num);
-//			long dec = decode(enc);
-//			
-//			if(num != dec) {
-//				System.out.println("We fail for " + num + ", enc: " + enc + ", dec: " + dec);
-//				break;
-//			}
-//		} while(num < MAX);
-//		
-//		long end = System.currentTimeMillis();
-//		
-//		System.out.println("Done in " + (end - start) + "ms.");
-//	}
+	/**
+	 * Test function
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		long start = System.currentTimeMillis();
+		
+		System.out.println(decode("A"));
+		
+		final long MAX = 100 * 1000 * 1000; // 100 million
+		for(long index = 0; index < 100; index++) {
+			String enc = encode(index);
+			long dec = decode(enc);
+			
+			System.out.println("We build for " + index + ", enc: " + enc + ", dec: " + dec);
+			if(index != dec) {
+				break;
+			}
+		}
+		
+		long end = System.currentTimeMillis();
+		
+		System.out.println("Done in " + (end - start) + "ms.");
+	}
 
 }

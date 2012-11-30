@@ -25,6 +25,8 @@ import javax.mail.Address;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.mail.MailException;
@@ -41,6 +43,8 @@ import com.sangupta.jerry.util.AssertUtils;
  *
  */
 public class SmtpEmailServiceImpl extends AbstractEmailServiceImpl implements EmailService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SmtpEmailServiceImpl.class);
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -91,7 +95,7 @@ public class SmtpEmailServiceImpl extends AbstractEmailServiceImpl implements Em
 			this.mailSender.send(preparator);
 			return true;
 		} catch(MailException e) {
-			e.printStackTrace();
+			LOGGER.error("Unable to send email", e);
 		}
 		
 		return false;
