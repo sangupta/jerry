@@ -51,4 +51,18 @@
 		</attribute>
 	</tag>
 	
+	<!-- Let's add the javascript into the page context so that it can be added at the end of the page -->
+	<tag>
+		<name>includeJS</name>
+		<tag-class>com.sangupta.jerry.taglib.JavascriptIncludeTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	
+	<!-- Emit all javascript that is included in the request till now -->
+	<tag>
+		<name>emitAllJavascript</name>
+		<tag-class>com.sangupta.jerry.taglib.AllJavascriptTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+	
 </taglib>
