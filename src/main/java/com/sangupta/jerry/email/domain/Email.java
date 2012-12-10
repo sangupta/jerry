@@ -72,6 +72,30 @@ public class Email {
 		this.to.add(address);
 	}
 	
+	public void addCc(String toAddress) {
+		addCc(new EmailAddress(toAddress));
+	}
+	
+	public void addCc(EmailAddress address) {
+		if(this.cc == null) {
+			this.cc = new HashSet<EmailAddress>();
+		}
+		
+		this.cc.add(address);
+	}
+	
+	public void addBcc(String toAddress) {
+		addBcc(new EmailAddress(toAddress));
+	}
+	
+	public void addBcc(EmailAddress address) {
+		if(this.bcc == null) {
+			this.bcc = new HashSet<EmailAddress>();
+		}
+		
+		this.bcc.add(address);
+	}
+	
 	// Usual accessors follow
 
 	/**
