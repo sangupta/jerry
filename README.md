@@ -20,7 +20,7 @@ The library can be downloaded from Maven Central using:
 <dependency>
     <groupId>com.sangupta</groupId>
     <artifactId>jerry</artifactId>
-    <version>0.1.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
