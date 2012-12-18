@@ -65,4 +65,16 @@
 		<body-content>empty</body-content>
 	</tag>
 	
+	<!-- Display the duration elapsed between the time and now in human understandable format -->
+	<tag>
+		<name>timeAgo</name>
+		<tag-class>com.sangupta.jerry.taglib.TimeAgoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>time</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
 </taglib>
