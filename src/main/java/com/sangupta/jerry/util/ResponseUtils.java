@@ -55,6 +55,28 @@ public class ResponseUtils {
 	}
 
 	/**
+	 * 
+	 * @param response
+	 * @param data
+	 * @param fileName
+	 * @param mimeType
+	 * @throws IOException
+	 */
+	public static void pushForUserDownload(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
+		setOnlyDownload(response, fileName);
+
+		response.setContentType("application/octet-stream");
+		response.setCharacterEncoding("UTF-8");
+		response.setStatus(HttpServletResponse.SC_OK);
+		
+		ServletOutputStream stream = response.getOutputStream();
+		response.setContentLength(bytes.length);
+		stream.write(bytes);
+		stream.flush();
+		stream.close();
+	}
+
+	/**
 	 * Make sure that IE8+ do not sniff for MIME when already
 	 * specified in response.
 	 * 
@@ -78,6 +100,6 @@ public class ResponseUtils {
 	 */
 	public static void setOnlyDownload(HttpServletResponse response, String fileName) {
 		response.addHeader("X-Download-Options", "noopen");
-		response.addHeader("Content--Disposition", "attachment; filename=" + fileName);
+		response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
 	}
 }
