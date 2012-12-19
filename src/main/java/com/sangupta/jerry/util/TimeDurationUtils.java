@@ -39,12 +39,33 @@ public class TimeDurationUtils {
 	
 	private static final long YEAR = 365 * DAY;
 	
+	/**
+	 * Compute the time duration from given date.
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static String ago(Date date) {
 		if(date == null) {
 			throw new IllegalArgumentException("Date item cannot be null");
 		}
 		
 		long delta = System.currentTimeMillis() - date.getTime();
+		return fromDelta(delta);
+	}
+	
+	/**
+	 * Compute the time duration from given millis.
+	 * 
+	 * @param millis
+	 * @return
+	 */
+	public static String ago(long millis) {
+		long delta = System.currentTimeMillis() - millis;
+		return fromDelta(delta);
+	}
+	
+	private static String fromDelta(long delta) {
 		if(delta < 0) {
 			return "moments ago";
 		}

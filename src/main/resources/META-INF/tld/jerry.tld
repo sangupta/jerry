@@ -72,7 +72,12 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<name>time</name>
-			<required>true</required>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>millis</name>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>

@@ -38,6 +38,8 @@ public class TimeAgoTag extends SimpleTagSupport {
 	
 	private Date time;
 	
+	private long millis;
+	
 	/**
 	 * @see javax.servlet.jsp.tagext.SimpleTagSupport#doTag()
 	 */
@@ -46,11 +48,17 @@ public class TimeAgoTag extends SimpleTagSupport {
 		final JspWriter out = getJspContext().getOut();
 		
 		if(this.time == null) {
-			out.print("right now");
+			if(this.millis == 0) {
+				out.print("right now");
+				return;
+			}
+			
+			// the time is given in millis
+			out.write(TimeDurationUtils.ago(this.millis));
 			return;
 		}
 		
-		out.write(TimeDurationUtils.ago(time));
+		out.write(TimeDurationUtils.ago(this.time));
 	}
 	
 	// Usual accessors follow
@@ -67,6 +75,20 @@ public class TimeAgoTag extends SimpleTagSupport {
 	 */
 	public void setTime(Date time) {
 		this.time = time;
+	}
+
+	/**
+	 * @return the millis
+	 */
+	public long getMillis() {
+		return millis;
+	}
+
+	/**
+	 * @param millis the millis to set
+	 */
+	public void setMillis(long millis) {
+		this.millis = millis;
 	}
 
 }
