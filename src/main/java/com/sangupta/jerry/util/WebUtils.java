@@ -54,9 +54,7 @@ public class WebUtils {
 		File tempFile = File.createTempFile("download", extension);
 		tempFile.deleteOnExit();
 		
-		if(logger.isDebugEnabled()) {
-			logger.debug("Downloading " + url + " to " + tempFile.getAbsolutePath());
-		}
+		logger.debug("Downloading {} to {}", url, tempFile.getAbsolutePath());
 		
 		try {
 			WebRequest.get(url).execute().writeToFile(tempFile);

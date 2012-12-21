@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ZipUtils {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ZipUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ZipUtils.class);
 
 	/**
 	 * Read a given file from the ZIP file and store it in a temporary file. The temporary file
@@ -59,9 +59,7 @@ public class ZipUtils {
 			return null;
 		}
 		
-		if(logger.isDebugEnabled()) {
-			logger.debug("Reading " + fileName + " from " + tempZip.getAbsolutePath());
-		}
+		LOGGER.debug("Reading {} from {}", fileName, tempZip.getAbsolutePath());
 		
 		ZipInputStream stream = null;
 		BufferedOutputStream outStream = null;
@@ -104,10 +102,10 @@ public class ZipUtils {
 	 * @return returns the absolute path of the ZIP file. 
 	 */
 	public String createZipFile(String filePath) {
-        logger.debug("Starting compression of " + filePath);
+        LOGGER.debug("Starting compression of " + filePath);
         
     	String zipFilename = filePath + ".zip";
-    	logger.debug("Creating zip file at " + zipFilename);
+    	LOGGER.debug("Creating zip file at " + zipFilename);
         
     	byte[] buf = new byte[1024];
 
@@ -133,7 +131,7 @@ public class ZipUtils {
             // Complete the entry
             stream.closeEntry();
         } catch (IOException e) {
-            logger.error("Unable to compress file " + filePath, e);
+            LOGGER.error("Unable to compress file " + filePath, e);
         } finally {
             IOUtils.closeQuietly(input);
             
