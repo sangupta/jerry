@@ -54,6 +54,19 @@ public class SpringMongoClosingListener implements ApplicationListener<ContextCl
 	public void init() {
 		DB mongoDB = this.mongoTemplate.getDb();
 		this.mongo = mongoDB.getMongo();
+		
+		// add a JVM shutdown hook
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			
+			@Override
+			public void run() {
+				if(mongo != null) {
+					mongo.close();
+					mongo = null;
+				}
+			}
+			
+		});
 	}
 
 	/**
@@ -63,6 +76,7 @@ public class SpringMongoClosingListener implements ApplicationListener<ContextCl
 	public void onApplicationEvent(ContextClosedEvent event) {
 		if(this.mongo != null) {
 			this.mongo.close();
+			this.mongo = null;
 		}
 	}
 	
