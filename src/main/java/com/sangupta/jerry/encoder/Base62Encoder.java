@@ -47,16 +47,15 @@ public class Base62Encoder {
 	 * 
 	 * @param number the number to encode
 	 * 
-	 * @throws IllegalArgumentException if the number is less than zero
-	 * 
 	 * @return string representation of number
 	 */
 	public static String encode(long number) {
-		if(number < 0) {
-			throw new IllegalArgumentException("Number cannot be negative");
-		}
-		
 		StringBuilder builder = new StringBuilder(10);
+		
+		if(number < 0) {
+			builder.append(elements[0]);
+			number = 0 - number;
+		}
 		
 		int remainder;
 		do {
@@ -81,9 +80,17 @@ public class Base62Encoder {
 		char[] array = string.toCharArray();
 		long num = 0;
 		int index = array.length - 1;
+		boolean negative = false;
 		for( ; index >= 0; index--) {
-			num = num * 62;
 			char c = array[index];
+			
+			if(index == 0 && c == elements[0]) {
+				negative = true;
+				break;
+			}
+
+			num = num * 62;
+			
 			if('A' <= c && c <= 'Z') {
 				num += (c - 'A');
 				continue;
@@ -102,6 +109,10 @@ public class Base62Encoder {
 			throw new IllegalArgumentException("String is not Base62 encoded");
 		}
 		
+		if(negative) {
+			num = 0 - num;
+		}
+		
 		return num;
 	}
 	
@@ -113,15 +124,16 @@ public class Base62Encoder {
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
 		
-		System.out.println(decode("A"));
-		
 		final long MAX = 100 * 1000 * 1000; // 100 million
-		for(long index = 0; index < 100; index++) {
-			String enc = encode(index);
+		for(long index = 0; index < MAX; index++) {
+			long num = 0 - index;
+			
+			String enc = encode(num);
 			long dec = decode(enc);
 			
-			System.out.println("We build for " + index + ", enc: " + enc + ", dec: " + dec);
-			if(index != dec) {
+			// System.out.println("We build for " + num + ", enc: " + enc + ", dec: " + dec);
+			if(num != dec) {
+				System.out.println("breaking");
 				break;
 			}
 		}
