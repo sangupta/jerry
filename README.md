@@ -10,6 +10,7 @@ Features
 * MongoDB abstract class for writing CRUD operations on objects with single line of code
 * Quartz scheduling framework
 * Basic security framework classes
+* Basic batching framework
 
 Downloads
 ---------
