@@ -11,6 +11,7 @@ Features
 * Quartz scheduling framework
 * Basic security framework classes
 * Basic batching framework
+* Added Base62 encoder for 64-bit integers
 
 Downloads
 ---------
