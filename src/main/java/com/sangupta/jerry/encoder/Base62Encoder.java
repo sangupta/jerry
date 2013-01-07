@@ -59,9 +59,9 @@ public class Base62Encoder {
 		
 		int remainder;
 		do {
-			remainder = (int) number % 62;
+			remainder = (int) (number % 62l);
 			builder.append(elements[remainder]);
-			number = (int) number / 62;
+			number = number / 62;
 		} while(number > 0);
 		
 		return builder.toString();

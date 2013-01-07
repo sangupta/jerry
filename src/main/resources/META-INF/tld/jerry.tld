@@ -81,5 +81,22 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	
+	<!-- Base62 encoder/decoder tag -->
+	<tag>
+		<name>base62</name>
+		<tag-class>com.sangupta.jerry.taglib.Base62Tag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>encode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>decode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 
 </taglib>
