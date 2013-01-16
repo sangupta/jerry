@@ -66,16 +66,16 @@ import com.sangupta.jerry.util.AssertUtils;
  */
 public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasicOperationsService<T, X> {
 	
-	private MappingContext<? extends MongoPersistentEntity<?>, MongoPersistentProperty> mappingContext = null;
+	protected MappingContext<? extends MongoPersistentEntity<?>, MongoPersistentProperty> mappingContext = null;
 	
-	private ConversionService conversionService = null;
+	protected ConversionService conversionService = null;
 
 	@Autowired
 	protected MongoTemplate mongoTemplate = null;
 	
-	private Class<T> entityClass = null;
+	protected Class<T> entityClass = null;
 	
-	private Class<X> primaryIDClass = null;
+	protected Class<X> primaryIDClass = null;
 	
 	/**
 	 * Default constructor that goes ahead and infers the entity class via
