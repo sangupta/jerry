@@ -21,6 +21,8 @@
 
 package com.sangupta.jerry.util;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +99,22 @@ public class StringUtils {
 		}
 		
 		return defaultValue;
+	}
+	
+	public String fromList(List<Object> list, String appender) {
+		if(AssertUtils.isEmpty(list)) {
+			return "";
+		}
+		
+		StringBuilder builder = new StringBuilder();
+		for(int index = 0; index < list.size(); index++) {
+			if(index > 0) {
+				builder.append(appender);
+			}
+			builder.append(list.get(index));
+		}
+		
+		return builder.toString();
 	}
 
 }
