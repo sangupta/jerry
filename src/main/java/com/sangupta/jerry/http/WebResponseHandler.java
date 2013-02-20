@@ -22,6 +22,7 @@
 package com.sangupta.jerry.http;
 
 import java.io.IOException;
+import java.nio.charset.UnsupportedCharsetException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -97,10 +98,16 @@ public class WebResponseHandler implements ResponseHandler<WebResponse> {
         }
 		
 		// charset
-		ContentType type = ContentType.get(entity);
-		if(type != null) {
-			webResponse.charSet = type.getCharset();
-		}
+        try {
+			ContentType type = ContentType.get(entity);
+			if(type != null) {
+				webResponse.charSet = type.getCharset();
+			}
+        } catch(UnsupportedCharsetException e) {
+        	// we are unable to find the charset for the content
+        	// let's leave it to be considered binary
+        }
+        
 		// return the object finally
         return webResponse;
 	}
