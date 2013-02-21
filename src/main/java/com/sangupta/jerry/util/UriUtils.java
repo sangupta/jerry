@@ -74,6 +74,7 @@ public class UriUtils {
 				String e = input.substring(i, i + 1);
 				if (ALLOWED_CHARS.indexOf(e) == -1) {
 					byte[] b = e.getBytes("utf-8");
+					output.append('%');
 					output.append(StringUtils.getHex(b));
 					continue;
 				}
