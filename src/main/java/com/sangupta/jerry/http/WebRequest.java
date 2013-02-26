@@ -240,6 +240,39 @@ public class WebRequest {
     HttpRequestBase getHttpRequest() {
         return this.request;
     }
+    
+    /**
+     * Display the debug information for this request
+     * 
+     * @return
+     */
+    public WebRequest trace() {
+    	System.out.println(this.request.getRequestLine());
+    	Header[] headers = this.request.getAllHeaders();
+    	if(headers != null) {
+    		for(Header header : headers) {
+    			System.out.println(header.toString());
+    		}
+    	}
+    	
+    	if (this.request instanceof HttpEntityEnclosingRequest) {
+    		HttpEntityEnclosingRequest hecr = (HttpEntityEnclosingRequest) request;
+    		HttpEntity entity = hecr.getEntity();
+    		if(entity != null) {
+    			if(entity.getContentType() != null) {
+    				System.out.println(entity.getContentType().toString());
+    			}
+    			
+    			if(entity.getContentEncoding() != null) {
+    				System.out.println(entity.getContentEncoding().toString());
+    			}
+    			
+    			System.out.println("Content-Length: " + entity.getContentLength());
+    		}
+    	}
+    	
+    	return this;
+    }
 
     /**
      * Execute this web request now.
@@ -516,9 +549,9 @@ public class WebRequest {
         if (this.request instanceof HttpEntityEnclosingRequest) {
             ((HttpEntityEnclosingRequest) this.request).setEntity(entity);
         } else {
-            throw new IllegalStateException(this.request.getMethod()
-                    + " request cannot enclose an entity");
+            throw new IllegalStateException(this.request.getMethod() + " request cannot enclose an entity");
         }
+        
         return this;
     }
 
