@@ -156,6 +156,62 @@ public class WebResponse implements Serializable {
     }
     
     /**
+     * Check if the request returned a successful response. All response codes between HTTP 200
+     * and HTTP 299 are considered to be successful.
+     * 
+     * @return
+     */
+    public boolean isSuccess() {
+    	if(this.responseCode >= 200 && this.responseCode <= 299) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
+    
+    /**
+     * Check if the response indicates a redirected request. All response codes between HTTP 300
+     * and HTTP 399 are considered to be a redirect.
+     * 
+     * @return
+     */
+    public boolean isRedirect() {
+    	if(this.responseCode >= 300 && this.responseCode <= 399) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
+    
+    /**
+     * Check if the response indicates an erroneous client request. All response codes between HTTP 400
+     * and HTTP 499 are considered to be a client error.
+     * 
+     * @return
+     */
+    public boolean isClientError() {
+    	if(this.responseCode >= 400 && this.responseCode <= 499) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
+    
+    /**
+     * Check if the response indicates an error on the server. All response codes between HTTP 500
+     * and HTTP 599 are considered to be a server error.
+     * 
+     * @return
+     */
+    public boolean isServerError() {
+    	if(this.responseCode >= 500 && this.responseCode <= 599) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
+    
+    /**
      * Return the value of the header if present, or <code>null</code>
      * 
      * @param headerName
