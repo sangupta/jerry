@@ -122,7 +122,7 @@ public class WebRawResponse {
     }
 
     /**
-     * Convert the response to a {@link WebResponse} object.
+     * Convert the response to a {@link WebResponse} object. The method will never return a <code>null</code>.
      * 
      * @return
      * @throws ClientProtocolException
