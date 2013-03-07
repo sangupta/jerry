@@ -21,9 +21,12 @@
 
 package com.sangupta.jerry.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.Inflater;
 
 import org.apache.commons.logging.Log;
@@ -151,4 +154,13 @@ public class CompressionUtils {
 		return new String(uncompress(inputBytes, uncompressedSize));
 	}
 
+	public static byte[] gzipByteArray(byte[] bytes) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(bytes.length);
+		
+		GZIPOutputStream gzip = new GZIPOutputStream(baos);
+		gzip.write(bytes);
+		gzip.close();
+		
+		return baos.toByteArray();
+	}
 }

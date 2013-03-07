@@ -116,5 +116,23 @@ public class StringUtils {
 		
 		return builder.toString();
 	}
+	
+	public static boolean contains(String[] list, String value) {
+		if(list == null) {
+			return false;
+		}
+		
+		if(list.length == 0) {
+			return false;
+		}
+		
+		for(String item : list) {
+			if(item.equals(value)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 }
