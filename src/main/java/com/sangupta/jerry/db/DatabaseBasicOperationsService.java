@@ -21,6 +21,7 @@
 
 package com.sangupta.jerry.db;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -81,6 +82,21 @@ public interface DatabaseBasicOperationsService<T, X> {
 	 * @return
 	 */
 	public long count();
+	
+	/**
+	 * Retrieves a list of all entities in the datastore that match the list
+	 * of given primary identifiers.
+	 * 
+	 * <b>Note:</b> If there are too many entity identifiers supplied, the code
+	 * may go out of memory or may take too long to complete. This method should
+	 * be used only by developer at discretion.
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	public List<T> getForIdentifiers(Collection<X> ids);
+	
+	public List<T> getForIdentifiers(X... ids);
 
 	/**
 	 * Retrieves a list of all entities in the datastore.

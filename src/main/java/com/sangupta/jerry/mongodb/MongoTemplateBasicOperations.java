@@ -23,6 +23,7 @@ package com.sangupta.jerry.mongodb;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.sangupta.jerry.db.DatabaseBasicOperationsService;
@@ -78,6 +80,12 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 	protected Class<X> primaryIDClass = null;
 	
 	/**
+	 * The identifier key that has been used as the primary key to store in the datastore.
+	 * 
+	 */
+	protected String idKey = null;
+	
+	/**
 	 * Default constructor that goes ahead and infers the entity class via
 	 * generics - it will be needed with {@link MongoTemplate} while working.
 	 */
@@ -99,6 +107,32 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 		
 		T dbObject = this.mongoTemplate.findById(primaryID, this.entityClass);
 		return dbObject;
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public List<T> getForIdentifiers(Collection<X> ids) {
+		if(this.idKey == null) {
+			fetchMappingContextAndConversionService();
+		}
+		
+		Query query = new Query(Criteria.where(this.idKey).in(ids));
+		return this.mongoTemplate.find(query, this.entityClass);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public List<T> getForIdentifiers(X... ids) {
+		if(this.idKey == null) {
+			fetchMappingContextAndConversionService();
+		}
+		
+		Query query = new Query(Criteria.where(this.idKey).in(ids));
+		return this.mongoTemplate.find(query, this.entityClass);
 	}
 	
 	/**
@@ -266,6 +300,10 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 			MongoConverter mongoConverter = this.mongoTemplate.getConverter();
 			mappingContext = mongoConverter.getMappingContext();
 			conversionService = mongoConverter.getConversionService();
+
+			MongoPersistentEntity<?> persistentEntity = mappingContext.getPersistentEntity(entityClass);
+			MongoPersistentProperty idProperty = persistentEntity.getIdProperty();
+			this.idKey = idProperty == null ? "_id" : idProperty.getName();
 		}
 	}
 	
