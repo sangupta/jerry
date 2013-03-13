@@ -99,4 +99,18 @@
 		</attribute>
 	</tag>
 
+	<!-- do body for anonymous user -->	
+	<tag>
+		<name>anonymous</name>
+		<tag-class>com.sangupta.jerry.taglib.AnonymousTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	
+	<!-- do body for signed-in user -->
+	<tag>
+		<name>signedIn</name>
+		<tag-class>com.sangupta.jerry.taglib.SignedInTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	
 </taglib>
