@@ -22,13 +22,12 @@
 package com.sangupta.jerry.taglib;
 
 import java.io.IOException;
-import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
+
+import com.sangupta.jerry.security.SecurityContext;
 
 /**
  * @author sangupta
@@ -43,16 +42,14 @@ public class UserNameTag extends SimpleTagSupport {
 	 */
 	@Override
 	public void doTag() throws JspException, IOException {
-		PageContext pageContext = (PageContext) getJspContext();
-		Principal principal = ((HttpServletRequest) pageContext.getRequest()).getUserPrincipal();
 		JspWriter out = getJspContext().getOut();
 		
-		if(principal == null) {
+		if(SecurityContext.isAnonymousUser()) {
 			out.write(onAnonymous);
-		} else {
-			principal.getName();
+			return;
 		}
 		
+		out.write(SecurityContext.getPrincipal().getName());
 	}
 	
 	// Usual accessors follow
