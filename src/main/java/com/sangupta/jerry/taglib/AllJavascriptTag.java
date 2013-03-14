@@ -30,6 +30,8 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
+import com.sangupta.jerry.util.AssertUtils;
+
 /**
  * Tag that adds all javascript in the {@link ThreadLocal} variable at the given
  * location in the page.
@@ -41,10 +43,26 @@ public class AllJavascriptTag extends SimpleTagSupport {
 
 	@Override
 	public void doTag() throws JspException, IOException {
-		PageContext pageContext = (PageContext) getJspContext();
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		final PageContext pageContext = (PageContext) getJspContext();
+		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		final JspWriter out = getJspContext().getOut();
 		
-		Object object = request.getAttribute(JavascriptIncludeTag.JAVASCRIPT_INCLUDE_TAG);
+		
+		// let's emit all source files first
+		Object object = request.getAttribute(JavascriptIncludeTag.JAVASCRIPT_INCLUDE_URL_TAG);
+		if(object != null) {
+			@SuppressWarnings("unchecked")
+			List<String> urls = (List<String>) object;
+			if(AssertUtils.isNotEmpty(urls)) {
+				for(String url : urls) {
+					out.write("<script type=\"text/javascript\" src=\"" + url + "\">");
+					out.write("</script>\n");
+				}
+			}
+		}
+		
+		// now turn of individual script bodies
+		object = request.getAttribute(JavascriptIncludeTag.JAVASCRIPT_INCLUDE_TAG);
 		if(object == null) {
 			return;
 		}
@@ -55,13 +73,11 @@ public class AllJavascriptTag extends SimpleTagSupport {
 			return;
 		}
 		
-		JspWriter out = getJspContext().getOut();
-		
 		out.write("<script type=\"text/javascript\">");
 		
 		for(String script : list) {
 			out.write(script);
-			out.write('\n');
+			out.write("\n\n");
 		}
 		
 		pageContext.removeAttribute(JavascriptIncludeTag.JAVASCRIPT_INCLUDE_TAG);

@@ -29,6 +29,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import com.sangupta.jerry.util.AssertUtils;
+import com.sangupta.jerry.util.UriUtils;
+
 /**
  * @author sangupta
  * 
@@ -44,6 +47,52 @@ public class JavascriptIncludeTag extends BodyTagSupport {
 	 * Name of the page context attribute that is used to include all tags
 	 */
 	public static final String JAVASCRIPT_INCLUDE_TAG = "javascript.include.tag";
+	
+	/**
+	 * Name of the page context attribute that is used to include all tags
+	 */
+	public static final String JAVASCRIPT_INCLUDE_URL_TAG = "javascript.include.url.tag";
+	
+	/**
+	 * The url of the file to include. If specified, the URL is included at the end
+	 */
+	private String url;
+	
+	/**
+	 * Specifies if application context needs to be appended to the URL or not
+	 */
+	private boolean appendContext = false;
+	
+	/** (non-Javadoc)
+	 * @see javax.servlet.jsp.tagext.BodyTagSupport#doStartTag()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int doStartTag() throws JspException {
+		super.doStartTag();
+
+		if(AssertUtils.isNotEmpty(this.url)) {
+			final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+			Object object = request.getAttribute(JavascriptIncludeTag.JAVASCRIPT_INCLUDE_URL_TAG);
+			List<String> urls;
+			
+			if(object == null) {
+				urls = new ArrayList<String>();
+				request.setAttribute(JavascriptIncludeTag.JAVASCRIPT_INCLUDE_URL_TAG, urls);
+			} else {
+				urls = (List<String>) object;
+			}
+			
+			if(this.appendContext) {
+				url = UriUtils.addWebPaths(request.getContextPath(), url); 
+			}
+			urls.add(url);
+			
+			return SKIP_BODY;
+		}
+		
+		return EVAL_BODY_INCLUDE;
+	}
 
 	/**
 	 * @see javax.servlet.jsp.tagext.BodyTagSupport#doAfterBody()
@@ -51,10 +100,15 @@ public class JavascriptIncludeTag extends BodyTagSupport {
 	@SuppressWarnings("unchecked")
 	@Override
 	public int doAfterBody() throws JspException {
+		if(AssertUtils.isNotEmpty(this.url)) {
+			return SKIP_BODY;
+		}
+		
+		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+		
 		BodyContent bodycontent = getBodyContent();
 		String body = bodycontent.getString();
 		
-		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		Object object = request.getAttribute(JavascriptIncludeTag.JAVASCRIPT_INCLUDE_TAG);
 		
 		List<String> scripts;
@@ -68,5 +122,33 @@ public class JavascriptIncludeTag extends BodyTagSupport {
 		scripts.add(body);
 		
 		return SKIP_BODY;
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	/**
+	 * @return the appendContext
+	 */
+	public boolean isAppendContext() {
+		return appendContext;
+	}
+
+	/**
+	 * @param appendContext the appendContext to set
+	 */
+	public void setAppendContext(boolean appendContext) {
+		this.appendContext = appendContext;
 	}
 }

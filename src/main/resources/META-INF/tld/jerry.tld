@@ -56,6 +56,16 @@
 		<name>includeJS</name>
 		<tag-class>com.sangupta.jerry.taglib.JavascriptIncludeTag</tag-class>
 		<body-content>JSP</body-content>
+		<attribute>
+			<name>url</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>appendContext</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 	
 	<!-- Emit all javascript that is included in the request till now -->
