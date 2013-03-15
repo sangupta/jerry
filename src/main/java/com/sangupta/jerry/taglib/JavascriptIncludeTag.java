@@ -107,8 +107,12 @@ public class JavascriptIncludeTag extends BodyTagSupport {
 		final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		
 		BodyContent bodycontent = getBodyContent();
-		String body = bodycontent.getString();
+		if(bodycontent == null) {
+			// nothing to do
+			return SKIP_BODY;
+		}
 		
+		String body = bodycontent.getString();
 		Object object = request.getAttribute(JavascriptIncludeTag.JAVASCRIPT_INCLUDE_TAG);
 		
 		List<String> scripts;
