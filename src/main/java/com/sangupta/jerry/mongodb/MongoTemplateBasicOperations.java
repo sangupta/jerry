@@ -277,7 +277,7 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 	 * @param entity
 	 * @return
 	 */
-	private X getPrimaryID(T entity) {
+	protected X getPrimaryID(T entity) {
 		if(mappingContext == null || conversionService == null) {
 			fetchMappingContextAndConversionService();
 		}
