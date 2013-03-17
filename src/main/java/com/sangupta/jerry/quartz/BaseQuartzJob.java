@@ -86,8 +86,8 @@ public abstract class BaseQuartzJob implements Job {
     }
     
     /**
-     * Utility method to extract a Spring Bean from the Spring Application Context that is supplied in the Quartz
-     * JobExecutin Context. The method is parameterised to use dynamic typing.
+     * Utility method to extract a Spring Bean from the Spring {@link ApplicationContext} that is supplied in the Quartz
+     * {@link JobExecutionContext}. The method is parameterized to use dynamic typing.
      *  
      * @param <T>
      * @param beanName
@@ -99,6 +99,21 @@ public abstract class BaseQuartzJob implements Job {
         if(this.applicationContext != null) {
             return (T) this.applicationContext.getBean(beanName);
         }
+        
         return null;
     }
+    
+    /**
+     * Utility method to extract a Spring Bean from the Spring {@link ApplicationContext} that is supplied in the Quartz
+     * {@link JobExecutionContext}. The method is parameterized to use dynamic typing.
+     * @param clazz
+     * @return
+     */
+    public final <T> T getBean(Class<T> clazz) {
+    	if(this.applicationContext != null) {
+            return (T) this.applicationContext.getBean(clazz);
+        }
+        return null;
+    }
+    
 }

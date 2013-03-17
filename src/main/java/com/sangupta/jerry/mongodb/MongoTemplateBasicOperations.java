@@ -114,6 +114,10 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 	 */
 	@Override
 	public List<T> getForIdentifiers(Collection<X> ids) {
+		if(AssertUtils.isEmpty(ids)) {
+			return null;
+		}
+		
 		if(this.idKey == null) {
 			fetchMappingContextAndConversionService();
 		}
@@ -127,6 +131,10 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 	 */
 	@Override
 	public List<T> getForIdentifiers(X... ids) {
+		if(AssertUtils.isEmpty(ids)) {
+			return null;
+		}
+		
 		if(this.idKey == null) {
 			fetchMappingContextAndConversionService();
 		}
