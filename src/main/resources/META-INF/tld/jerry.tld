@@ -123,4 +123,20 @@
 		<body-content>JSP</body-content>
 	</tag>
 	
+	<tag>
+		<name>encodeUriComponent</name>
+		<tag-class>com.sangupta.jerry.taglib.EncodeUriComponentTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
 </taglib>
