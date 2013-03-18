@@ -21,6 +21,7 @@
 
 package com.sangupta.jerry.taglib;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,18 +38,36 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
  */
 public class DateFormatTag extends SimpleTagSupport {
 	
-	private Date value;
+	private Object value;
 	
 	private String pattern = "EEE, MMM dd yyyy, HH:mm:ss z";
 
 	@Override
 	public void doTag() throws JspException, IOException {
-		if(value != null) {
-			JspWriter out = getJspContext().getOut();
-			SimpleDateFormat format = new SimpleDateFormat(pattern);
-			String formatted = format.format(value);
-			out.write(formatted);
+		if(this.value == null) {
+			return;
 		}
+
+		Date date  = null;
+		if(this.value instanceof Date) {
+			date = (Date) this.value;
+		}
+		
+		if(this.value instanceof Long) {
+			date = new Date((Long) this.value);
+		}
+		if(this.value instanceof File) {
+			date = new Date(((File) this.value).lastModified());
+		}
+		
+		if(date == null) {
+			throw new IllegalArgumentException("Value should be either a valid date object or a long timestamp");
+		}
+		
+		JspWriter out = getJspContext().getOut();
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		String formatted = format.format(date);
+		out.write(formatted);
 	}
 	
 	// Usual accessor's follow
@@ -56,15 +75,27 @@ public class DateFormatTag extends SimpleTagSupport {
 	/**
 	 * @return the value
 	 */
-	public Date getValue() {
+	public Object getValue() {
 		return value;
 	}
 
 	/**
 	 * @param value the value to set
 	 */
-	public void setValue(Date value) {
+	public void setValue(Object value) {
 		this.value = value;
+	}
+	
+	public void setValue(long value) {
+		this.value = value;
+	}
+	
+	public void setValue(Date date) {
+		this.value = date;
+	}
+	
+	public void setValue(File file) {
+		this.value = file;
 	}
 
 	/**
