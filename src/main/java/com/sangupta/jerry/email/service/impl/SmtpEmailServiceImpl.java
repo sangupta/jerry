@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import com.sangupta.jerry.email.domain.Email;
@@ -86,7 +87,7 @@ public class SmtpEmailServiceImpl extends AbstractEmailServiceImpl implements Em
 				 
 				 mimeMessage.setFrom(email.getFrom().getInternetAddress());
 				 mimeMessage.setSubject(email.getSubject());
-				 mimeMessage.setText(email.getText());
+				 mimeMessage.setContent(email.getText(), "text/html; charset=utf-8");
 			 }
 			
 		};
@@ -99,6 +100,28 @@ public class SmtpEmailServiceImpl extends AbstractEmailServiceImpl implements Em
 		}
 		
 		return false;
+	}
+	
+	public static void main(String[] args) {
+		try {
+			JavaMailSenderImpl sender  = new org.springframework.mail.javamail.JavaMailSenderImpl();
+			sender.setHost("smtp.1and1.com");
+			sender.setPort(587);
+			sender.setUsername("no-reply@multiplx.com");
+			sender.setPassword("noreplyplx");
+			
+			SmtpEmailServiceImpl impl = new SmtpEmailServiceImpl();
+			impl.setMailSender(sender);
+			
+			Email email = new Email();
+			email.addTo("sangupta@outlook.com");
+			email.setSubject("test mail");
+			email.setText("hello <b>world</b>!");
+			email.setFrom(new EmailAddress("MultiPLX", "no-reply@multiplx.com"));
+			impl.sendEmail(email);
+		} catch(Throwable t) {
+			t.printStackTrace();
+		}
 	}
 	
 	// Usual accessors follow

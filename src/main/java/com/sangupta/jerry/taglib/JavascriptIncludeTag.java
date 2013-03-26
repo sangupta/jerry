@@ -91,7 +91,7 @@ public class JavascriptIncludeTag extends BodyTagSupport {
 			return SKIP_BODY;
 		}
 		
-		return EVAL_BODY_INCLUDE;
+		return EVAL_BODY_BUFFERED;
 	}
 
 	/**
