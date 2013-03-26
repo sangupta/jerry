@@ -642,6 +642,15 @@ public class WebRequest {
         return body(new InputStreamEntity(instream, -1, contentType));
     }
 
+	/**
+	 * @param cookiePolicy
+	 * @return
+	 */
+	public WebRequest cookiePolicy(String cookiePolicy) {
+		this.request.getParams().setParameter(ClientPNames.COOKIE_POLICY, cookiePolicy);
+		return this;
+	}
+
     /**
      * Convert this request to {@link String} format. This is basically a 
      * representation of the request line that will be sent over the wire.

@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.params.CookiePolicy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -67,8 +68,18 @@ public class WebInvoker {
 	 * @return
 	 */
 	public static String fetchResponse(String url) {
+		return fetchResponse(url, CookiePolicy.BEST_MATCH);
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @param cookiePolicy
+	 * @return
+	 */
+	public static String fetchResponse(String url, String cookiePolicy) {
 		try {
-			return WebRequest.get(url).execute().webResponse().asString();
+			return WebRequest.get(url).cookiePolicy(cookiePolicy).execute().webResponse().asString();
 		} catch(IOException e) {
 			logger.debug("Unable to fetch repsonse from url: {}", url, e);
 		}
@@ -77,15 +88,24 @@ public class WebInvoker {
 	}
 	
 	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static WebResponse getResponse(String url) {
+		return getResponse(url, CookiePolicy.BEST_MATCH);
+	}
+	
+	/**
 	 * Return the entire response for a GET request to the given URL.
 	 *  
 	 * @param url
 	 * @return
 	 */
-	public static WebResponse getResponse(String url) {
+	public static WebResponse getResponse(String url, String cookiePolicy) {
 		try {
-			return WebRequest.get(url).execute().webResponse();
-		} catch(IOException e) {
+			return WebRequest.get(url).cookiePolicy(cookiePolicy).execute().webResponse();
+		} catch(Exception e) {
 			logger.debug("Unable to fetch repsonse from url: {}", url, e);
 		}
 		
@@ -99,12 +119,23 @@ public class WebInvoker {
 	 * @param url
 	 */
 	public static Map<String, String> getHeaders(String url, boolean followRedirects) {
+		return getHeaders(url, followRedirects, CookiePolicy.BEST_MATCH);
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @param followRedirects
+	 * @param cookiePolicy
+	 * @return
+	 */
+	public static Map<String, String> getHeaders(String url, boolean followRedirects, String cookiePolicy) {
 		try {
 			if(followRedirects) {
-				return WebRequest.head(url).followRedirects().execute().webResponse().getHeaders();
+				return WebRequest.head(url).cookiePolicy(cookiePolicy).followRedirects().execute().webResponse().getHeaders();
 			}
 			
-			return WebRequest.head(url).noRedirects().execute().webResponse().getHeaders();
+			return WebRequest.head(url).cookiePolicy(cookiePolicy).noRedirects().execute().webResponse().getHeaders();
 		} catch(IOException e) {
 			logger.debug("Unable to fetch response headers from url: {}", url, e);
 		}
@@ -120,12 +151,23 @@ public class WebInvoker {
 	 * @return
 	 */
 	public static WebResponse headRequest(String url, boolean followRedirects) {
+		return headRequest(url, followRedirects, CookiePolicy.BEST_MATCH);
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @param followRedirects
+	 * @param cookiePolicy
+	 * @return
+	 */
+	public static WebResponse headRequest(String url, boolean followRedirects, String cookiePolicy) {
 		try {
 			if(followRedirects) {
-				return WebRequest.head(url).followRedirects().execute().webResponse();
+				return WebRequest.head(url).cookiePolicy(cookiePolicy).followRedirects().execute().webResponse();
 			}
 			
-			return WebRequest.head(url).noRedirects().execute().webResponse();
+			return WebRequest.head(url).cookiePolicy(cookiePolicy).noRedirects().execute().webResponse();
 		} catch(IOException e) {
 			logger.debug("Unable to fetch response headers from url: {}", url, e);
 		}
