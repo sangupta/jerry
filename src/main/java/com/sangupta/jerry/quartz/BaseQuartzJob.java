@@ -48,8 +48,12 @@ public abstract class BaseQuartzJob implements Job {
      * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
      */
     public final void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        initializeApplicationContext(jobExecutionContext);
-        executeInternal(jobExecutionContext);
+    	try {
+	        initializeApplicationContext(jobExecutionContext);
+	        executeInternal(jobExecutionContext);
+    	} catch(Throwable t) {
+    		getLogger().error("Unable to execute job successfully", t);
+    	}
     }
 
     /**
