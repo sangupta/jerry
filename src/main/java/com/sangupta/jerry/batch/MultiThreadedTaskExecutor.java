@@ -45,18 +45,26 @@ public class MultiThreadedTaskExecutor {
 	
 	private ExecutorService pool = null;
 	
-	public MultiThreadedTaskExecutor(MultiThreadableOperation operation) {
-		this(operation, DEFAULT_BATCH_SIZE);
+	/**
+	 * Provides a user defined-name to this object so that errors can be traced easily.
+	 * 
+	 */
+	private String name;
+	
+	public MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation) {
+		this(name, operation, DEFAULT_BATCH_SIZE);
 	}
 	
-	public MultiThreadedTaskExecutor(MultiThreadableOperation operation, int batchSize) {
+	public MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation, int batchSize) {
 		if(operation == null) {
 			throw new IllegalArgumentException("Operation cannot be null.");
 		}
 		
+		this.name = name;
 		this.multiThreadableOperation = operation;
 		
 		pool = Executors.newFixedThreadPool(batchSize);
+		LOGGER.debug("Starting executor pool: {}", this.name);
 	}
 	
 	public void addInvocation(final Object argument) {
@@ -68,7 +76,7 @@ public class MultiThreadedTaskExecutor {
 				try {
 					multiThreadableOperation.runWithArguments(argument);
 				} catch(Throwable t) {
-					LOGGER.error("Error thrown running thread for argument " + argument.toString(), t);
+					LOGGER.error("[{}] Error thrown running thread for argument {}" + argument.toString(), name, t);
 				}
 				
 				return null;
@@ -78,9 +86,23 @@ public class MultiThreadedTaskExecutor {
 	
 	public void waitForCompletion() throws InterruptedException {
 		if(pool != null) {
-			pool.shutdown();
-			
-			pool.awaitTermination(1, TimeUnit.DAYS);
+			try {
+				pool.shutdown();
+				
+				pool.awaitTermination(1, TimeUnit.DAYS);
+			} catch(Throwable t) {
+				LOGGER.error("Unable to complete jobs and shutdown pool", t);
+			}
+		}
+	}
+	
+	public void cleanUp() {
+		if(pool != null && !pool.isShutdown()) {
+			try {
+				pool.shutdownNow();
+			} catch(Throwable t) {
+				LOGGER.error("Unable to shutdown pool", t);
+			}
 		}
 	}
 	
