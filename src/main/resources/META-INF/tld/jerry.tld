@@ -109,6 +109,27 @@
 		</attribute>
 	</tag>
 
+	<tag>
+		<name>base64</name>
+		<tag-class>com.sangupta.jerry.taglib.Base64Tag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>encode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>decode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
 	<!-- do body for anonymous user -->	
 	<tag>
 		<name>anonymous</name>
