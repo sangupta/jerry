@@ -48,6 +48,10 @@ public class QuartzJobTriggerInfo {
 	
 	private TriggerState status;
 	
+	private boolean running;
+	
+	private long runTime;
+	
 	public String getStatusAsString() {
 		return this.status.toString();
 	}
@@ -122,6 +126,34 @@ public class QuartzJobTriggerInfo {
 	 */
 	public void setStatus(TriggerState status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the running
+	 */
+	public boolean isRunning() {
+		return running;
+	}
+
+	/**
+	 * @param running the running to set
+	 */
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
+
+	/**
+	 * @return the runTime
+	 */
+	public long getRunTime() {
+		return runTime;
+	}
+
+	/**
+	 * @param runTime the runTime to set
+	 */
+	public void setRunTime(long runTime) {
+		this.runTime = runTime;
 	}
 	
 }

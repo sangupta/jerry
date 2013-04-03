@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -63,6 +64,9 @@ public class DefaultQuartzServiceImpl implements QuartzService {
         List<QuartzJobInfo> jobs = new ArrayList<QuartzJobInfo>();
         try {
             List<String> jobGroupNames = this.scheduler.getJobGroupNames();
+            
+            List<JobExecutionContext> runningJobs = this.scheduler.getCurrentlyExecutingJobs();
+            
             for(String jobGroupName : jobGroupNames) {
             	final Set<JobKey> jobKeys = this.scheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroupName));
                 
@@ -82,6 +86,7 @@ public class DefaultQuartzServiceImpl implements QuartzService {
                 	if(AssertUtils.isNotEmpty(triggers)) {
                 		for(Trigger trigger : triggers) {
                 			QuartzJobTriggerInfo triggerInfo = new QuartzJobTriggerInfo();
+                			
                 			String triggerName = trigger.getKey().getName();
                 			String triggerGroup = trigger.getKey().getGroup();
                 			triggerInfo.setTriggerName(triggerName);
@@ -90,6 +95,15 @@ public class DefaultQuartzServiceImpl implements QuartzService {
                 			triggerInfo.setNextFireTime(trigger.getNextFireTime());
                 			
                 			triggerInfo.setStatus(this.scheduler.getTriggerState(trigger.getKey()));
+                			
+                			// check if the trigger is already running
+                			for(JobExecutionContext jec : runningJobs) {
+                				if(jec.getTrigger().equals(trigger)) {
+                					triggerInfo.setRunning(true);
+                					triggerInfo.setRunTime(jec.getJobRunTime());
+                					break;
+                				}
+                			}
                 			
                 			jobInfo.addTriggerInfo(triggerInfo);
                 		}
