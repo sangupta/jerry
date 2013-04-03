@@ -24,6 +24,7 @@ package com.sangupta.jerry.batch;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -51,11 +52,15 @@ public class MultiThreadedTaskExecutor {
 	 */
 	private String name;
 	
-	public MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation) {
-		this(name, operation, DEFAULT_BATCH_SIZE);
+	public MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation, boolean fixedSizePool) {
+		this(name, operation, DEFAULT_BATCH_SIZE, fixedSizePool);
 	}
 	
 	public MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation, int batchSize) {
+		this(name, operation, batchSize, false);
+	}
+	
+	private MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation, int batchSize, boolean fixedSizePool) {
 		if(operation == null) {
 			throw new IllegalArgumentException("Operation cannot be null.");
 		}
@@ -63,12 +68,17 @@ public class MultiThreadedTaskExecutor {
 		this.name = name;
 		this.multiThreadableOperation = operation;
 		
-		pool = Executors.newFixedThreadPool(batchSize);
+		if(fixedSizePool) {
+			pool = Executors.newFixedThreadPool(batchSize);
+		} else {
+			pool = Executors.newCachedThreadPool();
+		}
+		
 		LOGGER.debug("Starting executor pool: {}", this.name);
 	}
 	
-	public void addInvocation(final Object argument) {
-		pool.submit(new Callable<Void>() {
+	public Future<Void> addInvocation(final Object argument) {
+		return pool.submit(new Callable<Void>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
