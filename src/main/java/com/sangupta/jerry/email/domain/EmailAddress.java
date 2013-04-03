@@ -71,6 +71,18 @@ public class EmailAddress {
 		return this.email.equals(ea.email);
 	}
 	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		if(this.email != null) {
+			return this.email.hashCode();
+		}
+		
+		return -1;
+	}
+	
 	// Usual accessors follow
 
 	/**
