@@ -79,7 +79,7 @@ public class WebInvoker {
 	 */
 	public static String fetchResponse(String url, String cookiePolicy) {
 		try {
-			return WebRequest.get(url).cookiePolicy(cookiePolicy).execute().webResponse().asString();
+			return WebRequest.get(url).cookiePolicy(cookiePolicy).execute().webResponse().getContent();
 		} catch(IOException e) {
 			logger.debug("Unable to fetch repsonse from url: {}", url, e);
 		}
