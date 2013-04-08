@@ -31,8 +31,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.Consts;
 import org.apache.http.HttpHeaders;
-import org.apache.http.protocol.HTTP;
 
 
 /**
@@ -87,7 +87,11 @@ public class WebResponse implements Serializable {
     }
     
     public String getContent() {
-    	return asString();
+    	return asString(Consts.UTF_8);
+    }
+    
+    public String asContent(Charset charset) {
+    	return asString(charset);
     }
     
     /**
@@ -96,14 +100,14 @@ public class WebResponse implements Serializable {
      * 
      * @return
      */
-    public String asString() {
+    public String asString(Charset charset) {
     	if(this.bytes != null) {
             try {
                 if (this.charSet != null) {
 	                return new String(this.bytes, this.charSet.name());
                 }
                 
-                return new String(this.bytes, HTTP.DEF_CONTENT_CHARSET);
+                return new String(this.bytes, charset);
             } catch (UnsupportedEncodingException ex) {
                 // eat up
             }

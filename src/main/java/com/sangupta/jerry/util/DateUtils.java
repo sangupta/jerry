@@ -28,6 +28,46 @@ import java.util.Date;
  *
  */
 public class DateUtils {
+	
+	/**
+	 * One second expressed as millis
+	 */
+	public static final long ONE_SECOND = 1000l;
+	
+	/**
+	 * One minute expressed as millis
+	 */
+	public static final long ONE_MINUTE = 60l * ONE_SECOND;
+	
+	/**
+	 * Five minutes expressed as millis
+	 */
+	public static final long FIVE_MINUTES = 15l * ONE_MINUTE;
+
+	/**
+	 * Fifteen minutes expressed in millis
+	 */
+	public static final long FIFTEEN_MINUTES = 15l * ONE_MINUTE;
+	
+	/**
+	 * One hour expressed as millis
+	 */
+	public static final long ONE_HOUR = 60l * ONE_MINUTE;
+	
+	/**
+	 * One day (24-hours) expressed as millis
+	 */
+	public static final long ONE_DAY = 24l * ONE_HOUR;
+	
+	/**
+	 * One week (7 days) expressed as millis
+	 */
+	public static final long ONE_WEEK = 7l * ONE_DAY;
+	
+	/**
+	 * One month (30-days) expressed as millis
+	 */
+	public static final long ONE_MONTH = 30l * ONE_DAY; 
 
     /**
      * Convert the given time (in millis) represented as a {@link Long} object into the {@link Date} object.
