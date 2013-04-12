@@ -121,4 +121,10 @@ public interface DatabaseBasicOperationsService<T, X> {
 	 * @return
 	 */
 	public List<T> getEntities(int page, int pageSize);
+	
+	/**
+	 * Clean the database of all entities in this collection.
+	 * 
+	 */
+	public void deleteAllEntities();
 }

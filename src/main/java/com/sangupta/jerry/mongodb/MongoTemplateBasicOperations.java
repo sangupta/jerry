@@ -270,6 +270,15 @@ public abstract class MongoTemplateBasicOperations<T, X> implements DatabaseBasi
 	}
 	
 	/**
+	 * Drop the given collection.
+	 * 
+	 */
+	@Override
+	public void deleteAllEntities() {
+		this.mongoTemplate.dropCollection(this.entityClass);
+	}
+	
+	/**
 	 * Defines if we need to allow empty or zero value in primary ID
 	 * of the entity object.
 	 * 
