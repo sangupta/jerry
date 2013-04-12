@@ -52,14 +52,36 @@ public class MultiThreadedTaskExecutor {
 	 */
 	private String name;
 	
+	/**
+	 * Create an executor depending on developer's preference.
+	 * 
+	 * @param name
+	 * @param operation
+	 * @param fixedSizePool
+	 */
 	public MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation, boolean fixedSizePool) {
 		this(name, operation, DEFAULT_BATCH_SIZE, fixedSizePool);
 	}
 	
+	/**
+	 * Create an Executor that uses a fixed size pool.
+	 * 
+	 * @param name
+	 * @param operation
+	 * @param batchSize
+	 */
 	public MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation, int batchSize) {
-		this(name, operation, batchSize, false);
+		this(name, operation, batchSize, true);
 	}
 	
+	/**
+	 * Create an Executor depending on given fixed size or cached thread pool.
+	 *  
+	 * @param name
+	 * @param operation
+	 * @param batchSize
+	 * @param fixedSizePool
+	 */
 	private MultiThreadedTaskExecutor(String name, MultiThreadableOperation operation, int batchSize, boolean fixedSizePool) {
 		if(operation == null) {
 			throw new IllegalArgumentException("Operation cannot be null.");

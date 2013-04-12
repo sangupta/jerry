@@ -96,7 +96,7 @@ public class WebResponse implements Serializable {
     
     /**
      * Returns the fetched response as a {@link String} parsed using the
-     * response {@link Charset} or a default {@link Charset} if none is specified.
+     * response {@link Charset} or the provided {@link Charset} if none is specified.
      * 
      * @return
      */
