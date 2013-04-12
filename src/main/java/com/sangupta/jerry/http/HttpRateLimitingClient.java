@@ -294,7 +294,7 @@ public class HttpRateLimitingClient implements HttpClient {
 		
 		final int limit;
 		
-		AtomicInteger current;
+		AtomicInteger current = new AtomicInteger();
 		
 		long block;
 		
