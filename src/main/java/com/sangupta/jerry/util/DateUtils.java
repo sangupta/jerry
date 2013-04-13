@@ -60,6 +60,16 @@ public class DateUtils {
 	public static final long ONE_HOUR = 60l * ONE_MINUTE;
 	
 	/**
+	 * 6 hours expressed as millis
+	 */
+	public static final long SIX_HOURS = 6l * ONE_HOUR;
+	
+	/**
+	 * 12 hours expressed as millis
+	 */
+	public static final long TWELVE_HOURS = 12l * ONE_HOUR;
+	
+	/**
 	 * One day (24-hours) expressed as millis
 	 */
 	public static final long ONE_DAY = 24l * ONE_HOUR;
