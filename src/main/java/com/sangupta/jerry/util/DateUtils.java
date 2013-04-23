@@ -47,7 +47,7 @@ public class DateUtils {
 	/**
 	 * Five minutes expressed as millis
 	 */
-	public static final long FIVE_MINUTES = 15l * ONE_MINUTE;
+	public static final long FIVE_MINUTES = 5l * ONE_MINUTE;
 
 	/**
 	 * Fifteen minutes expressed in millis
