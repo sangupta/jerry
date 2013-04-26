@@ -165,12 +165,12 @@
 		<tag-class>com.sangupta.jerry.taglib.CheckBoxTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<name>name</name>
-			<required>true</required>
+			<name>id</name>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>test</name>
+			<name>name</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -180,8 +180,34 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>test</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>radio</name>
+		<tag-class>com.sangupta.jerry.taglib.RadioButtonTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
 			<name>id</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>current</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
