@@ -45,13 +45,21 @@ public class TimeDurationUtils {
 	 * @param date
 	 * @return
 	 */
-	public static String ago(Date date) {
+	public static String ago(final Date date) {
+		return ago(date, false);
+	}
+	
+	public static String ago(final Date date, final boolean condensed) {
 		if(date == null) {
 			throw new IllegalArgumentException("Date item cannot be null");
 		}
 		
 		long delta = System.currentTimeMillis() - date.getTime();
-		return fromDelta(delta);
+		if(!condensed) {
+			return fromDelta(delta);
+		}
+		
+		return fromDeltaCondensed(delta);
 	}
 	
 	/**
@@ -61,10 +69,86 @@ public class TimeDurationUtils {
 	 * @return
 	 */
 	public static String ago(long millis) {
-		long delta = System.currentTimeMillis() - millis;
-		return fromDelta(delta);
+		return ago(millis, false);
 	}
 	
+	/**
+	 * 
+	 * @param millis
+	 * @param condensed
+	 * @return
+	 */
+	public static String ago(final long millis, final boolean condensed) {
+		long delta = System.currentTimeMillis() - millis;
+		if(!condensed) {
+			return fromDelta(delta);
+		}
+		
+		return fromDeltaCondensed(delta);
+	}
+	
+	/**
+	 * @param delta
+	 * @return
+	 */
+	private static String fromDeltaCondensed(long delta) {
+		if(delta < 0) {
+			return "now";
+		}
+		
+		if(delta < MINUTE) {
+			return "now";
+		}
+		
+		if(delta < HOUR) {
+			int minutes = (int) (delta / MINUTE);
+			if(minutes == 1) {
+				return "1min";
+			}
+			
+			return "" + minutes + "min";
+		}
+		
+		if(delta < DAY) {
+			int hours = (int) (delta / HOUR);
+			if(hours == 1) {
+				return "1h";
+			}
+			
+			return "" + hours + "h";
+		}
+		
+		if(delta < MONTH) {
+			int days = (int) (delta / DAY);
+			if(days == 1) {
+				return "1d";
+			}
+			
+			return "" + days + "d";
+		}
+		
+		if(delta < YEAR) {
+			int months = (int) (delta / MONTH);
+			if(months == 1) {
+				return "1mo";
+			}
+			
+			return "" + months + "mo";
+		}
+		
+		int years = (int) (delta / YEAR);
+		if(years == 1) {
+			return "1y";
+		}
+		
+		return "" + years + "y";
+	}
+
+	/**
+	 * 
+	 * @param delta
+	 * @return
+	 */
 	private static String fromDelta(long delta) {
 		if(delta < 0) {
 			return "moments ago";
