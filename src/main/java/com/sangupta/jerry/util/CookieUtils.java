@@ -63,15 +63,7 @@ public class CookieUtils {
 	 * @param i
 	 */
 	public static void setMaxAgeInDays(Cookie cookie, int days) {
-		if(cookie == null) {
-			return;
-		}
-		
-		if(days < 0) {
-			return;
-		}
-		
-		cookie.setMaxAge(days * 86400);
+		setMaxAgeInHours(cookie, 24);
 	}
 	
 	/**
@@ -81,15 +73,25 @@ public class CookieUtils {
 	 * @param i
 	 */
 	public static void setMaxAgeInHours(Cookie cookie, int hours) {
+		setMaxAgeInMinutes(cookie, 60);
+	}
+	
+	/**
+	 * Set the max age of the cookie in number of days.
+	 * 
+	 * @param cookie
+	 * @param i
+	 */
+	public static void setMaxAgeInMinutes(Cookie cookie, int minutes) {
 		if(cookie == null) {
 			return;
 		}
 		
-		if(hours < 0) {
+		if(minutes < 0) {
 			return;
 		}
 		
-		cookie.setMaxAge(hours * 3600);
+		cookie.setMaxAge(minutes * 60);
 	}
 	
 }
