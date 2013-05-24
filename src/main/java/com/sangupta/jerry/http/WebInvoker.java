@@ -176,6 +176,25 @@ public class WebInvoker {
 	}
 	
 	/**
+	 * Invoke the given URL by the specified method and return the entire HTTP response.
+	 * 
+	 * @param uri
+	 * @param method
+	 * @return
+	 */
+	public static WebResponse invokeUrl(final String uri, final WebRequestMethod method) {
+		WebRequest request = getWebRequest(uri, method);
+		
+		try {
+			return request.execute().webResponse();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Invoke the given URL by the specified method, supplying the header and params as specified and return
 	 * the entire HTTP response.
 	 * 

@@ -32,7 +32,7 @@ package com.sangupta.jerry.http;
  * @author sangupta
  *
  */
-public class HttpStatusCode {
+public interface HttpStatusCode {
 	
 	// success codes
 	
