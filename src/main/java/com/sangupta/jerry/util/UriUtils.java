@@ -91,7 +91,9 @@ public class UriUtils {
 	/**
 	 * Function to decode a given string from URI encoded format.
 	 * 
-	 * @param encodedURI the encoded string component
+	 * @param encodedURI
+	 *            the encoded string component
+	 *            
 	 * @return the decoded string
 	 */
 	public static String decodeURIComponent(String encodedURI) {
@@ -155,10 +157,11 @@ public class UriUtils {
 	}
 	
 	/**
-	 * Extract the file name from the URL removing the scheme, domain,
-	 * query params and named anchor, if present.
+	 * Extract the file name from the URL removing the scheme, domain, query
+	 * params and named anchor, if present.
 	 * 
-	 * @param url the URL to be used
+	 * @param url
+	 *            the URL to be used
 	 * 
 	 * @return extracted filename from the URL
 	 */
@@ -193,7 +196,12 @@ public class UriUtils {
 	 * Extract the filename from the URL.
 	 * 
 	 * @param url
-	 * @return
+	 *            the url from which the filename needs to be extracted
+	 * 
+	 * @return the extracted filename
+	 * 
+	 * @throws NullPointerException
+	 *             if the URL presented is <code>null</code>
 	 */
 	public static String extractFileName(String url) {
 		int index = url.lastIndexOf('/');
@@ -220,10 +228,15 @@ public class UriUtils {
 	}
 
 	/**
-	 * Extract the extension from the URL
+	 * Extract the extension from the given URL.
 	 * 
 	 * @param url
-	 * @return
+	 *            the url from which the extension needs to be extracted.
+	 * 
+	 * @return the extracted extension
+	 * 
+	 * @throws NullPointerException
+	 *             if the URL presented is <code>null</code>
 	 */
 	public static String extractExtension(String url) {
 		// check for any slash characters that remain
@@ -400,11 +413,13 @@ public class UriUtils {
     }
     
     /**
-     * Canonicalize the query string.
-     *
-     * @param sortedParamMap Parameter name-value pairs in lexicographical order.
-     * @return Canonical form of query string.
-     */
+	 * Canonicalize the query string.
+	 * 
+	 * @param sortedParamMap
+	 *            Parameter name-value pairs in lexicographical order.
+	 *            
+	 * @return Canonical form of query string.
+	 */
     private static String canonicalize(final SortedMap<String, String> sortedParamMap) {
         if (sortedParamMap == null || sortedParamMap.isEmpty()) {
             return "";
@@ -427,12 +442,15 @@ public class UriUtils {
     }
 
     /**
-     * Percent-encode values according the RFC 3986. The built-in Java URLEncoder does not encode
-     * according to the RFC, so we make the extra replacements.
-     *
-     * @param string Decoded string.
-     * @return Encoded string per RFC 3986.
-     */
+	 * Percent-encode values according the RFC 3986. The built-in Java
+	 * URLEncoder does not encode according to the RFC, so we make the extra
+	 * replacements.
+	 * 
+	 * @param string
+	 *            Decoded string.
+	 *            
+	 * @return Encoded string per RFC 3986.
+	 */
     private static String percentEncodeRfc3986(final String string) {
         try {
             return URLEncoder.encode(string, "UTF-8").replace("+", "%20").replace("*", "%2A").replace("%7E", "~");
@@ -445,7 +463,10 @@ public class UriUtils {
 	 * Extract the host value from the URL.
 	 * 
 	 * @param url
-	 * @return
+	 *            the URL from which host/domain needs to be extracted
+	 * 
+	 * @return the extracted domain/host
+	 * 
 	 */
 	public static String extractHost(String url) {
 		try {
@@ -561,6 +582,46 @@ public class UriUtils {
 			}
 		}
 		
+		return builder.toString();
+	}
+	
+	/**
+	 * Add multiple web-path components given in the order.
+	 * 
+	 * @param components
+	 *            the components that need to be added
+	 * 
+	 * @return the complete added web-paths
+	 * 
+	 */
+	public static String addWebPaths(String[] components) {
+		if(components == null || components.length == 0) {
+			return "";
+		}
+		
+		if(components.length == 1) {
+			return components[0];
+		}
+		
+		StringBuilder builder = new StringBuilder(components[0]);
+		for(int index = 1; index < components.length; index++) {
+			String suffix = components[index];
+			
+			if(builder.charAt(builder.length() - 1) == '/') {
+				if(suffix.startsWith("/")) {
+					builder.append(suffix.substring(1));
+				} else {
+					builder.append(suffix);
+				}
+			} else {
+				if(suffix.startsWith("/")) {
+					builder.append(suffix);
+				} else {
+					builder.append('/');
+					builder.append(suffix);
+				}
+			}
+		}
 		return builder.toString();
 	}
 

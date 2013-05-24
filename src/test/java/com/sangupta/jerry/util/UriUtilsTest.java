@@ -70,4 +70,13 @@ public class UriUtilsTest {
 		Assert.assertEquals(null, UriUtils.extractExtension("http://news.ycombinator.com/rss"));
 	}
 	
+	@Test
+	public void testAddWebPathsMultiple() {
+		Assert.assertEquals("", UriUtils.addWebPaths(null));
+		Assert.assertEquals("", UriUtils.addWebPaths(new String[] { "" }));
+		Assert.assertEquals("file.html", UriUtils.addWebPaths(new String[] { "file.html" }));
+		Assert.assertEquals("one/two/three/four/five", UriUtils.addWebPaths(new String[] { "one", "two", "three", "four", "five" }));
+		Assert.assertEquals("one/two/three/four/five", UriUtils.addWebPaths(new String[] { "one/", "/two/", "/three/", "/four/", "/five" }));
+	}
+	
 }
