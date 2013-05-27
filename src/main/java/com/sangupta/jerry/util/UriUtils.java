@@ -594,7 +594,7 @@ public class UriUtils {
 	 * @return the complete added web-paths
 	 * 
 	 */
-	public static String addWebPaths(String[] components) {
+	public static String addWebPaths(String... components) {
 		if(components == null || components.length == 0) {
 			return "";
 		}
