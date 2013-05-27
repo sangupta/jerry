@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.XStreamUtils;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * Utility class containing methods pertaining to invocation of REST based webservices and
@@ -249,6 +250,8 @@ public class WebInvoker {
 	}
 	
 	/**
+	 * POST the XML representation of the given object, to the given URL. The object
+	 * is converted to XML format using {@link XStream} project.
 	 * 
 	 * @param uri
 	 * @param object
