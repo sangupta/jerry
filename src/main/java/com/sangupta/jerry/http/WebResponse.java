@@ -22,6 +22,7 @@
 package com.sangupta.jerry.http;
 
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -40,7 +41,7 @@ import org.apache.http.HttpHeaders;
  * 
  * @author sangupta
  */
-public class WebResponse implements Serializable {
+public class WebResponse implements Serializable, Closeable {
 	
 	/**
 	 * Generated using Eclipse
@@ -84,6 +85,18 @@ public class WebResponse implements Serializable {
     
     public WebResponse(byte[] bytes) {
     	this.bytes = bytes;
+    }
+    
+    @Override
+    public void close() {
+    	try {
+    		InputStream stream = this.asStream();
+    		if(stream != null) {
+    			stream.close();
+    		}
+    	} catch(Exception e) {
+    		// eat up
+    	}
     }
     
     public String getContent() {
