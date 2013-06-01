@@ -243,6 +243,14 @@ public class WebResponse implements Serializable, Closeable {
     }
     
     /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+    	return this.responseCode + " " + this.message;
+    }
+    
+    /**
      * Utility function that returns a string representation of this response
      * which can be used for debugging purposes. Should not be used in production
      * code as is slow.
