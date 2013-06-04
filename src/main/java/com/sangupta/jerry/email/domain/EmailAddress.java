@@ -22,9 +22,13 @@
 package com.sangupta.jerry.email.domain;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.mail.Address;
 import javax.mail.internet.InternetAddress;
+
+import com.sangupta.jerry.util.AssertUtils;
 
 /**
  * Value object to store one email address. Two {@link EmailAddress} objects
@@ -83,6 +87,18 @@ public class EmailAddress {
 		return -1;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		if(this.name != null) {
+			return "<" + this.name + "> " + this.email;
+		}
+		
+		return this.email;
+	}
+	
 	// Usual accessors follow
 
 	/**
@@ -124,4 +140,41 @@ public class EmailAddress {
 		}
 	}
 
+	/**
+	 * Parse a string that contains multiple email addresses and return a {@link Set}
+	 * of {@link EmailAddress} objects that can then be set to various properties
+	 * of {@link Email} object.
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public static Set<EmailAddress> parseMultiple(String email) {
+		if(AssertUtils.isEmpty(email)) {
+			throw new IllegalArgumentException("Email cannot be empty/null");
+		}
+		
+		Set<EmailAddress> emails = new HashSet<EmailAddress>();
+		String[] tokens = email.split("[;,]");
+		for(String token : tokens) {
+			token = token.trim();
+			
+			// check for angular brackets
+			if(token.contains("<") || token.contains(">")) {
+				int start = token.indexOf('<');
+				int end = token.indexOf('>');
+				if(start >= 0 && end > start) {
+					String name = token.substring(start + 1, end).trim();
+					String em = token.substring(end + 1).trim();
+					emails.add(new EmailAddress(name, em));
+				} else {
+					emails.add(new EmailAddress(token));
+				}
+			} else {
+				emails.add(new EmailAddress(token));
+			}
+		}
+		
+		return emails;
+	}
+	
 }
