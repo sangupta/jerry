@@ -96,6 +96,21 @@ public class Email {
 		this.bcc.add(address);
 	}
 	
+	public void addReplyTo(String replyTo) {
+		addReplyTo(new EmailAddress(replyTo));
+	}
+	
+	/**
+	 * @param emailAddress
+	 */
+	public void addReplyTo(EmailAddress emailAddress) {
+		if(this.replyTo == null) {
+			this.replyTo = new HashSet<EmailAddress>();
+		}
+		
+		this.replyTo.add(emailAddress);
+	}
+
 	// Usual accessors follow
 
 	/**

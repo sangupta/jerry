@@ -26,11 +26,29 @@ import java.io.IOException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sangupta.jerry.http.HttpStatusCode;
+
 /**
  * @author sangupta
  *
  */
 public class ResponseUtils {
+	
+	/**
+	 * Write the response
+	 * 
+	 * @param response
+	 * @param data
+	 * @param mimeType
+	 * @throws IOException 
+	 */
+	public static void sendResponse(HttpServletResponse response, String data, String mimeType) throws IOException {
+		response.setContentType(mimeType);
+		response.setStatus(HttpStatusCode.OK);
+		response.setContentLength(data.length());
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(data);
+	}
 
 	/**
 	 * @param response
