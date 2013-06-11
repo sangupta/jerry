@@ -48,7 +48,7 @@ public class WorkerGroup {
 		this.myThreads = new ThreadGroup(groupName);
 	}
 	
-	public WorkerGroup(int numWorkers, String groupName, Class<Runnable> workerClass) throws InstantiationException, IllegalAccessException {
+	public WorkerGroup(int numWorkers, String groupName, Class<? extends Runnable> workerClass) throws InstantiationException, IllegalAccessException {
 		this(numWorkers, groupName);
 		
 		for(int index = 0; index < this.numWorkers; index++) {
@@ -61,6 +61,14 @@ public class WorkerGroup {
 		
 		for(int index = 0; index < this.numWorkers; index++) {
 			this.workers[index] = worker;
+		}
+	}
+	
+	public WorkerGroup(int numWorkers, String groupName, RunnableFactory runnableFactory) {
+		this(numWorkers, groupName);
+		
+		for(int index = 0; index < this.numWorkers; index++) {
+			this.workers[index] = runnableFactory.createInstance();
 		}
 	}
 	
