@@ -37,11 +37,6 @@ import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
 public class JerseyGrizzlyServer {
 
 	/**
-	 * Default webservices packages to load  
-	 */
-	private static final String DEFAULT_WEBSERVICES_PACKAGES = "com.sangupta.lineup com.sangupta.jerry.jersey";
-
-	/**
 	 * The server URL where we will hook up.
 	 */
 	private final String serverURL;
@@ -83,16 +78,16 @@ public class JerseyGrizzlyServer {
 		initParams = new HashMap<String, String>();
 		
 		if(AssertUtils.isEmpty(customJerseyWebservices)) {
-			initParams.put("com.sun.jersey.config.property.packages", DEFAULT_WEBSERVICES_PACKAGES);
-		} else {
-			final StringBuilder packages = new StringBuilder(DEFAULT_WEBSERVICES_PACKAGES);
-			for(String customPackage : customJerseyWebservices) {
-				packages.append(' ');
-				packages.append(customPackage);
-			}
-			
-			initParams.put("com.sun.jersey.config.property.packages", packages.toString());
+			throw new IllegalArgumentException("Atleast one custom webservice package must be specified.");
 		}
+		
+		final StringBuilder packages = new StringBuilder();
+		for(String customPackage : customJerseyWebservices) {
+			packages.append(' ');
+			packages.append(customPackage);
+		}
+		
+		initParams.put("com.sun.jersey.config.property.packages", packages.toString());
 	}
 	
 	/**
