@@ -72,7 +72,7 @@ public class UriUtilsTest {
 	
 	@Test
 	public void testAddWebPathsMultiple() {
-		Assert.assertEquals("", UriUtils.addWebPaths((String) null));
+		Assert.assertEquals("", UriUtils.addWebPaths((String[]) null));
 		Assert.assertEquals("", UriUtils.addWebPaths(new String[] { "" }));
 		Assert.assertEquals("file.html", UriUtils.addWebPaths(new String[] { "file.html" }));
 		Assert.assertEquals("one/two/three/four/five", UriUtils.addWebPaths(new String[] { "one", "two", "three", "four", "five" }));

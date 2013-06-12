@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.ConsoleUtils;
 import com.sun.grizzly.http.SelectorThread;
@@ -57,6 +60,11 @@ public class JerseyGrizzlyServer {
 	 */
     private SelectorThread threadSelector = null;
     
+    /**
+     * 
+     * @param serverURL
+     * @param customJerseyWebservice
+     */
     public JerseyGrizzlyServer(final String serverURL, final String customJerseyWebservice) {
     	this(serverURL, new String[] { customJerseyWebservice });
     }
@@ -101,12 +109,27 @@ public class JerseyGrizzlyServer {
 	 * 
 	 */
 	public void startServer() throws IllegalArgumentException, IOException {
+		this.startServer(null);
+	}
+	
+	/**
+	 * 
+	 * @param context
+	 * @throws IllegalArgumentException
+	 * @throws IOException
+	 */
+	public void startServer(ApplicationContext context) throws IllegalArgumentException, IOException {
 		if(this.started) {
 			throw new IllegalStateException("Server is already running.");
 		}
 		
-        
-		this.threadSelector = GrizzlyWebContainerFactory.create(serverURL, initParams);
+		if(context != null) {
+			SpringServletWithCustomApplicationContext.setConfigurableApplicationContext((ConfigurableApplicationContext) context);
+			this.threadSelector = GrizzlyWebContainerFactory.create(serverURL, SpringServletWithCustomApplicationContext.class, initParams);
+		} else {
+			this.threadSelector = GrizzlyWebContainerFactory.create(serverURL, initParams);
+		}
+		
 		this.threadSelector.setReuseAddress(false);
 		this.threadSelector.setSocketKeepAlive(false);
 		
@@ -115,14 +138,21 @@ public class JerseyGrizzlyServer {
 	
 	/**
 	 * 
+	 */
+	public void startServerBlocking() {
+		this.startServerBlocking(null);
+	}
+	
+	/**
+	 * 
 	 * @throws IllegalArgumentException
 	 * @throws IOException
 	 */
-	public void startServerBlocking() {
+	public void startServerBlocking(ApplicationContext context) {
 		this.registerShutdownHook();
 		
 		try {
-			this.startServer();
+			this.startServer(context);
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException("Unable to start the server", e);
 		} catch (IOException e) {

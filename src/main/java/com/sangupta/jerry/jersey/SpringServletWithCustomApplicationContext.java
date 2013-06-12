@@ -36,8 +36,15 @@ public class SpringServletWithCustomApplicationContext extends SpringServlet {
 	 */
 	private static final long serialVersionUID = -4365856846912383821L;
 	
+	/**
+	 * 
+	 */
 	private static ConfigurableApplicationContext configurableApplicationContext;
 	
+	/**
+	 * 
+	 * @param context
+	 */
 	public static void setConfigurableApplicationContext(ConfigurableApplicationContext context) {
 		SpringServletWithCustomApplicationContext.configurableApplicationContext = context;
 	}
@@ -49,6 +56,14 @@ public class SpringServletWithCustomApplicationContext extends SpringServlet {
 	 */
 	@Override
 	protected ConfigurableApplicationContext getContext() {
+		return SpringServletWithCustomApplicationContext.configurableApplicationContext;
+	}
+	
+	/**
+	 * @see com.sun.jersey.spi.spring.container.servlet.SpringServlet#getDefaultContext()
+	 */
+	@Override
+	protected ConfigurableApplicationContext getDefaultContext() {
 		return SpringServletWithCustomApplicationContext.configurableApplicationContext;
 	}
 	
