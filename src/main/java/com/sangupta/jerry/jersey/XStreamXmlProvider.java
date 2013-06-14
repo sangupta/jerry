@@ -36,8 +36,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
+import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+
 import com.sangupta.jerry.util.XStreamUtils;
-import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 

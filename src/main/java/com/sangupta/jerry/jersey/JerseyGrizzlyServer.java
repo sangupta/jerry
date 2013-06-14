@@ -22,16 +22,14 @@
 package com.sangupta.jerry.jersey;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.ConsoleUtils;
-import com.sun.grizzly.http.SelectorThread;
-import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
 
 /**
  * @author sangupta
@@ -45,11 +43,6 @@ public class JerseyGrizzlyServer {
 	private final String serverURL;
 	
 	/**
-	 * Initialization parameters for grizzly container
-	 */
-	private final Map<String, String> initParams;
-	
-	/**
 	 * Keeps track of whether the server is running or not.
 	 * 
 	 */
@@ -58,7 +51,7 @@ public class JerseyGrizzlyServer {
 	/**
 	 * The thread selector obtained from Grizzly container
 	 */
-    private SelectorThread threadSelector = null;
+    private final HttpServer httpServer;
     
     /**
      * 
@@ -83,33 +76,13 @@ public class JerseyGrizzlyServer {
 		}
 		
 		this.serverURL = serverURL;
-		initParams = new HashMap<String, String>();
 		
 		if(AssertUtils.isEmpty(customJerseyWebservices)) {
 			throw new IllegalArgumentException("Atleast one custom webservice package must be specified.");
 		}
 		
-		final StringBuilder packages = new StringBuilder();
-		for(String customPackage : customJerseyWebservices) {
-			packages.append(' ');
-			packages.append(customPackage);
-		}
-		
-		initParams.put("com.sun.jersey.config.property.packages", packages.toString());
-	}
-	
-	/**
-	 * Start the server.
-	 *  
-	 * @throws IOException
-	 *  
-	 * @throws IllegalArgumentException 
-	 * 
-	 * @throws IllegalStateException if the server is already running.
-	 * 
-	 */
-	public void startServer() throws IllegalArgumentException, IOException {
-		this.startServer(null);
+		ResourceConfig config = new ResourceConfig().packages(customJerseyWebservices);
+		this.httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(this.serverURL), config, false);
 	}
 	
 	/**
@@ -118,29 +91,13 @@ public class JerseyGrizzlyServer {
 	 * @throws IllegalArgumentException
 	 * @throws IOException
 	 */
-	public void startServer(ApplicationContext context) throws IllegalArgumentException, IOException {
+	public void startServer() throws IOException {
 		if(this.started) {
 			throw new IllegalStateException("Server is already running.");
 		}
-		
-		if(context != null) {
-			SpringServletWithCustomApplicationContext.setConfigurableApplicationContext((ConfigurableApplicationContext) context);
-			this.threadSelector = GrizzlyWebContainerFactory.create(serverURL, SpringServletWithCustomApplicationContext.class, initParams);
-		} else {
-			this.threadSelector = GrizzlyWebContainerFactory.create(serverURL, initParams);
-		}
-		
-		this.threadSelector.setReuseAddress(false);
-		this.threadSelector.setSocketKeepAlive(false);
-		
+
+		this.httpServer.start();
 		this.started = true;
-	}
-	
-	/**
-	 * 
-	 */
-	public void startServerBlocking() {
-		this.startServerBlocking(null);
 	}
 	
 	/**
@@ -148,11 +105,11 @@ public class JerseyGrizzlyServer {
 	 * @throws IllegalArgumentException
 	 * @throws IOException
 	 */
-	public void startServerBlocking(ApplicationContext context) {
+	public void startServerBlocking() {
 		this.registerShutdownHook();
 		
 		try {
-			this.startServer(context);
+			this.startServer();
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException("Unable to start the server", e);
 		} catch (IOException e) {
@@ -180,12 +137,8 @@ public class JerseyGrizzlyServer {
 			throw new IllegalStateException("Server has not yet started.");
 		}
 		
-		if(this.threadSelector != null) {
-			this.threadSelector.stopEndpoint();
-		}
-		
+		this.httpServer.stop();
 		this.started = false;
-		this.threadSelector = null;
 	}
 	
 	/**

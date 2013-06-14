@@ -36,9 +36,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
+import org.glassfish.jersey.message.internal.AbstractMessageReaderWriterProvider;
+
 import com.google.gson.Gson;
 import com.sangupta.jerry.util.GsonUtils;
-import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
 
 /**
  * JSON serialization mechanism for Jersey. We use Google GSON library
