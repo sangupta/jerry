@@ -108,7 +108,7 @@ public class MultiThreadedTaskExecutor {
 				try {
 					multiThreadableOperation.runWithArguments(argument);
 				} catch(Throwable t) {
-					LOGGER.error("[{}] Error thrown running thread for argument {}" + argument.toString(), name);
+					LOGGER.error("[{}] Error thrown running thread for argument {}", name, argument.toString());
 					LOGGER.error("Stack trace:", t);
 				}
 				
