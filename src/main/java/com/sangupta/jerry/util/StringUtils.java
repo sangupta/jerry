@@ -69,7 +69,8 @@ public class StringUtils {
      * Return true if the string is equal to "true" or "yes"
      * otherwise return false.
      * 
-     * @param string string whose content is checked for true or false
+     * @param boolString string whose content is checked for true or false
+     * 
      * @return boolean flag indicating whether the input was true or false
      */
 	public static boolean getBoolean(String boolString) {
