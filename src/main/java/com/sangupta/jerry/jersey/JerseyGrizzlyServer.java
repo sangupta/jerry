@@ -34,6 +34,11 @@ import com.sun.grizzly.http.SelectorThread;
 import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
 
 /**
+ * A simple utility class to start a Grizzly-based Jersey webservices server
+ * from a command-line application to server various web requests. Comes in
+ * handy when you want to expose simple webservices, may be for a command line
+ * tool.
+ * 
  * @author sangupta
  *
  */
@@ -61,8 +66,10 @@ public class JerseyGrizzlyServer {
     private SelectorThread threadSelector = null;
     
     /**
+     * Construct an instance of the {@link JerseyGrizzlyServer}.
+     *  
+     * @param serverURL 
      * 
-     * @param serverURL
      * @param customJerseyWebservice
      */
     public JerseyGrizzlyServer(final String serverURL, final String customJerseyWebservice) {
@@ -140,15 +147,29 @@ public class JerseyGrizzlyServer {
 	 * 
 	 */
 	public void startServerBlocking() {
-		this.startServerBlocking(null);
+		this.startServerBlocking(null, null);
+	}
+	
+	public void startServerBlocking(String message) {
+		this.startServerBlocking(null, message);
+	}
+	
+	public void startServerBlocking(ApplicationContext context) {
+		this.startServerBlocking(context, null);
 	}
 	
 	/**
 	 * 
-	 * @throws IllegalArgumentException
-	 * @throws IOException
+	 * @param context the Spring {@link ApplicationContext} that needs to be passed to
+	 * IOC container.
+	 * 
+	 * @param message the message to be used to display when holding user input to unblock
+	 * server.
+	 * 
+	 * @throws RuntimeException in case we are unable to start the server
+	 * 
 	 */
-	public void startServerBlocking(ApplicationContext context) {
+	public void startServerBlocking(final ApplicationContext context, String message) {
 		this.registerShutdownHook();
 		
 		try {
@@ -158,9 +179,13 @@ public class JerseyGrizzlyServer {
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to start the server", e);
 		}
+
+		if(message == null) {
+			message = "Type exit to stop the server: ";
+		}
 		
 		do {
-			String input = ConsoleUtils.readLine("Type exit to stop server: ", false);
+			String input = ConsoleUtils.readLine(message, false);
 			if("exit".equalsIgnoreCase(input)) {
 				break;
 			}

@@ -48,11 +48,14 @@ import org.slf4j.LoggerFactory;
 public class UriUtils {
 
 	/**
+	 * My own logger instance
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(UriUtils.class);
+
+	/**
 	 * Characters that are allowed in a URI.
 	 */
 	private static final String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*'()";
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(UriUtils.class);
 
 	/**
 	 * Function to convert a given string into URI encoded format.
@@ -274,8 +277,10 @@ public class UriUtils {
 	 * Encode the given set of parameters into a URL format, considering that the parameter
 	 * values are already encoded.
 	 * 
-	 * @param params
-	 * @return
+	 * @param params the url parameters that need to be encoded
+	 * 
+	 * @return string representation of the parameters
+	 * 
 	 */
 	public static String urlEncode(Map<String, String> params) {
 		return urlEncode(params, false);
