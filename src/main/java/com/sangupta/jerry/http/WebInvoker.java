@@ -34,7 +34,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.sangupta.jerry.util.AssertUtils;
+import com.sangupta.jerry.util.GsonUtils;
 import com.sangupta.jerry.util.XStreamUtils;
 import com.thoughtworks.xstream.XStream;
 
@@ -262,6 +264,29 @@ public class WebInvoker {
 		
 		String requestBody = XStreamUtils.getXStream(object.getClass()).toXML(object);
 		request.bodyString(requestBody, ContentType.create("text/xml"));
+		
+		try {
+			return request.execute().webResponse();
+		} catch(IOException e) {
+			logger.debug("Unable to fetch repsonse from url: {}", uri, e);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * POST the JSON representation of the given object to the given URL. The object
+	 * is converted to JSON format usign {@link Gson} project.
+	 * 
+	 * @param uri
+	 * @param object
+	 * @return
+	 */
+	public static WebResponse postJSON(final String uri, final Object object) {
+		WebRequest request = getWebRequest(uri, WebRequestMethod.POST);
+		
+		String requestBody = GsonUtils.getGson().toJson(object);
+		request.bodyString(requestBody, ContentType.create("application/json"));
 		
 		try {
 			return request.execute().webResponse();
