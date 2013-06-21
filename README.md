@@ -16,7 +16,7 @@ Features
 Builds
 ------
 
-** 0.4.0 **
+**0.4.0**
 
 * Added a Jersey-Grizzly based un/blocking server that can be used to run services from given packages
 * Added `UnsafeMemory` class and corresponding interface to allow for serialization using `unsafe` direct memory for performance reasons
