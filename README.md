@@ -13,6 +13,19 @@ Features
 * Basic batching framework
 * Added Base62 encoder for 64-bit integers
 
+Builds
+------
+
+** 0.4.0 **
+
+* Added a Jersey-Grizzly based un/blocking server that can be used to run services from given packages
+* Added `UnsafeMemory` class and corresponding interface to allow for serialization using `unsafe` direct memory for performance reasons
+* Added a `WorkerGroup` convenience class to launch multiple worker threads via a given class/instance/runnable factory
+* Added an interface `HttpStatusCode` that defines various HTTP status codes
+* Added method to `EmailAddress` class to parse multiple email addresses from a given string supporting the format `<full name> email@domain.com`
+* Added many constants to `DateUtils` class
+
+
 Downloads
 ---------
 
