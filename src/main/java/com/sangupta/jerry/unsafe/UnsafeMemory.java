@@ -30,6 +30,10 @@ import java.lang.reflect.Field;
  * @author sangupta
  *
  */
+/**
+ * @author sangupta
+ *
+ */
 @SuppressWarnings("restriction")
 public class UnsafeMemory {
 	
@@ -69,6 +73,16 @@ public class UnsafeMemory {
 	 * Size of an integer
 	 */
 	private static final int SIZE_OF_INT = 4;
+	
+	/**
+	 * Size of a byte
+	 */
+	private static final int SIZE_OF_BYTE = 1;
+	
+	/**
+	 * Size of short
+	 */
+	private static final int SIZE_OF_SHORT = 2;
 	
 	/**
 	 * Size of a double
@@ -239,6 +253,20 @@ public class UnsafeMemory {
 
 		return value;
 	}
+	
+	public void putByte(final byte bite) {
+		unsafe.putByte(buffer, byteArrayOffset + pos, bite);
+		pos += SIZE_OF_BYTE;
+	}
+	
+	public byte getByte() {
+		positionCheck();
+		
+		byte bite = unsafe.getByte(buffer, byteArrayOffset + pos);
+		pos += SIZE_OF_BYTE;
+		
+		return bite;
+	}
 
 	/**
 	 * Write a long value to the memory buffer.
@@ -324,6 +352,20 @@ public class UnsafeMemory {
 		pos += bytesToCopy;
 
 		return values;
+	}
+
+	/**
+	 * @return the pos
+	 */
+	public int getPos() {
+		return pos;
+	}
+
+	/**
+	 * @return the buffer
+	 */
+	public byte[] getBuffer() {
+		return buffer;
 	}
 
 }

@@ -39,10 +39,17 @@ public interface UnsafePersistable {
 	public UnsafeMemory writeUnsafe();
 	
 	/**
+	 * Serialize the object into the given instance of {@link UnsafeMemory}.
+	 * 
+	 * @param memory
+	 */
+	public void writeUnsafe(UnsafeMemory memory);
+	
+	/**
 	 * De-serialize the object using the given instance of {@link UnsafeMemory}.
 	 * 
 	 * @param stream
 	 */
-	public void readUnsafe(UnsafeMemory stream);
+	public void readUnsafe(UnsafeMemory memory);
 
 }
