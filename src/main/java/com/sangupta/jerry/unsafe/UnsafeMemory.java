@@ -148,8 +148,8 @@ public class UnsafeMemory {
 			return;
 		}
 
-		putInt(value.length());
 		char[] chars = value.toCharArray();
+		putInt(chars.length);
 		for(char c : chars) {
 			unsafe.putChar(buffer, byteArrayOffset + pos, c);
 			pos++;

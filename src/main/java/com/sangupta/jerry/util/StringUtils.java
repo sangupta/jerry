@@ -21,6 +21,7 @@
 
 package com.sangupta.jerry.util;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -35,6 +36,8 @@ import org.slf4j.LoggerFactory;
 public class StringUtils {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
+	
+	public static final Charset CHARSET_UTF8 = Charset.forName("UTF8");
 	
 	/**
 	 * An empty string object containing nothing.
