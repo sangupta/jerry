@@ -106,6 +106,16 @@ public class JerseyGrizzlyServer {
 	}
 	
 	/**
+	 * Add a new initialization parameter.
+	 * 
+	 * @param paramName
+	 * @param paramValue
+	 */
+	public void addInitParam(String paramName, String paramValue) {
+		this.initParams.put(paramName, paramValue);
+	}
+	
+	/**
 	 * Start the server.
 	 *  
 	 * @throws IOException
