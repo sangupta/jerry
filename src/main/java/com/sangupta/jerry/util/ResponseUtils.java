@@ -51,11 +51,12 @@ public class ResponseUtils {
 	 * 
 	 */
 	public static void sendResponse(HttpServletResponse response, String data, String mimeType) throws IOException {
-		response.setContentType(mimeType);
+		byte[] bytes = data.getBytes("UTF-8");
+		response.setContentType(mimeType + "; charset=UTF-8");
 		response.setStatus(HttpStatusCode.OK);
-		response.setContentLength(data.length());
+		response.setContentLength(bytes.length);
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(data);
+		response.getOutputStream().write(bytes);
 	}
 
 	/**
