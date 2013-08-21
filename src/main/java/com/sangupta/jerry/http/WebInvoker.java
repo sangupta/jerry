@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.sangupta.jerry.util.AssertUtils;
+import com.sangupta.jerry.util.DateUtils;
 import com.sangupta.jerry.util.GsonUtils;
 import com.sangupta.jerry.util.XStreamUtils;
 import com.thoughtworks.xstream.XStream;
@@ -45,11 +46,24 @@ import com.thoughtworks.xstream.XStream;
  * capturing the responses obtained from the same. For advanced usage, the {@link WebRequest} facade
  * can be used directly to gain much more control over the request/response handling.
  * 
+ * The methods in this class will timeout within one minute if no connection is established, or the
+ * socket timeout happens.
+ * 
  * @author sangupta
  * @since 0.1.0
  * 
  */
 public class WebInvoker {
+	
+	/**
+	 * Value to be used for connection timeout
+	 */
+	private static int CONNECTION_TIMEOUT = (int) DateUtils.ONE_MINUTE;
+	
+	/**
+	 * Value to be used for socket timeout
+	 */
+	private static int SOCKET_TIMEOUT = (int) DateUtils.ONE_MINUTE;
 	
 	/**
 	 * An instance of {@link WebInvocationInterceptor} that needs to be used when handling interceptors.
@@ -304,35 +318,66 @@ public class WebInvoker {
 	 * @param method
 	 * @return
 	 */
-	private static WebRequest getWebRequest(final String uri, final WebRequestMethod method) {
+	public static WebRequest getWebRequest(final String uri, final WebRequestMethod method) {
 		if(method == null) {
 			throw new IllegalArgumentException("WebRequestMethod cannot be null");
 		}
 		
+		WebRequest request = null;
 		switch(method) {
 			case DELETE:
-				return WebRequest.delete(uri);
+				request = WebRequest.delete(uri);
+				break;
 				
 			case GET:
-				return WebRequest.get(uri);
+				request = WebRequest.get(uri);
+				break;
 				
 			case HEAD:
-				return WebRequest.head(uri);
+				request = WebRequest.head(uri);
+				break;
 				
 			case OPTIONS:
-				return WebRequest.options(uri);
+				request = WebRequest.options(uri);
+				break;
 				
 			case POST:
-				return WebRequest.post(uri);
+				request = WebRequest.post(uri);
+				break;
 				
 			case PUT:
-				return WebRequest.put(uri);
+				request = WebRequest.put(uri);
+				break;
 				
 			case TRACE:
-				return WebRequest.trace(uri);
+				request = WebRequest.trace(uri);
+				break;
+		}
+		
+		if(request != null) {
+			request.connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT);
+			return request;
 		}
 		
 		throw new IllegalStateException("All options of enumeration have a check above, reaching this is impossible. This is a coding horror.");
+	}
+	
+	/**
+	 * Change the default value of the connection timeout.
+	 * 
+	 * @param millis
+	 */
+	public static void setConnectionTimeout(int millis) {
+		CONNECTION_TIMEOUT = millis;
+	}
+	
+	/**
+	 * Change the default value of the socket timeout.
+	 * 
+	 * @param millis
+	 */
+	public static void setSocketTimeout(int millis) {
+		SOCKET_TIMEOUT = millis;
 	}
 	
 	/**
