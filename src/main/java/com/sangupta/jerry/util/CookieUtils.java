@@ -63,7 +63,7 @@ public class CookieUtils {
 	 * @param i
 	 */
 	public static void setMaxAgeInDays(Cookie cookie, int days) {
-		setMaxAgeInHours(cookie, 24);
+		setMaxAgeInHours(cookie, 24 * days);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class CookieUtils {
 	 * @param i
 	 */
 	public static void setMaxAgeInHours(Cookie cookie, int hours) {
-		setMaxAgeInMinutes(cookie, 60);
+		setMaxAgeInMinutes(cookie, 60 * hours);
 	}
 	
 	/**
