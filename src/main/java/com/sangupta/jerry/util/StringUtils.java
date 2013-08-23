@@ -35,8 +35,14 @@ import org.slf4j.LoggerFactory;
  */
 public class StringUtils {
 	
+	/**
+	 * Logger instance
+	 */
 	public static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
 	
+	/**
+	 * UTF-8 charset object
+	 */
 	public static final Charset CHARSET_UTF8 = Charset.forName("UTF8");
 	
 	/**
