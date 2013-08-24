@@ -381,6 +381,25 @@ public class WebInvoker {
 	}
 	
 	/**
+	 * Execute the given webrequest silently.
+	 * 
+	 *
+	 */
+	public static WebResponse executeSilently(WebRequest request) {
+		if(request == null) {
+			throw new IllegalArgumentException("Webrequest to be executed cannot be null");
+		}
+		
+		try {
+			return request.execute().webResponse();
+		} catch(Exception e) {
+			logger.debug("Unable to fetch repsonse from url: {}", request.getHttpRequest().getURI().toString(), e);	
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Create a {@link NameValuePair} list from the given {@link Map} of params to be passed.
 	 * 
 	 * @param params

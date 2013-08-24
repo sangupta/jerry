@@ -56,6 +56,10 @@ public class UriUtils {
 	 * Characters that are allowed in a URI.
 	 */
 	private static final String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*'()";
+	
+	public static String encodeURIComponent(String input) {
+		return encodeURIComponent(input, false);
+	}
 
 	/**
 	 * Function to convert a given string into URI encoded format.
@@ -65,7 +69,7 @@ public class UriUtils {
 	 * 
 	 * @return the encoded string
 	 */
-	public static String encodeURIComponent(String input) {
+	public static String encodeURIComponent(String input, boolean upperCase) {
 		if (AssertUtils.isEmpty(input)) {
 			return input;
 		}
@@ -78,7 +82,7 @@ public class UriUtils {
 				if (ALLOWED_CHARS.indexOf(e) == -1) {
 					byte[] b = e.getBytes("utf-8");
 					output.append('%');
-					output.append(StringUtils.getHex(b));
+					output.append(StringUtils.getHex(b).toUpperCase());
 					continue;
 				}
 				output.append(e);
