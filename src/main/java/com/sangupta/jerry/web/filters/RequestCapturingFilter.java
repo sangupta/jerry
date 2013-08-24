@@ -58,6 +58,7 @@ public class RequestCapturingFilter implements Filter {
 
 		HttpServletRequest hsr = (HttpServletRequest) request;
 		LOGGER.info(LogUtils.buildLogMessage(hsr, "Proxied request recevied as: "));
+		chain.doFilter(request, response);
 	}
 
 	public void destroy() {
