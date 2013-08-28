@@ -83,6 +83,11 @@ public class DateUtils {
 	 * One month (30-days) expressed as millis
 	 */
 	public static final long ONE_MONTH = 30l * ONE_DAY; 
+	
+	/**
+	 * One year (365-days) expressed as millis
+	 */
+	public static final long ONE_YEAR = 365l * ONE_DAY;
 
     /**
      * Convert the given time (in millis) represented as a {@link Long} object into the {@link Date} object.

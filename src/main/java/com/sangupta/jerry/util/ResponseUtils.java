@@ -156,4 +156,24 @@ public class ResponseUtils {
 		response.addHeader("X-Download-Options", "noopen");
 		response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
 	}
+	
+	/**
+	 * Set cache headers to one month from today.
+	 * 
+	 * @param response
+	 */
+	public static void setCacheHeaders(HttpServletResponse response) {
+		setCacheHeaders(response, DateUtils.ONE_MONTH);
+	}
+	
+	/**
+	 * Set cache headers to given time from today.
+	 * 
+	 * @param response
+	 * @param ageInMillis
+	 */
+	public static void setCacheHeaders(HttpServletResponse response, long ageInMillis) {
+		response.addDateHeader("Expires", System.currentTimeMillis() + ageInMillis);
+		response.addHeader("Cache-Control", "public, max-age=" + (ageInMillis / DateUtils.ONE_SECOND));
+	}
 }
