@@ -35,3 +35,4 @@ target/*
 # Project specific
 .settings/*
 nosubmit/*
+/target

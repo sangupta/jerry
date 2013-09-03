@@ -64,21 +64,25 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.2.5</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient-cache</artifactId>
 			<version>4.2.5</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.4</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.3</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
@@ -108,6 +112,7 @@
 			<groupId>net.htmlparser.jericho</groupId>
 			<artifactId>jericho-html</artifactId>
 			<version>3.2</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
@@ -131,6 +136,7 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>3.2.3.RELEASE</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>javax.mail</groupId>
