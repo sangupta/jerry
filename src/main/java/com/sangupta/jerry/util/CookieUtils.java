@@ -33,6 +33,45 @@ import javax.servlet.http.HttpServletRequest;
 public class CookieUtils {
 	
 	/**
+	 * Create a new cookie.
+	 * 
+	 * @param name
+	 * @param value
+	 * @param domain
+	 * @param path
+	 * @return
+	 */
+	public static Cookie createCookie(String name, String value, String domain, String path) {
+		Cookie cookie = new Cookie(name, value);
+		
+		if(domain != null) {
+			cookie.setDomain(domain);
+		}
+		
+		if(path != null) {
+			cookie.setPath(path);
+		}
+		
+		return cookie;
+	}
+	
+	/**
+	 * Create a cookie with the given amount of time.
+	 * 
+	 * @param name
+	 * @param value
+	 * @param domain
+	 * @param path
+	 * @param days
+	 * @return
+	 */
+	public static Cookie createCookie(String name, String value, String domain, String path, int days) {
+		Cookie cookie = createCookie(name, value, domain, path);
+		setMaxAgeInDays(cookie, days);
+		return cookie;
+	}
+	
+	/**
 	 * Fetch the {@link Cookie} from the available cookies as passed from the
 	 * {@link HttpServletRequest}.
 	 * 
@@ -54,6 +93,22 @@ public class CookieUtils {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Fetch the value of the cookie.
+	 * 
+	 * @param cookies
+	 * @param cookieName
+	 * @return
+	 */
+	public static String getCookieValue(Cookie[] cookies, String cookieName) {
+		Cookie cookie = getCookie(cookies, cookieName);
+		if(cookie == null) {
+			return null;
+		}
+		
+		return cookie.getValue();
 	}
 
 	/**
