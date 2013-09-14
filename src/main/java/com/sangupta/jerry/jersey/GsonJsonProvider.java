@@ -87,10 +87,10 @@ public class GsonJsonProvider extends AbstractMessageReaderWriterProvider<Object
 
     public void writeTo(Object o, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> map, OutputStream stream) throws IOException, WebApplicationException {
         String encoding = getCharsetAsString(mediaType);
-        Gson gson = GsonUtils.getGson();
-        String json = gson.toJson(o, type);
+        String json = GsonUtils.getGson().toJson(o, type);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(stream, encoding);
         outputStreamWriter.write(json);
+        outputStreamWriter.flush();
     }
 
 }
