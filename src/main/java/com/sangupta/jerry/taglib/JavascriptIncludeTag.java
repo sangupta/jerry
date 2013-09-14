@@ -86,7 +86,11 @@ public class JavascriptIncludeTag extends BodyTagSupport {
 			if(this.appendContext) {
 				url = UriUtils.addWebPaths(request.getContextPath(), url); 
 			}
-			urls.add(url);
+			
+			// do not add a duplicate url here
+			if(!urls.contains(url)) {
+				urls.add(url);
+			}
 			
 			return SKIP_BODY;
 		}
