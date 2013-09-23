@@ -111,6 +111,18 @@ public class StringUtils {
 		return defaultValue;
 	}
 	
+	public static long getLongValue(String string, long defaultValue) {
+		try {
+			if(AssertUtils.isNotEmpty(string)) {
+				return Long.parseLong(string);
+			}
+		} catch(NumberFormatException e) {
+			LOGGER.debug("error getting long from string: " + string, e);
+		}
+		
+		return defaultValue;
+	}
+	
 	public String fromList(List<Object> list, String appender) {
 		if(AssertUtils.isEmpty(list)) {
 			return "";
