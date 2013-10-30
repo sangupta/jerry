@@ -34,18 +34,39 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
  */
 public class ByteArrayServletOutputStream extends ServletOutputStream {
 	
+	/**
+	 * The byte-stream that will store the data that is being written to
+	 */
 	private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	
+	/**
+	 * A {@link PrintWriter} object over the embedded byte-stream
+	 */
 	private final PrintWriter writer = new PrintWriter(this.outputStream);
 	
+	/**
+	 * Return the writer object associated with this.
+	 * 
+	 * @return
+	 */
 	public PrintWriter getWriter() {
 		return this.writer;
 	}
 	
+	/**
+	 * Return the current size of the data that has been written.
+	 * 
+	 * @return
+	 */
 	public int getLength() {
 		return this.outputStream.size();
 	}
 	
+	/**
+	 * Get the entire byte-stream.
+	 * 
+	 * @return
+	 */
 	public ByteArrayOutputStream getByteArrayOutputStream() {
 		return this.outputStream;
 	}

@@ -51,60 +51,93 @@ public class ArchiveUtils {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ArchiveUtils.class);
 	
-	public static List<File> unpackTAR(final File inputFile, final File outputDir) throws ArchiveException, IOException {
-		LOGGER.info(String.format("Untaring %s to dir %s.", inputFile.getAbsolutePath(), outputDir.getAbsolutePath()));
+	/**
+	 * Unpack the TAR file into the given output directory.
+	 * 
+	 * @param tarFile
+	 * @param outputDir
+	 * @return
+	 * @throws ArchiveException
+	 * @throws IOException
+	 */
+	public static List<File> unpackTAR(final File tarFile, final File outputDir) throws ArchiveException, IOException {
+		LOGGER.info("Untaring {} to dir {}", tarFile.getAbsolutePath(), outputDir.getAbsolutePath());
 
 	    final List<File> untaredFiles = new LinkedList<File>();
-	    final InputStream is = new FileInputStream(inputFile); 
-	    final TarArchiveInputStream debInputStream = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", is);
-	    TarArchiveEntry entry = null; 
-	    while ((entry = (TarArchiveEntry) debInputStream.getNextEntry()) != null) {
-	        final File outputFile = new File(outputDir, entry.getName());
-	        if (entry.isDirectory()) {
-	        	LOGGER.debug(String.format("Attempting to write output directory %s.", outputFile.getAbsolutePath()));
-	        	
-	            if (!outputFile.exists()) {
-	            	LOGGER.debug(String.format("Attempting to create output directory %s.", outputFile.getAbsolutePath()));
-	                
-	            	if (!outputFile.mkdirs()) {
-	                    throw new IllegalStateException(String.format("Couldn't create directory %s.", outputFile.getAbsolutePath()));
-	                }
-	            }
-	        } else {
-	        	LOGGER.debug(String.format("Creating output file %s.", outputFile.getAbsolutePath()));
+	    
+	    InputStream fileInputStream = null;
+	    TarArchiveInputStream tarInputStream = null;
+	    
+	    try {
+			fileInputStream = new FileInputStream(tarFile); 
+			tarInputStream = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", fileInputStream);
+		    
+		    TarArchiveEntry entry = null; 
+		    while ((entry = (TarArchiveEntry) tarInputStream.getNextEntry()) != null) {
+		        final File outputFile = new File(outputDir, entry.getName());
+		        if (entry.isDirectory()) {
+		        	LOGGER.debug("Attempting to write output directory {}", outputFile.getAbsolutePath());
+		        	
+		            if (!outputFile.exists()) {
+		            	LOGGER.debug("Attempting to create output directory {}", outputFile.getAbsolutePath());
+		                
+		            	if (!outputFile.mkdirs()) {
+		                    throw new IllegalStateException("Couldn't create directory: " + outputFile.getAbsolutePath());
+		                }
+		            }
+		            
+		            // next file
+		            continue;
+		        }
+		        
+		        // write the plain file
+	        	LOGGER.debug("Creating output file {}", outputFile.getAbsolutePath());
 	        	
 	            final OutputStream outputFileStream = new FileOutputStream(outputFile); 
-	            IOUtils.copy(debInputStream, outputFileStream);
+	            IOUtils.copy(tarInputStream, outputFileStream);
 	            outputFileStream.close();
-	        }
-	        untaredFiles.add(outputFile);
+	            
+	            // add to the list of written files
+		        untaredFiles.add(outputFile);
+		    }
+	    } finally {
+		    org.apache.commons.io.IOUtils.closeQuietly(tarInputStream);
+		    org.apache.commons.io.IOUtils.closeQuietly(fileInputStream);
 	    }
-	    debInputStream.close(); 
 
 	    return untaredFiles;
 	}
 
 	/**
-	 * @param file
-	 * @param tempDir
+	 * Unpack the Gzip GZ file into the given directory.
+	 * 
+	 * @param gzipFile
+	 * @param outputDir
 	 * @return
 	 * @throws FileNotFoundException 
 	 */
-	public static List<File> unpackGZIP(File file, File tempDir) throws IOException {
-		String outputFileName = GzipUtils.getUncompressedFilename(file.getName());
-		File outputFile = new File(tempDir, outputFileName);
+	public static List<File> unpackGZIP(final File gzipFile, final File outputDir) throws IOException {
+		String outputFileName = GzipUtils.getUncompressedFilename(gzipFile.getName());
+		File outputFile = new File(outputDir, outputFileName);
 		
-		FileInputStream fin = new FileInputStream(file);
-		BufferedInputStream in = new BufferedInputStream(fin);
-		FileOutputStream out = new FileOutputStream(outputFile);
-		GzipCompressorInputStream gzIn = new GzipCompressorInputStream(in);
+		FileInputStream fin = null;
+		BufferedInputStream in = null;
+		FileOutputStream out = null;
+		GzipCompressorInputStream gzIn = null;
 		
-		org.apache.commons.io.IOUtils.copy(gzIn, out);
-		
-		out.close();
-		gzIn.close();
-		in.close();
-		fin.close();
+		try {
+			fin = new FileInputStream(gzipFile);
+			in = new BufferedInputStream(fin);
+			out = new FileOutputStream(outputFile);
+			gzIn = new GzipCompressorInputStream(in);
+			
+			org.apache.commons.io.IOUtils.copy(gzIn, out);
+		} finally {		
+			org.apache.commons.io.IOUtils.closeQuietly(gzIn);
+			org.apache.commons.io.IOUtils.closeQuietly(out);
+			org.apache.commons.io.IOUtils.closeQuietly(in);
+			org.apache.commons.io.IOUtils.closeQuietly(fin);
+		}
 		
 		List<File> files = new ArrayList<File>();
 		files.add(outputFile);

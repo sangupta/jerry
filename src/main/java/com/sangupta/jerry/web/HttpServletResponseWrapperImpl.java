@@ -22,6 +22,7 @@
 package com.sangupta.jerry.web;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Locale;
@@ -81,6 +82,15 @@ public class HttpServletResponseWrapperImpl extends HttpServletResponseWrapper {
 	}
 	
 	/**
+	 * Return the currently written bytes to this {@link HttpServletResponse} wrapper.
+	 * 
+	 * @return
+	 */
+	public byte[] getBytes() {
+		return this.outputStream.getByteArrayOutputStream().toByteArray();
+	}
+	
+	/**
 	 * 
 	 * @param response
 	 * @throws IOException
@@ -90,11 +100,32 @@ public class HttpServletResponseWrapperImpl extends HttpServletResponseWrapper {
 	}
 	
 	/**
+	 * Copy an altered response to the {@link ServletResponse}.
+	 * 
+	 * @param response
+	 * @param alteredResponse
+	 * @throws IOException
+	 */
+	public void copyAlteredResponse(ServletResponse response, byte[] alteredResponse) throws IOException {
+		this.copyToResponse((HttpServletResponse) response, null); 
+	}
+	
+	/**
 	 * 
 	 * @param response
 	 * @throws IOException
 	 */
-	public void copyToResponse(HttpServletResponse response) throws IOException {
+	public void copyToResponse(final HttpServletResponse response) throws IOException {
+		this.copyToResponse(response, null);
+	}
+	
+	/**
+	 * 
+	 * @param response
+	 * @param alteredResponse
+	 * @throws IOException
+	 */
+	public void copyToResponse(final HttpServletResponse response, final byte[] alteredResponse) throws IOException {
 		// character encoding
 		if(this.characterEncoding != null) {
 			response.setCharacterEncoding(this.characterEncoding);
@@ -115,17 +146,33 @@ public class HttpServletResponseWrapperImpl extends HttpServletResponseWrapper {
 			response.setStatus(this.statusCode);
 		}
 		
+		// set the locale
 		if(this.locale != null) {
 			response.setLocale(this.locale);
 		}
 		
-		// copy the byte array stream and also set its length
-		int length = this.outputStream.getLength();
-		response.setContentLength(length);
+		// set the cookies
+		if(this.cookies != null) {
+			for(Cookie cookie : this.cookies) {
+				response.addCookie(cookie);
+			}
+		}
 		
-		// write the entire byte chunk
-		this.outputStream.getByteArrayOutputStream().writeTo(response.getOutputStream());
-		response.getOutputStream().flush();
+		// copy the byte array stream and also set its length
+		final OutputStream finalOut = response.getOutputStream();
+		if(alteredResponse == null) {
+			int length = this.outputStream.getLength();
+			response.setContentLength(length);
+			
+			// write the entire byte chunk
+			this.outputStream.getByteArrayOutputStream().writeTo(finalOut);
+		} else {
+			response.setContentLength(alteredResponse.length);
+			finalOut.write(alteredResponse);
+		}
+		
+		// flush the final stream
+		finalOut.flush();
 	}
 	
 	// ----------------------------------------------
