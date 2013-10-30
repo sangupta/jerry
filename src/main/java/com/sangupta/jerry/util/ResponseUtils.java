@@ -24,6 +24,7 @@ package com.sangupta.jerry.util;
 import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.sangupta.jerry.http.HttpStatusCode;
@@ -175,5 +176,13 @@ public class ResponseUtils {
 	public static void setCacheHeaders(HttpServletResponse response, long ageInMillis) {
 		response.addDateHeader("Expires", System.currentTimeMillis() + ageInMillis);
 		response.addHeader("Cache-Control", "public, max-age=" + (ageInMillis / DateUtils.ONE_SECOND));
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	public static String getUrlWithContext(HttpServletRequest request, String url) {
+		return UriUtils.addWebPaths(request.getContextPath(), url);
 	}
 }
