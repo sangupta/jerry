@@ -45,21 +45,21 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class HttpServletResponseWrapperImpl extends HttpServletResponseWrapper {
 	
-	private final ByteArrayServletOutputStream outputStream = new ByteArrayServletOutputStream();
+	final ByteArrayServletOutputStream outputStream = new ByteArrayServletOutputStream();
 	
-	private Map<String, Object> headers;
+	Map<String, Object> headers;
 	
-	private Set<Cookie> cookies;
+	Set<Cookie> cookies;
 	
-	private int statusCode;
+	int statusCode;
 	
-	private String charset;
+	String charset;
 	
-	private String contentType;
+	String contentType;
 	
-	private String characterEncoding;
+	String characterEncoding;
 	
-	private Locale locale;
+	Locale locale;
 	
 	/**
 	 * 
