@@ -21,6 +21,8 @@
 
 package com.sangupta.jerry.oauth;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -66,10 +68,13 @@ public class OAuthUtils {
 	 * @param includeOAuthParamsInBody
 	 * @return
 	 */
-	public static WebRequest createOAuthRequest(String endPoint, WebRequestMethod method, OAuthSignatureMethod signatureMethod, String oAuthVersion, String oAuthHeaderName, String consumerKey, String consumerSecret, Map<String, String> requestParams, boolean includeOAuthParamsInBody) {
+	public static WebRequest createOAuthRequest(String endPoint, WebRequestMethod method, OAuthSignatureMethod signatureMethod, String oAuthVersion, String oAuthHeaderName, String consumerKey, 
+			String consumerSecret, String timestamp, String nonce, Map<String, String> requestParams, boolean includeOAuthParamsInBody) {
+		
 		StringBuilder builder = new StringBuilder();
 		builder.append(method.toString().toUpperCase());
 		builder.append("&");
+		
 		builder.append(UriUtils.encodeURIComponent(endPoint, true));
 		
 		TreeMap<String, String> params = new TreeMap<String, String>();
@@ -90,13 +95,15 @@ public class OAuthUtils {
 		builder.append("&");
 		builder.append(UriUtils.encodeURIComponent(paramString, true));
 		
+		System.out.println("Signable: " + builder.toString());
+		
 		String signature = generateSignature(consumerSecret, "", builder.toString(), signatureMethod);
 		params.put(OAuthConstants.OAUTH_SIGNATURE, signature);
 		
 		// build oauth header
 		WebRequest request = WebInvoker.getWebRequest(endPoint, method);
 		if(oAuthHeaderName != null) {
-			request.addHeader(oAuthHeaderName, getAllOAuthParams(params));
+			request.addHeader(oAuthHeaderName, "OAuth " + getAllOAuthParams(params));
 		}
 		
 		request.bodyForm(getBodyParams(params, includeOAuthParamsInBody));

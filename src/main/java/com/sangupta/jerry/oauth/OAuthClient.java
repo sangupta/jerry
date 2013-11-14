@@ -80,7 +80,8 @@ public class OAuthClient {
 		params.put(OAuthConstants.X_AUTH_PASSWORD, password);
 		params.put(OAuthConstants.X_AUTH_MODE, OAuthConstants.DEFAULT_XAUTH_MODE);
 		
-		return OAuthUtils.createOAuthRequest(endPoint, WebRequestMethod.POST, this.signatureMethod, this.oAuthVersion, this.authorizationHeader, this.consumerKey, this.consumerSecret, params, this.includeOAuthParamsInBody);
+//		return OAuthUtils.createOAuthRequest(endPoint, WebRequestMethod.POST, this.signatureMethod, this.oAuthVersion, this.authorizationHeader, this.consumerKey, this.consumerSecret, params, this.includeOAuthParamsInBody);
+		return null;
 	}
 
 	/**
