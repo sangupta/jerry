@@ -83,7 +83,7 @@ public class ResponseUtils {
 
 		response.setContentType(mimeType + "; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		response.setStatus(HttpServletResponse.SC_OK);
+		response.setStatus(HttpStatusCode.OK);
 		
 		ServletOutputStream stream = response.getOutputStream();
 		byte[] bytes = data.getBytes("UTF-8");
@@ -114,7 +114,7 @@ public class ResponseUtils {
 
 		response.setContentType("application/octet-stream");
 		response.setCharacterEncoding("UTF-8");
-		response.setStatus(HttpServletResponse.SC_OK);
+		response.setStatus(HttpStatusCode.OK);
 		
 		ServletOutputStream stream = response.getOutputStream();
 		response.setContentLength(bytes.length);
@@ -185,4 +185,5 @@ public class ResponseUtils {
 	public static String getUrlWithContext(HttpServletRequest request, String url) {
 		return UriUtils.addWebPaths(request.getContextPath(), url);
 	}
+
 }
