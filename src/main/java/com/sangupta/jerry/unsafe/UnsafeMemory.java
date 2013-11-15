@@ -37,32 +37,46 @@ import java.lang.reflect.Field;
 @SuppressWarnings("restriction")
 public class UnsafeMemory {
 	
-	private static final Unsafe unsafe;
+	/**
+	 * The internal reference to the UNSAFE object
+	 */
+	private static final Unsafe UNSAFE;
 	
 	static {
 		try {
 			Field field = Unsafe.class.getDeclaredField("theUnsafe");
 			field.setAccessible(true);
-			unsafe = (Unsafe) field.get(null);
+			UNSAFE = (Unsafe) field.get(null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	/**
+	 * Method to return the {@link com.sun.misc.Unsafe} object that can
+	 * be used for unsafe operations. Use this method with much caution
+	 * as this can lead to unpredictable results.
+	 *  
+	 * @return
+	 */
+	public static Unsafe getUnsafe() {
+		return UnsafeMemory.UNSAFE;
 	}
 
 	/**
 	 * array offset for bytes on this machine
 	 */
-	private static final long byteArrayOffset = unsafe.arrayBaseOffset(byte[].class);
+	private static final long byteArrayOffset = UNSAFE.arrayBaseOffset(byte[].class);
 	
 	/**
 	 * array offset for longs on this machine
 	 */
-	private static final long longArrayOffset = unsafe.arrayBaseOffset(long[].class);
+	private static final long longArrayOffset = UNSAFE.arrayBaseOffset(long[].class);
 	
 	/**
 	 * array offset for double's on this machine
 	 */
-	private static final long doubleArrayOffset = unsafe.arrayBaseOffset(double[].class);
+	private static final long doubleArrayOffset = UNSAFE.arrayBaseOffset(double[].class);
 
 	/**
 	 * Size of a boolean value
@@ -151,7 +165,7 @@ public class UnsafeMemory {
 		char[] chars = value.toCharArray();
 		putInt(chars.length);
 		for(char c : chars) {
-			unsafe.putChar(buffer, byteArrayOffset + pos, c);
+			UNSAFE.putChar(buffer, byteArrayOffset + pos, c);
 			pos++;
 		}
 	}
@@ -197,7 +211,7 @@ public class UnsafeMemory {
 		char[] values = new char[length];
 		
 		for(int index = 0; index < length; index++) {
-			values[index] = (char) unsafe.getByte(buffer, byteArrayOffset + pos);
+			values[index] = (char) UNSAFE.getByte(buffer, byteArrayOffset + pos);
 			pos ++;
 		}
 
@@ -212,7 +226,7 @@ public class UnsafeMemory {
 	public void putBoolean(final boolean value) {
 		positionCheck();
 		
-		unsafe.putBoolean(buffer, byteArrayOffset + pos, value);
+		UNSAFE.putBoolean(buffer, byteArrayOffset + pos, value);
 		pos += SIZE_OF_BOOLEAN;
 	}
 
@@ -224,7 +238,7 @@ public class UnsafeMemory {
 	public boolean getBoolean() {
 		positionCheck();
 		
-		boolean value = unsafe.getBoolean(buffer, byteArrayOffset + pos);
+		boolean value = UNSAFE.getBoolean(buffer, byteArrayOffset + pos);
 		pos += SIZE_OF_BOOLEAN;
 
 		return value;
@@ -236,7 +250,7 @@ public class UnsafeMemory {
 	 * @param value
 	 */
 	public void putInt(final int value) {
-		unsafe.putInt(buffer, byteArrayOffset + pos, value);
+		UNSAFE.putInt(buffer, byteArrayOffset + pos, value);
 		pos += SIZE_OF_INT;
 	}
 
@@ -248,21 +262,21 @@ public class UnsafeMemory {
 	public int getInt() {
 		positionCheck();
 		
-		int value = unsafe.getInt(buffer, byteArrayOffset + pos);
+		int value = UNSAFE.getInt(buffer, byteArrayOffset + pos);
 		pos += SIZE_OF_INT;
 
 		return value;
 	}
 	
 	public void putByte(final byte bite) {
-		unsafe.putByte(buffer, byteArrayOffset + pos, bite);
+		UNSAFE.putByte(buffer, byteArrayOffset + pos, bite);
 		pos += SIZE_OF_BYTE;
 	}
 	
 	public byte getByte() {
 		positionCheck();
 		
-		byte bite = unsafe.getByte(buffer, byteArrayOffset + pos);
+		byte bite = UNSAFE.getByte(buffer, byteArrayOffset + pos);
 		pos += SIZE_OF_BYTE;
 		
 		return bite;
@@ -274,7 +288,7 @@ public class UnsafeMemory {
 	 * @param value
 	 */
 	public void putLong(final long value) {
-		unsafe.putLong(buffer, byteArrayOffset + pos, value);
+		UNSAFE.putLong(buffer, byteArrayOffset + pos, value);
 		pos += SIZE_OF_LONG;
 	}
 
@@ -286,7 +300,7 @@ public class UnsafeMemory {
 	public long getLong() {
 		positionCheck();
 		
-		long value = unsafe.getLong(buffer, byteArrayOffset + pos);
+		long value = UNSAFE.getLong(buffer, byteArrayOffset + pos);
 		pos += SIZE_OF_LONG;
 
 		return value;
@@ -301,7 +315,7 @@ public class UnsafeMemory {
 		putInt(values.length);
 
 		long bytesToCopy = values.length << 3;
-		unsafe.copyMemory(values, longArrayOffset, buffer, byteArrayOffset + pos, bytesToCopy);
+		UNSAFE.copyMemory(values, longArrayOffset, buffer, byteArrayOffset + pos, bytesToCopy);
 		pos += bytesToCopy;
 	}
 
@@ -317,7 +331,7 @@ public class UnsafeMemory {
 		long[] values = new long[arraySize];
 
 		long bytesToCopy = values.length << 3;
-		unsafe.copyMemory(buffer, byteArrayOffset + pos, values, longArrayOffset, bytesToCopy);
+		UNSAFE.copyMemory(buffer, byteArrayOffset + pos, values, longArrayOffset, bytesToCopy);
 		pos += bytesToCopy;
 
 		return values;
@@ -332,7 +346,7 @@ public class UnsafeMemory {
 		putInt(values.length);
 
 		long bytesToCopy = values.length << 3;
-		unsafe.copyMemory(values, doubleArrayOffset, buffer, byteArrayOffset + pos, bytesToCopy);
+		UNSAFE.copyMemory(values, doubleArrayOffset, buffer, byteArrayOffset + pos, bytesToCopy);
 		pos += bytesToCopy;
 	}
 
@@ -348,7 +362,7 @@ public class UnsafeMemory {
 		double[] values = new double[arraySize];
 
 		long bytesToCopy = values.length << 3;
-		unsafe.copyMemory(buffer, byteArrayOffset + pos, values, doubleArrayOffset, bytesToCopy);
+		UNSAFE.copyMemory(buffer, byteArrayOffset + pos, values, doubleArrayOffset, bytesToCopy);
 		pos += bytesToCopy;
 
 		return values;
