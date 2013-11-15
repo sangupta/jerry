@@ -107,7 +107,7 @@ public class InMemoryNonceVerifier implements NonceVerifier {
 	}
 	
 	/**
-     * Clean up tokens older than 12 hours
+     * Clean up tokens older than the expiration time.
      */
     private void cleanUpOldTokens() {
         if(this.tokens.isEmpty()) {

@@ -21,8 +21,6 @@
 
 package com.sangupta.jerry.oauth;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -43,6 +41,8 @@ import com.sangupta.jerry.encoder.Base64Encoder;
 import com.sangupta.jerry.http.WebInvoker;
 import com.sangupta.jerry.http.WebRequest;
 import com.sangupta.jerry.http.WebRequestMethod;
+import com.sangupta.jerry.oauth.domain.OAuthConstants;
+import com.sangupta.jerry.oauth.domain.OAuthSignatureMethod;
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.StringUtils;
 import com.sangupta.jerry.util.UriUtils;
@@ -125,10 +125,13 @@ public class OAuthUtils {
 	 * @param includeOAuthParamsInBody
 	 * @return
 	 */
-	public static WebRequest createUserSignedOAuthRequest(String endPoint, WebRequestMethod method, OAuthSignatureMethod signatureMethod, String oAuthVersion, String oAuthHeaderName, String consumerKey, String consumerSecret, String tokenKey, String tokenSecret, Map<String, String> requestParams, boolean includeOAuthParamsInBody) {
+	public static WebRequest createUserSignedOAuthRequest(String endPoint, WebRequestMethod method, OAuthSignatureMethod signatureMethod, String oAuthVersion, String oAuthHeaderName, String consumerKey, 
+			String consumerSecret, String tokenKey, String tokenSecret, String timestamp, String nonce, Map<String, String> requestParams, boolean includeOAuthParamsInBody) {
+		
 		StringBuilder builder = new StringBuilder();
 		builder.append(method.toString().toUpperCase());
 		builder.append("&");
+		
 		builder.append(UriUtils.encodeURIComponent(endPoint, true));
 		
 		TreeMap<String, String> params = new TreeMap<String, String>();
@@ -138,7 +141,7 @@ public class OAuthUtils {
 		params.put(OAuthConstants.OAUTH_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
 		params.put(OAuthConstants.OAUTH_VERSION, oAuthVersion);
 		params.put(OAuthConstants.OAUTH_TOKEN, tokenKey);
-		
+
 		if(AssertUtils.isNotEmpty(requestParams)) {
 			for(Entry<String, String> entry : requestParams.entrySet()) {
 				params.put(entry.getKey(), entry.getValue());
@@ -150,27 +153,32 @@ public class OAuthUtils {
 		builder.append("&");
 		builder.append(UriUtils.encodeURIComponent(paramString, true));
 		
+		System.out.println("Signable: " + builder.toString());
+		
 		String signature = generateSignature(consumerSecret, tokenSecret, builder.toString(), signatureMethod);
 		params.put(OAuthConstants.OAUTH_SIGNATURE, signature);
 		
 		// build oauth header
 		WebRequest request = WebInvoker.getWebRequest(endPoint, method);
 		if(oAuthHeaderName != null) {
-			request.addHeader(oAuthHeaderName, getAllOAuthParams(params));
+			request.addHeader(oAuthHeaderName, "OAuth " + getAllOAuthParams(params));
 		}
 		
-		request.bodyForm(getBodyParams(params, includeOAuthParamsInBody));
+		List<NameValuePair> pairs = getBodyParams(params, includeOAuthParamsInBody);
+		if(pairs != null && !pairs.isEmpty()) {
+			request.bodyForm(pairs);
+		}
 		
 		return request;
 	}
-
+	
 	/**
 	 * Get a list of all non-aouth params from the given map.
 	 * 
 	 * @param params
 	 * @return
 	 */
-	private static Iterable<? extends NameValuePair> getBodyParams(TreeMap<String, String> params, boolean includeOAuthParamsInBody) {
+	private static List<NameValuePair> getBodyParams(TreeMap<String, String> params, boolean includeOAuthParamsInBody) {
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		
 		for(Entry<String, String> entry : params.entrySet()) {

@@ -26,6 +26,8 @@ import java.util.Map;
 
 import com.sangupta.jerry.http.WebRequest;
 import com.sangupta.jerry.http.WebRequestMethod;
+import com.sangupta.jerry.oauth.domain.OAuthConstants;
+import com.sangupta.jerry.oauth.domain.OAuthSignatureMethod;
 
 /**
  * @author sangupta
@@ -91,7 +93,8 @@ public class OAuthClient {
 	 * @param asMap
 	 */
 	public WebRequest createUserSignedOAuthRequest(String endPoint, WebRequestMethod method, OAuthUser user, Map<String, String> params) {
-		return OAuthUtils.createUserSignedOAuthRequest(endPoint, method, this.signatureMethod, this.oAuthVersion, this.authorizationHeader, this.consumerKey, this.consumerSecret, user.getTokenKey(), user.getTokenSecret(), params, this.includeOAuthParamsInBody);
+		return null;
+		// return OAuthUtils.createUserSignedOAuthRequest(endPoint, method, this.signatureMethod, this.oAuthVersion, this.authorizationHeader, this.consumerKey, this.consumerSecret, user.getTokenKey(), user.getTokenSecret(), params, this.includeOAuthParamsInBody);
 	}
 
 }
