@@ -57,6 +57,12 @@ public class UriUtils {
 	 */
 	private static final String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*'()";
 	
+	/**
+	 * Encode the given string as a URI component.
+	 * 
+	 * @param input
+	 * @return
+	 */
 	public static String encodeURIComponent(String input) {
 		return encodeURIComponent(input, false);
 	}
@@ -481,6 +487,23 @@ public class UriUtils {
 		try {
 			URI uri = new URI(url);
 			return uri.getHost();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Extract the path value from the URL.
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static String extractPath(String url) {
+		try {
+			URI uri = new URI(url);
+			return uri.getPath();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

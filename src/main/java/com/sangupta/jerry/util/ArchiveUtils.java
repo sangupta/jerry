@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Utility classes to pack/unpack popular compressed files
+ * like ZIP, RAR, TAR, GZ etc.
+ * 
  * @author sangupta
  *
  */
