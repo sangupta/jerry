@@ -21,6 +21,8 @@
 
 package com.sangupta.jerry.oauth;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -41,6 +43,9 @@ import com.sangupta.jerry.encoder.Base64Encoder;
 import com.sangupta.jerry.http.WebInvoker;
 import com.sangupta.jerry.http.WebRequest;
 import com.sangupta.jerry.http.WebRequestMethod;
+import com.sangupta.jerry.oauth.domain.OAuthConstants;
+import com.sangupta.jerry.oauth.domain.OAuthSignatureMethod;
+import com.sangupta.jerry.oauth.domain.OAuthToken;
 import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.jerry.util.StringUtils;
 import com.sangupta.jerry.util.UriUtils;
@@ -52,6 +57,139 @@ import com.sangupta.jerry.util.UriUtils;
  *
  */
 public class OAuthUtils {
+	
+	public static WebRequest signRequest(WebRequest request, OAuthToken consumer, OAuthToken userToken, String timeStamp, String nonce) {
+		StringBuilder builder = new StringBuilder();
+		
+		// first the HTTP VERB
+		builder.append(request.getVerb().toString().toUpperCase());
+		builder.append("&");
+		
+		// then the end point without any path or query or fragment
+		URI uri = request.getURI();
+		builder.append(getSignableBase(uri));
+		
+		// collect all parameters
+		TreeMap<String, String> requestParams = extractURIParameters(uri);
+		String paramString = buildParamString(null, requestParams);
+		
+		// now build up the signing string
+		final String signable = builder.toString();
+		
+		// compute the signature
+		final String signature = generateSignature(consumer, userToken, signable, OAuthSignatureMethod.HMAC_SHA1);
+		
+		// append to the request
+//		params.put(OAuthConstants.OAUTH_SIGNATURE, signature);
+//		
+//		// build oauth header
+//		request.addHeader(HttpHeaderName.AUTHORIZATION, "OAuth " + getAllOAuthParams(params));
+		
+		return request;
+	}
+	
+	public static String buildParamString(Object object, TreeMap<String, String> params) {
+		StringBuilder builder = new StringBuilder();
+		
+//		params.put(OAuthConstants.OAUTH_CONSUMER_KEY, consumerKey);
+//		params.put(OAuthConstants.OAUTH_NONCE, generateNonce());
+//		params.put(OAuthConstants.OAUTH_SIGNATURE_METHOD, signatureMethod.getOauthName());
+//		params.put(OAuthConstants.OAUTH_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
+//		params.put(OAuthConstants.OAUTH_VERSION, oAuthVersion);
+		
+		return builder.toString();
+	}
+	
+	/**
+	 * Extract all the query parameters from the URI
+	 * 
+	 * @param uri
+	 * @return
+	 */
+	public static TreeMap<String, String> extractURIParameters(URI uri) {
+		String query = uri.getQuery();
+		if(AssertUtils.isEmpty(query)) {
+			return null;
+		}
+		
+		TreeMap<String, String> params = new TreeMap<String, String>();
+		String[] pairs = query.split("&");
+		for(String pair : pairs) {
+			String[] tokens = pair.split("=");
+			params.put(tokens[0], tokens[1]);
+		}
+		
+		return params;
+	}
+
+	/**
+	 * Return the base string ready to be included in signable-string. The difference
+	 * between this method and {@link #getSigningBaseURL(String)} is that the return
+	 * value will be percent-encoded, if needed.
+	 * 
+	 * @param baseURL
+	 * @return
+	 * @throws URISyntaxException 
+	 */
+	public static String getSignableBase(String url) throws URISyntaxException {
+		return UriUtils.encodeURIComponent(getSigningBaseURL(url), true);
+	}
+	
+	/**
+	 * Return the base string ready to be included in signable-string. The difference
+	 * between this method and {@link #getSigningBaseURL(URI)} is that the return
+	 * value will be percent-encoded, if needed.
+	 * 
+	 * @param uri
+	 * @return
+	 */
+	public static String getSignableBase(URI uri) {
+		return UriUtils.encodeURIComponent(getSigningBaseURL(uri), true);
+	}
+	
+	/**
+	 * Return the signing base URL that is appended after the HTTP VERB
+	 * in OAuth header.
+	 * 
+	 * @param url
+	 * @return
+	 * @throws URISyntaxException
+	 */
+	public static String getSigningBaseURL(String url) throws URISyntaxException {
+		if(AssertUtils.isEmpty(url)) {
+			throw new IllegalArgumentException("URL cannot be null/empty");
+		}
+		
+		return getSigningBaseURL(new URI(url));
+	}
+	
+	/**
+	 * Return the signing base URL that is appended after the HTTP VERB
+	 * in OAuth header.
+	 * 
+	 * @param uri
+	 * @return
+	 */
+	public static String getSigningBaseURL(URI uri) {
+		if(uri == null) {
+			throw new IllegalArgumentException("URI cannot be null");
+		}
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append(uri.getScheme().toLowerCase());
+		builder.append("://");
+		builder.append(uri.getHost().toLowerCase());
+		
+		int port = uri.getPort();
+		if(port != 80) {
+			builder.append(':');
+			builder.append(String.valueOf(port));
+		}
+		
+		builder.append(uri.getPath());
+		
+		return builder.toString();
+	}
 	
 	/**
 	 * 
@@ -66,10 +204,13 @@ public class OAuthUtils {
 	 * @param includeOAuthParamsInBody
 	 * @return
 	 */
-	public static WebRequest createOAuthRequest(String endPoint, WebRequestMethod method, OAuthSignatureMethod signatureMethod, String oAuthVersion, String oAuthHeaderName, String consumerKey, String consumerSecret, Map<String, String> requestParams, boolean includeOAuthParamsInBody) {
+	public static WebRequest createOAuthRequest(String endPoint, WebRequestMethod method, OAuthSignatureMethod signatureMethod, String oAuthVersion, String oAuthHeaderName, String consumerKey, 
+			String consumerSecret, String timestamp, String nonce, Map<String, String> requestParams, boolean includeOAuthParamsInBody) {
+		
 		StringBuilder builder = new StringBuilder();
 		builder.append(method.toString().toUpperCase());
 		builder.append("&");
+		
 		builder.append(UriUtils.encodeURIComponent(endPoint, true));
 		
 		TreeMap<String, String> params = new TreeMap<String, String>();
@@ -90,13 +231,15 @@ public class OAuthUtils {
 		builder.append("&");
 		builder.append(UriUtils.encodeURIComponent(paramString, true));
 		
+		System.out.println("Signable: " + builder.toString());
+		
 		String signature = generateSignature(consumerSecret, "", builder.toString(), signatureMethod);
 		params.put(OAuthConstants.OAUTH_SIGNATURE, signature);
 		
 		// build oauth header
 		WebRequest request = WebInvoker.getWebRequest(endPoint, method);
 		if(oAuthHeaderName != null) {
-			request.addHeader(oAuthHeaderName, getAllOAuthParams(params));
+			request.addHeader(oAuthHeaderName, "OAuth " + getAllOAuthParams(params));
 		}
 		
 		request.bodyForm(getBodyParams(params, includeOAuthParamsInBody));
@@ -118,10 +261,13 @@ public class OAuthUtils {
 	 * @param includeOAuthParamsInBody
 	 * @return
 	 */
-	public static WebRequest createUserSignedOAuthRequest(String endPoint, WebRequestMethod method, OAuthSignatureMethod signatureMethod, String oAuthVersion, String oAuthHeaderName, String consumerKey, String consumerSecret, String tokenKey, String tokenSecret, Map<String, String> requestParams, boolean includeOAuthParamsInBody) {
+	public static WebRequest createUserSignedOAuthRequest(String endPoint, WebRequestMethod method, OAuthSignatureMethod signatureMethod, String oAuthVersion, String oAuthHeaderName, String consumerKey, 
+			String consumerSecret, String tokenKey, String tokenSecret, String timestamp, String nonce, Map<String, String> requestParams, boolean includeOAuthParamsInBody) {
+		
 		StringBuilder builder = new StringBuilder();
 		builder.append(method.toString().toUpperCase());
 		builder.append("&");
+		
 		builder.append(UriUtils.encodeURIComponent(endPoint, true));
 		
 		TreeMap<String, String> params = new TreeMap<String, String>();
@@ -131,7 +277,7 @@ public class OAuthUtils {
 		params.put(OAuthConstants.OAUTH_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
 		params.put(OAuthConstants.OAUTH_VERSION, oAuthVersion);
 		params.put(OAuthConstants.OAUTH_TOKEN, tokenKey);
-		
+
 		if(AssertUtils.isNotEmpty(requestParams)) {
 			for(Entry<String, String> entry : requestParams.entrySet()) {
 				params.put(entry.getKey(), entry.getValue());
@@ -143,27 +289,32 @@ public class OAuthUtils {
 		builder.append("&");
 		builder.append(UriUtils.encodeURIComponent(paramString, true));
 		
+		System.out.println("Signable: " + builder.toString());
+		
 		String signature = generateSignature(consumerSecret, tokenSecret, builder.toString(), signatureMethod);
 		params.put(OAuthConstants.OAUTH_SIGNATURE, signature);
 		
 		// build oauth header
 		WebRequest request = WebInvoker.getWebRequest(endPoint, method);
 		if(oAuthHeaderName != null) {
-			request.addHeader(oAuthHeaderName, getAllOAuthParams(params));
+			request.addHeader(oAuthHeaderName, "OAuth " + getAllOAuthParams(params));
 		}
 		
-		request.bodyForm(getBodyParams(params, includeOAuthParamsInBody));
+		List<NameValuePair> pairs = getBodyParams(params, includeOAuthParamsInBody);
+		if(pairs != null && !pairs.isEmpty()) {
+			request.bodyForm(pairs);
+		}
 		
 		return request;
 	}
-
+	
 	/**
 	 * Get a list of all non-aouth params from the given map.
 	 * 
 	 * @param params
 	 * @return
 	 */
-	private static Iterable<? extends NameValuePair> getBodyParams(TreeMap<String, String> params, boolean includeOAuthParamsInBody) {
+	private static List<NameValuePair> getBodyParams(TreeMap<String, String> params, boolean includeOAuthParamsInBody) {
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
 		
 		for(Entry<String, String> entry : params.entrySet()) {
@@ -208,6 +359,18 @@ public class OAuthUtils {
 		
 		return builder.toString();
 	}
+	
+	/**
+	 * 
+	 * @param consumer
+	 * @param userToken
+	 * @param signable
+	 * @param signingMethod
+	 * @return
+	 */
+	public static String generateSignature(OAuthToken consumer, OAuthToken userToken, String signable, OAuthSignatureMethod signingMethod) {
+		return generateSignature(consumer.getSecret(), userToken.getSecret(), signable, signingMethod);
+	}
 
 	/**
 	 * Generate an OAUTH signature for the given signature string.
@@ -233,13 +396,15 @@ public class OAuthUtils {
 	}
 	
 	/**
+	 * Generate the signature using the given signing method for the signable using the key string. For OAuth the key
+	 * string should already be URI-percent-encoded if need be.
 	 * 
 	 * @param toSign
 	 * @param keyString
 	 * @param method
 	 * @return
 	 */
-	private static String doSigning(String signable, String keyString, OAuthSignatureMethod signingMethod) {
+	public static String doSigning(String signable, String keyString, OAuthSignatureMethod signingMethod) {
 		SecretKeySpec key = new SecretKeySpec((keyString).getBytes(StringUtils.CHARSET_UTF8), signingMethod.getAlgorithmName());
 		Mac mac;
 		try {
@@ -287,13 +452,37 @@ public class OAuthUtils {
 	}
 
 	/**
-	 * Method that generates a NONCE string based on a generated UUID and current nano timestamp.
+	 * Method that generates a NONCE string based on a randomly generated UUID 
+	 * and current millis and nano timestamp.
 	 * 
 	 * @return
 	 */
 	public static String generateNonce() {
 		UUID uuid = UUID.randomUUID();
-		return Base62Encoder.encode(uuid.getMostSignificantBits()) + Base62Encoder.encode(uuid.getLeastSignificantBits()) + Base62Encoder.encode(System.nanoTime());
+		return Base62Encoder.encode(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits(), System.currentTimeMillis(), System.nanoTime());
 	}
 
+//	/**
+//	 * Parse the given URL-encoded params and return the value of the parameter
+//	 * that has the given name.
+//	 * 
+//	 * @param text
+//	 * @param string
+//	 * @return
+//	 */
+//	public static String parse(String text, String paramName) {
+//		if(!paramName.endsWith("=")) {
+//			paramName = paramName + "=";
+//		}
+//		
+//		int start = text.indexOf(paramName);
+//		if(start == -1) {
+//			return null;
+//		}
+//
+//		start = text.indexOf('=', start);
+//		int end = text.indexOf('&', start);
+//		return new String(text.substring(start + 1, end));
+//	}
+	
 }

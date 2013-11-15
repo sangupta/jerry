@@ -7,14 +7,41 @@ Features
 --------
 * Collection of utility classes
 * Powerful HTTP framework for handling web requests
+* OAuth client and server side filters
 * MongoDB abstract class for writing CRUD operations on objects with single line of code
 * Quartz scheduling framework
 * Basic security framework classes
 * Basic batching framework
-* Added Base62 encoder for 64-bit integers
+* Base62 encoder for 64-bit integers
 
 Builds
 ------
+
+**Development Version**
+
+* Added `com.sangupta.jerry.oauth` package to work with OAuth requests. 
+* Utility client to send OAuth signed requests
+* Server side filters to check validity of incoming requests per OAuth specifications
+* Added ArchiveUtils - utility class to work with compressed files
+* Added HttpServletResponseWrapper implementation that uses a ByteArray to buffer response
+* Updated CookieUtils to add method to create a new Cookie
+* Fixed bug in JavascriptTag to not include same Javascript URL twice
+
+* Some minor refactorings and bug fixes
+* Some libraries are back to `required` scope
+
+**0.4.1**
+
+* Added utility methods to Responseutils
+* Fixed a bug in RequestCapturingFilter where chained filters were not being called
+* Upgraded version on Apache Http-client library to 4.2.5
+* Fixed bug where Cookie age was not being set correctly
+* Added very fast Base64 encoder from another open-source project
+* Fixed bug where not all data was being sent to HttpServletResponse due to encoding issues
+* Added init() method to JerseyGrizzlyServer
+* Some other smaller fixes
+
+* All libraries were set to `provided` scope
 
 **0.4.0**
 

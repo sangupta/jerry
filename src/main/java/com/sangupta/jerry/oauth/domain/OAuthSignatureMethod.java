@@ -19,7 +19,7 @@
  * 
  */
 
-package com.sangupta.jerry.oauth;
+package com.sangupta.jerry.oauth.domain;
 
 /**
  * @author sangupta

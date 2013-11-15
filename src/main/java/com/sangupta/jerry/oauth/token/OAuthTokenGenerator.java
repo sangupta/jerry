@@ -19,36 +19,37 @@
  * 
  */
 
-package com.sangupta.jerry.oauth;
+package com.sangupta.jerry.oauth.token;
+
+import com.sangupta.jerry.oauth.domain.OAuthToken;
 
 /**
+ * Contract for implementations that wish to generate OAuth tokens
+ * for users.
+ * 
  * @author sangupta
  *
  */
-public class OAuthResponseUtils {
-
+public interface OAuthTokenGenerator {
+	
 	/**
-	 * Parse the given URL-encoded params and return the value of the parameter
-	 * that has the given name.
+	 * For the given consumer key, generate a new OAuth token pair
+	 * that needs to be sent to the client.
 	 * 
-	 * @param text
-	 * @param string
+	 * @param consumerKey
 	 * @return
 	 */
-	public static String get(String text, String paramName) {
-		if(!paramName.endsWith("=")) {
-			paramName = paramName + "=";
-		}
-		
-		int start = text.indexOf(paramName);
-		if(start == -1) {
-			return null;
-		}
-
-		start = text.indexOf('=', start);
-		int end = text.indexOf('&', start);
-		return new String(text.substring(start + 1, end));
-	}
-
+	public OAuthToken generateKeyPair(String consumerKey);
 	
+	/**
+	 * Return the token secret for the given consumer key and access token.
+	 * The method should return a <code>null</code> if any of the consumer
+	 * key or the request token do not match.
+	 * 
+	 * @param consumerKey
+	 * @param accessToken
+	 * @return
+	 */
+	public String getSecret(String consumerKey, String requestToken);
+
 }

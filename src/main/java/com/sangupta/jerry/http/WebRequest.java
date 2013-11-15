@@ -273,6 +273,61 @@ public class WebRequest {
     	
     	return this;
     }
+    
+    /**
+     * Return the HTTP VERB associated with this request.
+     * 
+     * @return
+     */
+    public String getVerb() {
+    	return this.request.getMethod().toUpperCase();
+    }
+    
+    /**
+     * Return the URI associated with this request.
+     * 
+     * @return
+     */
+    public URI getURI() {
+    	return this.request.getURI();
+    }
+    
+    /**
+     * Return the type of request that we encapsulate.
+     * 
+     * @return
+     */
+    public WebRequestMethod getWebRequestMethod() {
+    	if(this.request instanceof HttpGet) {
+    		return WebRequestMethod.GET;
+    	}
+    	
+    	if(this.request instanceof HttpPost) {
+    		return WebRequestMethod.POST;
+    	}
+    	
+    	if(this.request instanceof HttpPut) {
+    		return WebRequestMethod.PUT;
+    	}
+    	
+    	if(this.request instanceof HttpDelete) {
+    		return WebRequestMethod.DELETE;
+    	}
+    	
+    	if(this.request instanceof HttpHead) {
+    		return WebRequestMethod.HEAD;
+    	}
+    	
+    	if(this.request instanceof HttpTrace) {
+    		return WebRequestMethod.TRACE;
+    	}
+    	
+    	if(this.request instanceof HttpOptions) {
+    		return WebRequestMethod.OPTIONS;
+    	}
+    	
+    	throw new IllegalStateException("Unknown request type");
+    }
 
     /**
      * Execute this web request now.

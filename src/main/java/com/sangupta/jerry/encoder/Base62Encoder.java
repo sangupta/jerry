@@ -68,6 +68,32 @@ public class Base62Encoder {
 	}
 	
 	/**
+	 * Function to encode a list of numbers to Base62 all in one string-representation.
+	 * 
+	 * @param numbers
+	 * @return
+	 */
+	public static String encode(long... numbers) {
+		StringBuilder builder = new StringBuilder(numbers.length * 10);
+		
+		for(long number : numbers) {
+			if(number < 0) {
+				builder.append(elements[0]);
+				number = 0 - number;
+			}
+			
+			int remainder;
+			do {
+				remainder = (int) (number % 62l);
+				builder.append(elements[remainder]);
+				number = number / 62;
+			} while(number > 0);
+		}
+		
+		return builder.toString();
+	}
+	
+	/**
 	 * Function to decode a given Base62 string back to its original form
 	 * 
 	 * @param string the Base62 representation

@@ -24,6 +24,7 @@ package com.sangupta.jerry.web;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -45,21 +46,21 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class HttpServletResponseWrapperImpl extends HttpServletResponseWrapper {
 	
-	private final ByteArrayServletOutputStream outputStream = new ByteArrayServletOutputStream();
+	final ByteArrayServletOutputStream outputStream = new ByteArrayServletOutputStream();
 	
-	private Map<String, Object> headers;
+	Map<String, Object> headers;
 	
-	private Set<Cookie> cookies;
+	Set<Cookie> cookies;
 	
-	private int statusCode;
+	int statusCode;
 	
-	private String charset;
+	String charset;
 	
-	private String contentType;
+	String contentType;
 	
-	private String characterEncoding;
+	String characterEncoding;
 	
-	private Locale locale;
+	Locale locale;
 	
 	/**
 	 * 
@@ -88,6 +89,22 @@ public class HttpServletResponseWrapperImpl extends HttpServletResponseWrapper {
 	 */
 	public byte[] getBytes() {
 		return this.outputStream.getByteArrayOutputStream().toByteArray();
+	}
+	
+	/**
+	 * Return the currently written as a {@link String} object by deciphering the content
+	 * encoding as might have been written to this wrapper. If no encoding has been set
+	 * it uses the platform default encoding.
+	 * 
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 */
+	public String getAsString() throws UnsupportedEncodingException {
+		if(this.characterEncoding != null) {
+			return new String(getBytes(), this.characterEncoding);
+		}
+		
+		return new String(getBytes());
 	}
 	
 	/**

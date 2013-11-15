@@ -19,14 +19,16 @@
  * 
  */
 
-package com.sangupta.jerry.oauth;
+package com.sangupta.jerry.oauth.domain;
 
 /**
+ * Constants with regards to OAuth workflows.
+ * 
  * @author sangupta
  *
  */
 public interface OAuthConstants {
-
+	
 	public static final String OAUTH_SIGNATURE = "oauth_signature";
 	
 	public static final String OAUTH_CONSUMER_KEY = "oauth_consumer_key";
