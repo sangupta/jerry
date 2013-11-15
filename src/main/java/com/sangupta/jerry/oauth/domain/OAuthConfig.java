@@ -19,36 +19,12 @@
  * 
  */
 
-package com.sangupta.jerry.oauth;
+package com.sangupta.jerry.oauth.domain;
 
 /**
  * @author sangupta
  *
  */
-public class OAuthResponseUtils {
+public class OAuthConfig {
 
-	/**
-	 * Parse the given URL-encoded params and return the value of the parameter
-	 * that has the given name.
-	 * 
-	 * @param text
-	 * @param string
-	 * @return
-	 */
-	public static String get(String text, String paramName) {
-		if(!paramName.endsWith("=")) {
-			paramName = paramName + "=";
-		}
-		
-		int start = text.indexOf(paramName);
-		if(start == -1) {
-			return null;
-		}
-
-		start = text.indexOf('=', start);
-		int end = text.indexOf('&', start);
-		return new String(text.substring(start + 1, end));
-	}
-
-	
 }

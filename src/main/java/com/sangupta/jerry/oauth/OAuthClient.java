@@ -21,13 +21,13 @@
 
 package com.sangupta.jerry.oauth;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.sangupta.jerry.http.WebRequest;
 import com.sangupta.jerry.http.WebRequestMethod;
 import com.sangupta.jerry.oauth.domain.OAuthConstants;
 import com.sangupta.jerry.oauth.domain.OAuthSignatureMethod;
+import com.sangupta.jerry.oauth.domain.OAuthToken;
 
 /**
  * @author sangupta
@@ -35,33 +35,46 @@ import com.sangupta.jerry.oauth.domain.OAuthSignatureMethod;
  */
 public class OAuthClient {
 
-	private final String consumerKey;
+	private OAuthToken consumer;
 	
-	private final String consumerSecret;
+	private OAuthSignatureMethod signatureMethod;
 	
-	private final OAuthSignatureMethod signatureMethod;
+	private String oAuthVersion;
 	
-	private final String oAuthVersion;
-	
-	private final String authorizationHeader;
+	private String authorizationHeader;
 	
 	private final boolean includeOAuthParamsInBody;
 	
-	public OAuthClient(String consumerKey, String consumerSecret) {
-		this(consumerKey, consumerSecret, OAuthSignatureMethod.HMAC_SHA1, OAuthConstants.OAUTH_VERSION_1_0, OAuthConstants.OAUTH_AUTHORIZATION_HEADER_NAME, false);
+	/**
+	 * Generate a new instance of {@link OAuthClient} for the given key
+	 * and secret value.
+	 * 
+	 * @param key
+	 * @param secret
+	 */
+	public OAuthClient(String key, String secret) {
+		this(new OAuthToken(key, secret));
 	}
 	
-	public OAuthClient(String consumerKey, String consumerSecret, boolean includeOAuthParamsInBody) {
-		this(consumerKey, consumerSecret, OAuthSignatureMethod.HMAC_SHA1, OAuthConstants.OAUTH_VERSION_1_0, OAuthConstants.OAUTH_AUTHORIZATION_HEADER_NAME, includeOAuthParamsInBody);
+	/**
+	 * Generate a new instance of {@link OAuthClient} for the given {@link OAuthToken}.
+	 * 
+	 * @param consumer
+	 */
+	public OAuthClient(OAuthToken consumer) {
+		this(consumer, OAuthSignatureMethod.HMAC_SHA1, OAuthConstants.OAUTH_VERSION_1_0, OAuthConstants.OAUTH_AUTHORIZATION_HEADER_NAME, false);
 	}
-	
-	public OAuthClient(String consumerKey, String consumerSecret, OAuthSignatureMethod signatureMethod, String oauthVersion) {
-		this(consumerKey, consumerSecret, signatureMethod, oauthVersion, OAuthConstants.OAUTH_AUTHORIZATION_HEADER_NAME, false);
-	}
-	
-	public OAuthClient(String consumerKey, String consumerSecret, OAuthSignatureMethod signatureMethod, String oauthVersion, String authorizationHeader, boolean includeOAuthParamsInBody) {
-		this.consumerKey = consumerKey;
-		this.consumerSecret = consumerSecret;
+
+	/**
+	 * 
+	 * @param consumer
+	 * @param signatureMethod
+	 * @param oauthVersion
+	 * @param authorizationHeader
+	 * @param includeOAuthParamsInBody
+	 */
+	public OAuthClient(OAuthToken consumer, OAuthSignatureMethod signatureMethod, String oauthVersion, String authorizationHeader, boolean includeOAuthParamsInBody) {
+		this.consumer = consumer;
 		this.signatureMethod = signatureMethod;
 		this.oAuthVersion = oauthVersion;
 		this.authorizationHeader = authorizationHeader;
@@ -69,32 +82,29 @@ public class OAuthClient {
 	}
 	
 	/**
+	 * Create a web request to the given end point for the given {@link WebRequestMethod} which has the following
+	 * request parameters.
+	 * 
 	 * @param endPoint
-	 * @param post
-	 * @param oAuthClient
-	 * @param userName
-	 * @param password
+	 * @param method
+	 * @param requestParams
 	 * @return
 	 */
-	public WebRequest createXAuthRequest(String endPoint, String userName, String password) {
-		Map<String, String> params = new HashMap<String, String>();
-		params.put(OAuthConstants.X_AUTH_USERNAME, userName);
-		params.put(OAuthConstants.X_AUTH_PASSWORD, password);
-		params.put(OAuthConstants.X_AUTH_MODE, OAuthConstants.DEFAULT_XAUTH_MODE);
-		
-//		return OAuthUtils.createOAuthRequest(endPoint, WebRequestMethod.POST, this.signatureMethod, this.oAuthVersion, this.authorizationHeader, this.consumerKey, this.consumerSecret, params, this.includeOAuthParamsInBody);
+	public WebRequest createRequest(String endPoint, WebRequestMethod method, Map<String, String> requestParams) {
 		return null;
 	}
-
+	
 	/**
-	 * @param endPoint
-	 * @param post
-	 * @param user
-	 * @param asMap
+	 * Run an XAuth request to the given endpoint for the given credentials and
+	 * generate an {@link OAuthUser} that can then be used to perform other API
+	 * calls.
+	 * 
+	 * This call will always be a POST call.
+	 * 
+	 * @param userName
+	 * @param password
 	 */
-	public WebRequest createUserSignedOAuthRequest(String endPoint, WebRequestMethod method, OAuthUser user, Map<String, String> params) {
+	public OAuthUser doUserXAuth(String endPoint, String userName, String password) {
 		return null;
-		// return OAuthUtils.createUserSignedOAuthRequest(endPoint, method, this.signatureMethod, this.oAuthVersion, this.authorizationHeader, this.consumerKey, this.consumerSecret, user.getTokenKey(), user.getTokenSecret(), params, this.includeOAuthParamsInBody);
 	}
-
 }
