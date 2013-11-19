@@ -154,6 +154,13 @@ public class CompressionUtils {
 		return new String(uncompress(inputBytes, uncompressedSize));
 	}
 
+	/**
+	 * GZip a given byte-array in-memory.
+	 * 
+	 * @param bytes
+	 * @return
+	 * @throws IOException
+	 */
 	public static byte[] gzipByteArray(byte[] bytes) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(bytes.length);
 		

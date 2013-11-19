@@ -131,6 +131,8 @@ public class AssertUtils {
 	}
 
 	/**
+	 * Check if an object is empty or not.
+	 * 
 	 * @param object
 	 * @return
 	 */
@@ -142,6 +144,12 @@ public class AssertUtils {
 		return false;
 	}
 	
+	/**
+	 * Check if an object is NOT empty.
+	 * 
+	 * @param object
+	 * @return
+	 */
 	public static boolean isNotEmpty(Object object) {
 		if(object == null) {
 			return false;
