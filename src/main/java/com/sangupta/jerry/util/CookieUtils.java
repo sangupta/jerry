@@ -21,6 +21,8 @@
 
 package com.sangupta.jerry.util;
 
+import java.util.Arrays;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,6 +73,17 @@ public class CookieUtils {
 		return cookie;
 	}
 	
+	public static Cookie createSessionCookie(String name, String value, String domain, String path) {
+		Cookie cookie = createCookie(name, value, domain, path);
+		return cookie;
+	}
+	
+	public static void deleteCookie(Cookie cookie) {
+		if(cookie != null) {
+			cookie.setMaxAge(0);
+		}
+	}
+	
 	/**
 	 * Fetch the {@link Cookie} from the available cookies as passed from the
 	 * {@link HttpServletRequest}.
@@ -93,6 +106,36 @@ public class CookieUtils {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Return multiple cookies with the given name.
+	 * 
+	 * @param cookies
+	 * @param cookieName
+	 * @return
+	 */
+	public static Cookie[] getCookiesWithName(Cookie[] cookies, String cookieName) {
+		if(cookieName == null || cookieName.length() == 0) {
+			return null;
+		}
+		
+		Cookie[] found = new Cookie[cookies.length];
+		int count = 0;
+		
+		if(cookies != null && cookies.length > 0) {
+			for(Cookie cookie : cookies) {
+				if(cookie.getName().equals(cookieName)) {
+					found[count++] = cookie;
+				}
+			}
+		}
+		
+		if(count < found.length) {
+			return Arrays.copyOfRange(found, 0, count);
+		}
+		
+		return found;
 	}
 	
 	/**
