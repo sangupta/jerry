@@ -96,7 +96,7 @@ public class WebInvoker {
 	 */
 	public static String fetchResponse(String url, String cookiePolicy) {
 		try {
-			return WebRequest.get(url).cookiePolicy(cookiePolicy).execute().webResponse().getContent();
+			return WebRequest.get(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).execute().webResponse().getContent();
 		} catch(IOException e) {
 			logger.debug("Unable to fetch repsonse from url: {}", url, e);
 		}
@@ -121,7 +121,7 @@ public class WebInvoker {
 	 */
 	public static WebResponse getResponse(String url, String cookiePolicy) {
 		try {
-			return WebRequest.get(url).cookiePolicy(cookiePolicy).execute().webResponse();
+			return WebRequest.get(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).execute().webResponse();
 		} catch(Exception e) {
 			logger.debug("Unable to fetch repsonse from url: {}", url, e);
 		}
@@ -149,10 +149,10 @@ public class WebInvoker {
 	public static Map<String, String> getHeaders(String url, boolean followRedirects, String cookiePolicy) {
 		try {
 			if(followRedirects) {
-				return WebRequest.head(url).cookiePolicy(cookiePolicy).followRedirects().execute().webResponse().getHeaders();
+				return WebRequest.head(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).followRedirects().execute().webResponse().getHeaders();
 			}
 			
-			return WebRequest.head(url).cookiePolicy(cookiePolicy).noRedirects().execute().webResponse().getHeaders();
+			return WebRequest.head(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).noRedirects().execute().webResponse().getHeaders();
 		} catch(IOException e) {
 			logger.debug("Unable to fetch response headers from url: {}", url, e);
 		}
@@ -181,10 +181,10 @@ public class WebInvoker {
 	public static WebResponse headRequest(String url, boolean followRedirects, String cookiePolicy) {
 		try {
 			if(followRedirects) {
-				return WebRequest.head(url).cookiePolicy(cookiePolicy).followRedirects().execute().webResponse();
+				return WebRequest.head(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).followRedirects().execute().webResponse();
 			}
 			
-			return WebRequest.head(url).cookiePolicy(cookiePolicy).noRedirects().execute().webResponse();
+			return WebRequest.head(url).connectTimeout(CONNECTION_TIMEOUT).socketTimeout(SOCKET_TIMEOUT).cookiePolicy(cookiePolicy).noRedirects().execute().webResponse();
 		} catch(IOException e) {
 			logger.debug("Unable to fetch response headers from url: {}", url, e);
 		}
