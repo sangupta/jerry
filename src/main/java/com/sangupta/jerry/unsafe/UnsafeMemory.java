@@ -30,10 +30,6 @@ import java.lang.reflect.Field;
  * @author sangupta
  *
  */
-/**
- * @author sangupta
- *
- */
 @SuppressWarnings("restriction")
 public class UnsafeMemory {
 	
@@ -42,6 +38,9 @@ public class UnsafeMemory {
 	 */
 	private static final Unsafe UNSAFE;
 	
+	/**
+	 * Obtain the <code>Unsafe</code> object via reflection
+	 */
 	static {
 		try {
 			Field field = Unsafe.class.getDeclaredField("theUnsafe");
@@ -268,11 +267,21 @@ public class UnsafeMemory {
 		return value;
 	}
 	
+	/**
+	 * Write  byte into the underlying byte array.
+	 * 
+	 * @param bite
+	 */
 	public void putByte(final byte bite) {
 		UNSAFE.putByte(buffer, byteArrayOffset + pos, bite);
 		pos += SIZE_OF_BYTE;
 	}
 	
+	/**
+	 * Read a byte from the underlying byte array.
+	 * 
+	 * @return
+	 */
 	public byte getByte() {
 		positionCheck();
 		
@@ -280,6 +289,30 @@ public class UnsafeMemory {
 		pos += SIZE_OF_BYTE;
 		
 		return bite;
+	}
+	
+	/**
+	 * Write a short value into the underlying byte array.
+	 * 
+	 * @param shrt
+	 */
+	public void putShort(final short shrt) {
+		UNSAFE.putShort(buffer, byteArrayOffset + pos, shrt);
+		pos += SIZE_OF_SHORT;
+	}
+	
+	/**
+	 * Read a short value from the underlying byte array.
+	 * 
+	 * @return
+	 */
+	public short getShort() {
+		positionCheck();
+		
+		short shrt = UNSAFE.getShort(buffer, byteArrayOffset + pos);
+		pos += SIZE_OF_SHORT;
+		
+		return shrt;
 	}
 
 	/**
