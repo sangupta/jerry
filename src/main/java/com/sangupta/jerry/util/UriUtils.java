@@ -86,9 +86,11 @@ public class UriUtils {
 			for (int i = 0; i < l; i++) {
 				String e = input.substring(i, i + 1);
 				if (ALLOWED_CHARS.indexOf(e) == -1) {
-					byte[] b = e.getBytes("utf-8");
-					output.append('%');
-					output.append(StringUtils.getHex(b).toUpperCase());
+					byte[] bytes = e.getBytes("utf-8");
+					for(byte b : bytes) {
+						output.append('%');
+						output.append(StringUtils.getHex(b).toUpperCase());
+					}
 					continue;
 				}
 				output.append(e);
