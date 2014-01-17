@@ -21,10 +21,11 @@
 
 package com.sangupta.jerry.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Utility class to manipulate a new Url or an existing url. 
@@ -38,11 +39,11 @@ public class UrlManipulator {
 	
 	public static final String HTTP_SCHEME = "http";
 	
-	private String scheme;
+	private String scheme = HTTP_SCHEME;
 	
 	private String host;
 	
-	private int port;
+	private int port = 80;
 	
 	private String path;
 	
@@ -58,9 +59,7 @@ public class UrlManipulator {
 	 * @param path
 	 */
 	public UrlManipulator(String host, String path) {
-		this.scheme = HTTP_SCHEME;
 		this.host = host;
-		this.port = 80;
 		this.path = path;
 	}
 	
@@ -73,9 +72,22 @@ public class UrlManipulator {
 	 * @param path
 	 */
 	public UrlManipulator(String host, int port, String path) {
-		this.scheme = HTTP_SCHEME;
 		this.host = host;
 		this.port = port;
+		this.path = path;
+	}
+	
+	/**
+	 * Construct a new URL for the given scheme, host and path. A default
+	 * port value of 80 is assumed.
+	 * 
+	 * @param scheme
+	 * @param host
+	 * @param path
+	 */
+	public UrlManipulator(String scheme, String host, String path) {
+		this.scheme = scheme;
+		this.host = host;
 		this.path = path;
 	}
 	
@@ -240,18 +252,23 @@ public class UrlManipulator {
 
 			builder.append('?');
 			boolean first = true;
-			final Set<Entry<String, String>> entrySet = this.queryParams.entrySet();
-			for(Entry<String, String> param : entrySet) {
+			final List<String> keys = new ArrayList<String>(this.queryParams.keySet());
+			Collections.sort(keys);
+			
+			String value;
+			for(String key : keys) {
 				if(!first) {
 					builder.append('&');
 				}
 				
 				first = false;
 				
-				builder.append(param.getKey());
+				builder.append(key);
 				builder.append('=');
-				if(AssertUtils.isNotEmpty(param.getValue())) {
-					builder.append(param.getValue());
+				
+				value = this.queryParams.get(key);
+				if(AssertUtils.isNotEmpty(value)) {
+					builder.append(value);
 				}
 			}
 		}
@@ -262,10 +279,24 @@ public class UrlManipulator {
 				builder.append('/');
 			}
 			
+			builder.append('#');
 			builder.append(this.fragment);
 		}
 		
 		return builder.toString();
+	}
+	
+	// Java basic overriding methods follow
+	
+	/**
+	 * Return a {@link String} representation of the URL that can be currently
+	 * constructed using this manipulator.
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return this.constructURL();
 	}
 	
 	// Methods for manipulation start here
@@ -356,8 +387,14 @@ public class UrlManipulator {
 			return;
 		}
 		
-		if(fragment.trim().length() == 0) {
+		fragment = fragment.trim();
+		if(fragment.length() == 0) {
 			this.fragment = null;
+			return;
+		}
+		
+		if(fragment.charAt(0) == '#') {
+			this.fragment = fragment.substring(1);
 			return;
 		}
 		

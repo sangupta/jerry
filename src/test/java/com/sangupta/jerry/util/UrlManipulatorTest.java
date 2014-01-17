@@ -42,4 +42,29 @@ public class UrlManipulatorTest {
 		Assert.assertEquals(2, manipulator.getNumQueryParams());
 		Assert.assertEquals("fragmentme", manipulator.getFragment());
 	}
+	
+	@Test
+	public void testManipulationBasic() {
+		UrlManipulator manipulator = new UrlManipulator("hTTp://www.some-RANDOM-domain.com:80/abc.html?param1=value1&param2=value2#fragmentme");
+		Assert.assertEquals("http://www.some-random-domain.com/abc.html?param1=value1&param2=value2#fragmentme", manipulator.constructURL());
+		
+		manipulator.setPort(8080);
+		Assert.assertEquals("http://www.some-random-domain.com:8080/abc.html?param1=value1&param2=value2#fragmentme", manipulator.constructURL());
+		
+		manipulator.setQueryParam("param1", "value3");
+		Assert.assertEquals("http://www.some-random-domain.com:8080/abc.html?param1=value3&param2=value2#fragmentme", manipulator.constructURL());
+		
+		manipulator.removeQueryParam("param1");
+		Assert.assertEquals("http://www.some-random-domain.com:8080/abc.html?param2=value2#fragmentme", manipulator.constructURL());
+		
+		manipulator.setQueryParam("param1", "value4");
+		Assert.assertEquals("http://www.some-random-domain.com:8080/abc.html?param1=value4&param2=value2#fragmentme", manipulator.constructURL());
+	}
+	
+	@Test
+	public void testConstruct() {
+		Assert.assertEquals("http://google.com", new UrlManipulator("google.com", null).constructURL());
+		Assert.assertEquals("https://google.com", new UrlManipulator("https", "google.com", null).constructURL());
+		Assert.assertEquals("https://google.com", new UrlManipulator("https", "google.com", 80, null).constructURL());
+	}
 }
