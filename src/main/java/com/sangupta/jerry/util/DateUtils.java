@@ -90,16 +90,56 @@ public class DateUtils {
 	public static final long ONE_YEAR = 365l * ONE_DAY;
 
     /**
-     * Convert the given time (in millis) represented as a {@link Long} object into the {@link Date} object.
-     * 
-     * @param millis
-     * @return
-     */
+	 * Convert the given time (in millis) represented as a {@link Long} object
+	 * into the {@link Date} object.
+	 * 
+	 * @param millis
+	 *            the millis to be converted
+	 * 
+	 * @return the {@link Date} object representation, or <code>null</code> if
+	 *         the incoming millis are <code>null</code>
+	 */
     public static final Date getDate(Long millis) {
         if(millis == null) {
             return null;
         }
+        
         return new Date(millis);
     }
 
+    /**
+	 * Find the difference between two {@link Date} objects in milliseconds. The
+	 * method is <code>null</code>-safe. If either of the object is
+	 * <code>null</code>, the total time of the other object is returned. If
+	 * both the objects are <code>null</code>, a difference of <code>0</code> is
+	 * returned. The value is always positive.
+	 * 
+	 * @param first
+	 *            the first {@link Date} object
+	 * 
+	 * @param second
+	 *            the second {@link Date} object
+	 * 
+	 * @return the difference in milli-seconds.
+	 */
+    public static final long getDifference(Date first, Date second) {
+    	if(first == null && second == null) {
+    		return 0l;
+    	}
+    	
+    	if(first == null) {
+    		return second.getTime();
+    	}
+    	
+    	if(second == null) {
+    		return first.getTime();
+    	}
+    	
+    	long difference = first.getTime() - second.getTime();
+    	if(difference < 0) {
+    		return 0 - difference;
+    	}
+    	
+    	return difference;
+    }
 }

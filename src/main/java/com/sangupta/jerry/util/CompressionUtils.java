@@ -23,6 +23,8 @@ package com.sangupta.jerry.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
@@ -34,20 +36,29 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Utility function to compress given data into a byte-array and vice-versa.
- * Useful for situation where data needs to be stored in database etc.
+ * Useful for situation where data needs to be stored in database etc. The default
+ * compression happens using <code>DEFLATE</code> algorithm. 
  * 
  * @author sangupta
  *
  */
 public class CompressionUtils {
 	
+	/**
+	 * The logger
+	 */
 	private static final Log LOGGER = LogFactory.getLog(CompressionUtils.class);
 	
 	/**
-	 * Compress the given string data into byte-array.
+	 * Compress the given string data into byte-array. The method is
+	 * <code>null</code> safe. The incoming string is translated to bytes
+	 * using the platform-encoding.
 	 * 
 	 * @param string
-	 * @return
+	 *            the string to be compressed
+	 * 
+	 * @return the bytes of the compressed representation, or <code>null</code>
+	 *         if incoming string is null.
 	 */
 	public static byte[] compress(String string) {
 		if(string == null) {
@@ -58,10 +69,60 @@ public class CompressionUtils {
 	}
 	
 	/**
-	 * Compress the given input byte-array into a byte-array.
+	 * Compress the given string data into byte-array. The method is
+	 * <code>null</code> safe. The incoming string is translated to bytes using
+	 * the given charset-name.
+	 * 
+	 * @param string
+	 *            the string to be compressed
+	 * 
+	 * @return the bytes of the compressed representation, or <code>null</code>
+	 *         if incoming string is null.
+	 *         
+	 * @throws UnsupportedEncodingException
+	 *             if the incoming string cannot be converted into bytes using
+	 *             the given charset name.
+	 */
+	public static byte[] compress(String string, String charsetName) throws UnsupportedEncodingException {
+		if(string == null) {
+			return null;
+		}
+		
+		return compress(string.getBytes(charsetName));
+	}
+	
+	/**
+	 * Compress the given string data into byte-array. The method is
+	 * <code>null</code> safe. The incoming string is translated to bytes using
+	 * the given {@link Charset}.
+	 * 
+	 * @param string
+	 *            the string to be compressed
+	 * 
+	 * @return the bytes of the compressed representation, or <code>null</code>
+	 *         if incoming string is null.
+	 *         
+	 * @throws UnsupportedEncodingException
+	 *             if the incoming string cannot be converted into bytes using
+	 *             the given {@link Charset}.
+	 */
+	public static byte[] compress(String string, Charset charset) throws UnsupportedEncodingException {
+		if(string == null) {
+			return null;
+		}
+		
+		return compress(string.getBytes(charset));
+	}
+	
+	/**
+	 * Compress the given bytes using DEFLATE algorithm. The method is
+	 * <code>null</code> safe.
 	 * 
 	 * @param inputBytes
-	 * @return
+	 *            the bytes to be compressed
+	 * 
+	 * @return the bytes of the compressed representation, or <code>null</code>
+	 *         if incoming bytes is null.
 	 */
 	public static byte[] compress(byte[] inputBytes) {
 		if(AssertUtils.isEmpty(inputBytes)) {
