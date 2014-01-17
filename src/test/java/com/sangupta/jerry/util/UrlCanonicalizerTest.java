@@ -36,6 +36,9 @@ public class UrlCanonicalizerTest {
 		Assert.assertEquals("http://www.some-random-domain.com", UrlCanonicalizer.canonicalize("http://www.some-random-domain.com/"));
 		Assert.assertEquals("http://www.some-random-domain.com", UrlCanonicalizer.canonicalize("hTTp://www.some-RANDOM-domain.com"));
 		Assert.assertEquals("http://www.some-random-domain.com/abc.html?param1=value1&param2=value2#fragmentme", UrlCanonicalizer.canonicalize("http://www.some-random-domain.com/abc.html#fragmentme?param2=value2&param1=value1"));
+		
+		Assert.assertEquals("http://www.some-random-domain.com/abc.html", UrlCanonicalizer.getCanonicalizedBase("http://www.some-random-domain.com/abc.html#fragmentme?param2=value2&param1=value1"));
+		Assert.assertEquals("http://www.some-random-domain.com", UrlCanonicalizer.getCanonicalizedRoot("http://www.some-random-domain.com/abc.html#fragmentme?param2=value2&param1=value1"));
 	}
 
 }
