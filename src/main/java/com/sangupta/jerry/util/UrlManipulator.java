@@ -155,7 +155,7 @@ public class UrlManipulator {
 		if(schemeEnd == -1) {
 			this.scheme = HTTP_SCHEME;
 		} else {
-			this.scheme = url.substring(0, schemeEnd);
+			this.scheme = url.substring(0, schemeEnd).toLowerCase();
 			scanStart = schemeEnd + 3;
 			if(sanitizeParts) {
 				checkScheme();
@@ -223,9 +223,9 @@ public class UrlManipulator {
 	public String constructURL() {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append(this.scheme.toLowerCase());
+		builder.append(this.scheme);
 		builder.append("://");
-		builder.append(this.host.toLowerCase());
+		builder.append(this.host);
 		if(this.port != 80) {
 			builder.append(':');
 			builder.append(String.valueOf(this.port));
@@ -316,7 +316,7 @@ public class UrlManipulator {
 			throw new IllegalArgumentException("Scheme provided cannot be null/empty");
 		}
 		
-		this.scheme = newScheme;
+		this.scheme = newScheme.toLowerCase();
 	}
 	
 	/**
@@ -333,7 +333,7 @@ public class UrlManipulator {
 			throw new IllegalArgumentException("Host provided cannot be null/empty");
 		}
 		
-		this.host = host;
+		this.host = host.toLowerCase();
 	}
 	
 	/**
@@ -550,7 +550,7 @@ public class UrlManipulator {
 		int hasPort = url.indexOf(':', start);
 		if(hasPort != -1 && hasPort < end) {
 			// port exists
-			this.host = url.substring(start, hasPort);
+			this.host = url.substring(start, hasPort).toLowerCase();
 			
 			String portValue = url.substring(hasPort + 1, end);
 			
@@ -560,7 +560,7 @@ public class UrlManipulator {
 				throw new IllegalArgumentException("Port value cannot be parsed to an integer value");
 			}
 		} else {
-			this.host = url.substring(start, end);
+			this.host = url.substring(start, end).toLowerCase();
 			this.port = 80;
 		}
 	}
