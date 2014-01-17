@@ -423,6 +423,17 @@ public class UrlManipulator {
 		this.queryParams.put(key, UriUtils.encodeURIComponent(value));
 	}
 	
+	/**
+	 * Remove the query parameter with the given name.
+	 * 
+	 * @param key
+	 *            the request parameter name
+	 *            
+	 */
+	public void removeQueryParam(String key) {
+		this.queryParams.remove(key);
+	}
+	
 	// Simple accessors methods on the internal values start here
 	
 	/**
