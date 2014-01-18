@@ -486,14 +486,22 @@ public class UriUtils {
 	 * 
 	 */
 	public static String extractHost(String url) {
-		try {
-			URI uri = new URI(url);
-			return uri.getHost();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
+		if(AssertUtils.isEmpty(url)) {
+			return null;
 		}
 		
-		return null;
+		int start = url.indexOf("://");
+		if(start == -1) {
+			return null;
+		}
+		
+		start += 3;
+		int end = url.indexOf('/', start);
+		if(end == -1) {
+			return url.substring(start);
+		}
+		
+		return url.substring(start, end);
 	}
 	
 	/**

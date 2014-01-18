@@ -79,4 +79,12 @@ public class UriUtilsTest {
 		Assert.assertEquals("one/two/three/four/five", UriUtils.addWebPaths(new String[] { "one/", "/two/", "/three/", "/four/", "/five" }));
 	}
 	
+	@Test
+	public void testExtractHost() {
+		Assert.assertEquals(null, UriUtils.extractHost("www.google.com"));
+		Assert.assertEquals("www.google.com", UriUtils.extractHost("http://www.google.com"));
+		Assert.assertEquals("www.google.com", UriUtils.extractHost("http://www.google.com/"));
+		Assert.assertEquals("www.google.com", UriUtils.extractHost("http://www.google.com/abc.html"));
+	}
+	
 }
