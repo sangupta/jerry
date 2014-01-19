@@ -87,4 +87,17 @@ public class UriUtilsTest {
 		Assert.assertEquals("www.google.com", UriUtils.extractHost("http://www.google.com/abc.html"));
 	}
 	
+	@Test
+	public void testExtractPath() {
+		Assert.assertEquals("", UriUtils.extractPath("www.google.com"));
+		Assert.assertEquals("", UriUtils.extractPath("http://www.google.com"));
+		Assert.assertEquals("/", UriUtils.extractPath("www.google.com/"));
+		Assert.assertEquals("/", UriUtils.extractPath("http://www.google.com/"));
+		
+		Assert.assertEquals("/abc.html", UriUtils.extractPath("http://www.google.com/abc.html?a=b"));
+		Assert.assertEquals("/abc.html", UriUtils.extractPath("http://www.google.com/abc.html?a=b#123"));
+		Assert.assertEquals("/abc.html", UriUtils.extractPath("http://www.google.com/abc.html#123?a=b"));
+		Assert.assertEquals("/abc.html", UriUtils.extractPath("http://www.google.com/abc.html#ab"));
+	}
+	
 }

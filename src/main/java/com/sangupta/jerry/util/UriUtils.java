@@ -58,10 +58,16 @@ public class UriUtils {
 	private static final String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.!~*'()";
 	
 	/**
-	 * Encode the given string as a URI component.
+	 * Encode the given string as a URI component. A URI component is part of
+	 * the URI like a query parameter value, or the fragment name. In percent
+	 * encoded values, small-case letters will be used.
+	 * 
+	 * The method is <code>null</code>-safe.
 	 * 
 	 * @param input
-	 * @return
+	 *            the string that needs to be encoded
+	 * 
+	 * @return the encoded representation
 	 */
 	public static String encodeURIComponent(String input) {
 		return encodeURIComponent(input, false);
@@ -70,8 +76,14 @@ public class UriUtils {
 	/**
 	 * Function to convert a given string into URI encoded format.
 	 * 
+	 * The method is <code>null</code>-safe.
+	 * 
 	 * @param input
 	 *            the source string
+	 * 
+	 * @param upperCase
+	 *            whether to use upper-case or lower-case letters in the percent
+	 *            encoded representation
 	 * 
 	 * @return the encoded string
 	 */
@@ -477,7 +489,11 @@ public class UriUtils {
     }
 
 	/**
-	 * Extract the host value from the URL.
+	 * Extract the host value from the URL. If there is no scheme 
+	 * separator: <code>://</code> available, a <code>null</code> is 
+	 * returned. No checks for the sanity of the host value are made.
+	 * 
+	 * Also, the value is NOT canonicalized before returning. 
 	 * 
 	 * @param url
 	 *            the URL from which host/domain needs to be extracted
@@ -505,31 +521,61 @@ public class UriUtils {
 	}
 	
 	/**
-	 * Extract the path value from the URL.
+	 * Extract the path value from the URL. The path in a URL is considered from the
+	 * first leading slash to the end before the query or the fragment separator.
 	 * 
 	 * @param url
 	 * @return
 	 */
 	public static String extractPath(String url) {
-		try {
-			URI uri = new URI(url);
-			return uri.getPath();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
+		if(AssertUtils.isEmpty(url)) {
+			return null;
 		}
 		
-		return null;
+		int schemeEnd = url.indexOf("://");
+		if(schemeEnd >= 0) {
+			schemeEnd += 3;
+		}
+		
+		int pathStart = url.indexOf('/', schemeEnd);
+		if(pathStart == -1) {
+			// no path present - return an empty string
+			return StringUtils.EMPTY_STRING;
+		}
+		
+		// find query and fragment separators
+		int queryStart = url.indexOf('?', pathStart);
+		int fragmentStart = url.indexOf('#', pathStart);
+		
+		if(queryStart == -1 && fragmentStart == -1) {
+			return url.substring(pathStart);
+		}
+		
+		if(queryStart != -1 && fragmentStart != -1) {
+			// find min of both
+			int min = (queryStart < fragmentStart) ? queryStart : fragmentStart;
+			return url.substring(pathStart, min);
+		}
+		
+		if(queryStart != -1) {
+			return url.substring(pathStart, queryStart);
+		}
+		
+		return url.substring(pathStart, fragmentStart);
 	}
 
 	/**
-	 * Extract the protocol or the scheme from the given URL. For example,
-	 * in the URL http://www.sangupta.com, the protocol is http.
+	 * Extract the protocol or the scheme from the given URL. For example, in
+	 * the URL http://www.sangupta.com, the protocol is http. Neither checks for
+	 * the validily of the scheme is made, nor the value is canonicalized.
 	 * 
-	 * @param href
-	 * @return
+	 * @param url
+	 *            the URL from which the scheme/protocol needs to be extracted.
+	 * 
+	 * @return the scheme/protocol if found, or <code>null</code>.
 	 */
 	public static String extractProtocol(String url) {
-		if(url == null) {
+		if(AssertUtils.isEmpty(url)) {
 			return null;
 		}
 		
