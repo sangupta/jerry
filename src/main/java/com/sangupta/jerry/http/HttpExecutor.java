@@ -24,9 +24,13 @@ package com.sangupta.jerry.http;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -87,7 +91,28 @@ public class HttpExecutor {
             SSLContext sslcontext;
             try {
                 sslcontext = SSLContext.getInstance(SSLSocketFactory.TLS);
-                sslcontext.init(null, null, null);
+                sslcontext.init(null, new TrustManager[] {
+                		
+                		// make sure that we accept all SSL certificates
+                		new X509TrustManager() {
+							
+							@Override
+							public X509Certificate[] getAcceptedIssuers() {
+								return null;
+							}
+							
+							@Override
+							public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+								
+							}
+							
+							@Override
+							public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+								
+							}
+						}
+                		
+                }, null);
                 ssl = new SSLSocketFactory(sslcontext);
             } catch (SecurityException ignore) {
             	// do nothing
