@@ -33,6 +33,7 @@ docs/*
 target/*
 
 # Project specific
+*/.settings/*
+*/target/*
+*/.gitignore
 .settings/*
-nosubmit/*
-/target

@@ -32,7 +32,7 @@ Builds
 
 **0.4.1**
 
-* Added utility methods to Responseutils
+* Added utility methods to ResponseUtils
 * Fixed a bug in RequestCapturingFilter where chained filters were not being called
 * Upgraded version on Apache Http-client library to 4.2.5
 * Fixed bug where Cookie age was not being set correctly
