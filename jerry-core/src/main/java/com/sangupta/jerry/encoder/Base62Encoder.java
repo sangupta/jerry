@@ -142,31 +142,4 @@ public class Base62Encoder {
 		return num;
 	}
 	
-	/**
-	 * Test function
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		long start = System.currentTimeMillis();
-		
-		final long MAX = 100 * 1000 * 1000; // 100 million
-		for(long index = 0; index < MAX; index++) {
-			long num = 0 - index;
-			
-			String enc = encode(num);
-			long dec = decode(enc);
-			
-			// System.out.println("We build for " + num + ", enc: " + enc + ", dec: " + dec);
-			if(num != dec) {
-				System.out.println("breaking");
-				break;
-			}
-		}
-		
-		long end = System.currentTimeMillis();
-		
-		System.out.println("Done in " + (end - start) + "ms.");
-	}
-
 }
