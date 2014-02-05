@@ -1,7 +1,10 @@
 jerry
 =====
 
-`jerry` framework provides much of the common functionality that is used in a standard Java application like checking for application updates, providing template classes for CRUD operations with MongoDB, working with Quartz scheduler, and utility classes to work with HTML, cookies, JSON, XML, reflection, URIs, web and much more.
+`jerry` framework provides much of the common functionality that is used in a standard Java application like 
+checking for application updates, providing template classes for CRUD operations with MongoDB, working with 
+Quartz scheduler, and utility classes to work with HTML, cookies, JSON, XML, reflection, URIs, web and much 
+more.
 
 Features
 --------
@@ -75,7 +78,8 @@ Dependencies
 * Apache Commons IO for disk I/O
 * Jericho HTML parser to work with HTML
 
-Besides these, `jerry` also uses the following libraries (as in Maven `provided` scope) to provide utility functions and extension classes to remove boiler-plate code.
+Besides these, `jerry` also uses the following libraries (as in Maven `provided` scope) to provide utility 
+functions and extension classes to remove boiler-plate code.
 
 * Hibernate framework
 * Spring ORM framework
@@ -84,7 +88,9 @@ Besides these, `jerry` also uses the following libraries (as in Maven `provided`
 * Google GSON library
 * XStream XML parsing library
 
-The difference in `direct` and `provided` dependency stems from the fact on usage. For example, you will only use `HibernateUtils` class when using Hibernate in your project, and thus we don't declare that as a direct dependency. This helps us keep the size of the `jerry` library small.
+The difference in `direct` and `provided` dependency stems from the fact on usage. For example, you will only 
+use `HibernateUtils` class when using Hibernate in your project, and thus we don't declare that as a direct 
+dependency. This helps us keep the size of the `jerry` library small.
 
 Continuous Integration
 ----------------------
@@ -95,10 +101,10 @@ Current status of branch `MASTER`: [![Build Status](https://secure.travis-ci.org
 The library is tested against
 
 * Oracle JDK 7
-* Oracle JDK 6
 * Open JDK 7
 
-Note: Build are not tested against `Open JDK 6` because of a compilation failure in code on generics. It does not seem to be a code issue as it passes on `Oracle JDK 6`. Will fix the error once I get to know more on the cause and its remedy.
+Note: JDK6 has been removed from the list due to end-of-life from Oracle, and as support has been dropped by
+http://travis-ci.org as well.
 
 Versioning
 ----------
