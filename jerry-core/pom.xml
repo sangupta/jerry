@@ -14,7 +14,8 @@
 	<artifactId>jerry-core</artifactId>
 
 	<name>jerry-core</name>
-	<url>http://maven.apache.org</url>
+	<description>Common Java Functionality</description>
+	<url>http://sangupta.com/projects/jerry.html</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

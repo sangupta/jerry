@@ -16,7 +16,7 @@
 
 	<name>jerry</name>
 	<description>Common Java Functionality</description>
-	<url>http://www.sangupta.com/projects/jerry.html</url>
+	<url>http://sangupta.com/projects/jerry.html</url>
 	<inceptionYear>2012</inceptionYear>
 	
 	<modules>
