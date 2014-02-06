@@ -7,8 +7,8 @@
 	
 	<parent>
 		<groupId>com.sangupta</groupId>
-		<artifactId>jerry</artifactId>
-		<version>0.4.2-SNAPSHOT</version>
+		<artifactId>jerry-parent</artifactId>
+		<version>0.5.0-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>jerry-web</artifactId>

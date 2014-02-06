@@ -37,3 +37,5 @@ target/*
 */target/*
 */.gitignore
 .settings/*
+/target
+com/sangupta/jerry/*
