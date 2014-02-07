@@ -45,6 +45,7 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jerry-oauth</artifactId>
@@ -52,6 +53,7 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jerry-misc</artifactId>
