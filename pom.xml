@@ -22,10 +22,12 @@
 	<modules>
 		<module>jerry-core</module>
 		<module>jerry-http</module>
+		<!-- 
 		<module>jerry-oauth</module>
+		-->
 		<module>jerry-web</module>
 		<module>jerry-misc</module>
-    <module>jerry</module>
+		<module>jerry</module>
   </modules>
 
 	<licenses>
