@@ -10,26 +10,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sangupta</groupId>
-	<artifactId>jerry-parent</artifactId>
+	<artifactId>jerry</artifactId>
 	<version>0.5.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
-	<name>Jerry Project</name>
+	<name>Jerry</name>
 	<description>Common Java Functionality</description>
 	<url>http://sangupta.com/projects/jerry.html</url>
 	<inceptionYear>2012</inceptionYear>
 	
-	<modules>
-		<module>jerry-core</module>
-		<module>jerry-http</module>
-		<!-- 
-		<module>jerry-oauth</module>
-		-->
-		<module>jerry-web</module>
-		<module>jerry-misc</module>
-		<module>jerry</module>
-  </modules>
-
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -80,6 +69,23 @@
 			<version>1.6.4</version>
 		</dependency>
 
+		<!-- Other relevant jerry projects -->		
+		<dependency>
+			<groupId>com.sangupta</groupId>
+			<artifactId>jerry-core</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sangupta</groupId>
+			<artifactId>jerry-http</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sangupta</groupId>
+			<artifactId>jerry-web</artifactId>
+			<version>0.5.0</version>
+		</dependency>
+
 		<!-- For serialization/deserialization utils -->
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
@@ -94,6 +100,30 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Other required JARs -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.1.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.1.1.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>3.2.3.RELEASE</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.5</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -119,12 +149,6 @@
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
 			<version>1.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.commons</groupId>
-			<artifactId>commons-compress</artifactId>
-			<version>1.5</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

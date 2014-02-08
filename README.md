@@ -6,6 +6,12 @@ checking for application updates, providing template classes for CRUD operations
 Quartz scheduler, and utility classes to work with HTML, cookies, JSON, XML, reflection, URIs, web and much 
 more.
 
+The project is built upon the following `jerry` module libraries:
+
+* `jerry-core`: core functions and utility classes
+* `jerry-http`: core helper classes to work with HTTP requests
+* `jerry-web`: core helper classes when building Java web applications
+
 Features
 --------
 * Collection of utility classes
@@ -20,11 +26,12 @@ Features
 Builds
 ------
 
-**Development Version**
+**0.5.0**
 
-* Added `com.sangupta.jerry.oauth` package to work with OAuth requests. 
-* Utility client to send OAuth signed requests
-* Server side filters to check validity of incoming requests per OAuth specifications
+* Refactoring project to divide project into various module libraries
+
+**0.4.2-SNAPSHOT**
+
 * Added ArchiveUtils - utility class to work with compressed files
 * Added HttpServletResponseWrapper implementation that uses a ByteArray to buffer response
 * Updated CookieUtils to add method to create a new Cookie
