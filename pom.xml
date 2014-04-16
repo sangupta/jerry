@@ -91,6 +91,11 @@
             <artifactId>jerry-web</artifactId>
             <version>0.5.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.sangupta</groupId>
+            <artifactId>jerry-services</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <!-- For serialization/deserialization utils -->
         <dependency>
